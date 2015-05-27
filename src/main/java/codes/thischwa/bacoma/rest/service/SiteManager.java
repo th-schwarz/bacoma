@@ -110,8 +110,8 @@ public class SiteManager {
 				repo.putStringResource(macro.getName(), macro.getText());
 		
 		// add content.vm
-		String content = IOUtils.toString(SiteManager.class.getResourceAsStream("/vm/content.vm"));
-		repo.putStringResource("content.vm", content);
+//		String content = IOUtils.toString(SiteManager.class.getResourceAsStream("/vm/content.vm"));
+//		repo.putStringResource("content.vm", content);
 					
 		logger.info("*** VelocityEngine successful initialized for: {}", site.getUrl());
 		return ve;
