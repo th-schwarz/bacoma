@@ -13,9 +13,10 @@ import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
-public class _TestSiteBuilder {
 
-	public _TestSiteBuilder(File jsonFile) throws IOException {
+public class _SiteBuilder {
+
+	public _SiteBuilder(File jsonFile) throws IOException {
 		Persister persister  = new Persister();
 		Site site = new Site();
 		site.setId(UUID.fromString("d20e9e25-7e34-4411-a70e-90104b8d6000"));
@@ -40,7 +41,6 @@ public class _TestSiteBuilder {
 	private Level buildLevel(String id, Level parent, String name, String title) {
 		Level l = new Level();
 		l.setId(UUID.fromString(id));
-		l.setParent(parent);
 		l.setName(name);
 		l.setTitle(title);
 		return l;
@@ -119,6 +119,6 @@ public class _TestSiteBuilder {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		new _TestSiteBuilder(new File("test_temp"));
+		new _SiteBuilder(new File("test_temp"));
 	}
 }

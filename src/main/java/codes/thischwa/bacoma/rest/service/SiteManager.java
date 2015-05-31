@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.apache.velocity.runtime.resource.util.StringResourceRepository;
@@ -66,12 +65,10 @@ public class SiteManager {
 			if(lev.hasSublevels()) {
 				for(Level subLev : lev.getSublevels()) {
 					identify(subLev);
-					subLev.setParent(lev);
 				}
 			}
 			for(Page page : lev.getPages()) {
 				identify(page);
-				page.setParent(lev);
 			}
 			if(InstanceUtil.isSite(obj)) {
 				Site s = (Site) obj;
@@ -147,7 +144,6 @@ public class SiteManager {
 			objectsPerIdentifier.put(level.getId(), level);
 			Level parentLevel = (Level) objectsPerIdentifier.get(reqLevel.getParent());
 			parentLevel.add(level);
-			level.setParent(parentLevel);
 			reqLevel.setId(level.getId());
 		}
 		level.setName(reqLevel.getName());
@@ -164,8 +160,6 @@ public class SiteManager {
 			objectsPerIdentifier.put(page.getId(), page);
 			Level parentLevel = (Level) objectsPerIdentifier.get(reqPage.getParent());
 			parentLevel.add(page);
-			page.setParent(parentLevel);
-			reqPage.setId(page.getId());
 		}
 		page.setName(reqPage.getName());
 		page.setTitle(reqPage.getTitle());

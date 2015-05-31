@@ -37,6 +37,11 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 	}
 	public void setSublevels(List<Level> sublevels) {
 		this.sublevels = sublevels;
+		if(sublevels != null) {
+			for(Level level : sublevels) {
+				level.setParent(this);
+			}
+		}
 	}
 	
 	public boolean hasSublevels() {
@@ -45,6 +50,8 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 	public void add(Level level) {
 		// TODO check if there is already a level with the same name
 		sublevels.add(level);
+		if(level != null)
+			level.setParent(level);
 	}
 	public boolean remove(Level level) {
 		return sublevels.remove(level);
@@ -55,21 +62,28 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 	}
 	public void setPages(List<Page> pages) {
 		this.pages = pages;
+		if(pages != null) {
+			for(Page page : pages) {
+				page.setParent(this);
+			}
+		}
 	}
 	public void add(Page page) {
 		// TODO check if there is already a page with the same name
 		pages.add(page);
+		if(page != null)
+			page.setParent(this);
 	}
 	public boolean remove(Page page) {
 		return pages.remove(page);
 	}
 		
 	/**
-	 * @return The number of the hierarchy. (Starts with 1.)
+	 * @return The number of the hierarchy. (Starts with 1, site has hierarchy 0.)
 	 */
 	@JsonIgnore
-	public Integer getHierarchy() {
-		return (getParent() == null) ? Integer.valueOf(1) : Integer.valueOf(getParent().getHierarchy().intValue() + 1);
+	public int getHierarchy() {
+		return (getParent() == null) ? 0 : (getParent().getHierarchy() + 1);
 	}
 	
 	@Override

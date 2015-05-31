@@ -25,7 +25,7 @@ public class Persister {
 		mapper.writeValue(dataFile, site);
 	}
 	
-	public Site load(File dataDir, String userName, String siteUrl) throws IOException {
+	Site load(File dataDir, String userName, String siteUrl) throws IOException {
 		File userDir = new File(dataDir, userName);
 		return load(userDir, siteUrl); 
 	}

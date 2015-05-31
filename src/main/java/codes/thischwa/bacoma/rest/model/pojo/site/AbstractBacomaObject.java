@@ -32,13 +32,14 @@ public abstract class AbstractBacomaObject<P> {
 	/**
 	 * Set the parent of this {@link AbstractBacomaObject}.
 	 */
-	public void setParent(P directParent) {
+	protected void setParent(P directParent) {
 		this.parent = directParent;
 	}
 	
 	@Override
 	public int hashCode() {
 		int result = 1;
+		result += (id != null) ? 0 : id.hashCode();
 		result += ((parent == null) ? 0 : parent.hashCode());
 		result += id.hashCode();
 		return result;
