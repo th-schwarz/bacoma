@@ -53,9 +53,10 @@ public class VirtualFile implements IVirtualFile {
 	
 	@Override
 	public String getTagSrcForPreview() {
-		String path = pathTool.getURLFromFile(baseFile.getAbsolutePath());
-		String link = String.format("/%s%s", Constants.LINK_IDENTICATOR_SITE_RESOURCE, path);
-		return link;
+//		String path = pathTool.getURLFromFile(baseFile.getAbsolutePath());
+//		String link = String.format("/%s%s", Constants.LINK_IDENTICATOR_SITE_RESOURCE, path);
+//		return link;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -65,13 +66,14 @@ public class VirtualFile implements IVirtualFile {
 
 	@Override
 	public void consructFromTagFromView(final String src) throws IllegalArgumentException {
-		String urlResourcePath = String.format("/%s/%s", Constants.LINK_IDENTICATOR_SITE_RESOURCE, resourceFolder);
-		if(!src.startsWith(urlResourcePath))
-			throw new IllegalArgumentException("Unknown resource folder!");
-		String path = PathTool.decodePath(src.substring(Constants.LINK_IDENTICATOR_SITE_RESOURCE.length()+2, src.length()));
-		baseFile = new File(PoPathInfo.getSiteDirectory(site), path);
+//		String urlResourcePath = String.format("/%s/%s", Constants.LINK_IDENTICATOR_SITE_RESOURCE, resourceFolder);
+//		if(!src.startsWith(urlResourcePath))
+//			throw new IllegalArgumentException("Unknown resource folder!");
+//		String path = PathTool.decodePath(src.substring(Constants.LINK_IDENTICATOR_SITE_RESOURCE.length()+2, src.length()));
+//		baseFile = new File(PoPathInfo.getSiteDirectory(site), path);
+		throw new UnsupportedOperationException();
 	}
-	
+
 	@Override
 	public boolean isForLayout() {
 		return forLayout;

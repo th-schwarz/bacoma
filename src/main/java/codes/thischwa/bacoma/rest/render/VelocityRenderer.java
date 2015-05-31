@@ -65,30 +65,31 @@ public class VelocityRenderer {
 			final Map<String, Object> additionalContextObjects) {
 		logger.debug("Try to render: " + renderable);
 		Site site = BoInfo.getSite(renderable); 
-		Map<String, Object> contextObjects = ContextObjectManager.get(pojoHelper, viewMode);
-		if (logger.isDebugEnabled()) {
-			logger.debug("context objects:");
-			for (String objName : contextObjects.keySet()) {
-				logger.debug(" - Object class: " + objName + " - " + contextObjects.get(objName).getClass());
-			}
-		}
-		if (additionalContextObjects != null && !additionalContextObjects.isEmpty())
-			contextObjects.putAll(additionalContextObjects);
-		try {
-			String templateContent = ((Template) siteManager.getObject(renderable.getTemplateID())).getText();
-			StringWriter contentWriter = new StringWriter();
-			renderString(contentWriter, templateContent, contextObjects);
-
-			String layoutContent = site.getLayoutTemplate().getText();
-			if (layoutContent != null) {
-				contentWriter.flush();
-				contextObjects.put("content", contentWriter.toString());
-				renderString(writer, layoutContent, contextObjects);
-			} else
-				writer.write(contentWriter.toString());
-		} catch (IOException e) {
-			throw new RenderException(renderable.getTemplateType(), renderable.getId(), e);
-		}
+//		Map<String, Object> contextObjects = ContextObjectManager.get(pojoHelper, viewMode);
+//		if (logger.isDebugEnabled()) {
+//			logger.debug("context objects:");
+//			for (String objName : contextObjects.keySet()) {
+//				logger.debug(" - Object class: " + objName + " - " + contextObjects.get(objName).getClass());
+//			}
+//		}
+//		if (additionalContextObjects != null && !additionalContextObjects.isEmpty())
+//			contextObjects.putAll(additionalContextObjects);
+//		try {
+//			String templateContent = ((Template) siteManager.getObject(renderable.getTemplateID())).getText();
+//			StringWriter contentWriter = new StringWriter();
+//			renderString(contentWriter, templateContent, contextObjects);
+//
+//			String layoutContent = site.getLayoutTemplate().getText();
+//			if (layoutContent != null) {
+//				contentWriter.flush();
+//				contextObjects.put("content", contentWriter.toString());
+//				renderString(writer, layoutContent, contextObjects);
+//			} else
+//				writer.write(contentWriter.toString());
+//		} catch (IOException e) {
+//			throw new RenderException(renderable.getTemplateType(), renderable.getId(), e);
+//		}
+		throw new UnsupportedOperationException();
 	}
 
 }

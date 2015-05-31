@@ -14,8 +14,10 @@ import org.springframework.stereotype.Component;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectCommon;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedViewMode;
+import codes.thischwa.bacoma.rest.render.context.RenderData;
 import codes.thischwa.bacoma.rest.render.context.util.Link;
 import codes.thischwa.bacoma.rest.render.context.util.PathTool;
+import codes.thischwa.bacoma.rest.render.resource.VirtualFile;
 
 /**
  * Construct an a-tag. Mainly used by other context objects.
@@ -32,6 +34,9 @@ public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCo
 	
 	@Autowired
 	private RenderData renderData;
+	
+	@Autowired
+	private PathTool pathTool;
 	
 	public LinkTagTool() {
 		super("a");
@@ -50,7 +55,7 @@ public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCo
 			tempHref = href;
 		else
 			tempHref = href.replace(File.separatorChar, '/');
-		return setAttribute("href", PathTool.encodePath(tempHref));
+		return setAttribute("href", pathTool.encodePath(tempHref));
 	}
 
 	public LinkTagTool setAttribute(final String name, final String value) {
@@ -75,21 +80,22 @@ public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCo
 
 		// 2. construct the tag for preview or export
 		if (!isExternalLink) {
-			VirtualFile vf = new VirtualFile(this.pojoHelper.getSite(), false);
-			vf.consructFromTagFromView(hrefString);
-			if (viewMode == ViewMode.EXPORT) {
-				try {
-					File srcFile = vf.getBaseFile();
-					File destFile = vf.getExportFile();
-					FileUtils.copyFile(srcFile, destFile);
-					renderData.addFile(vf);
-				} catch (IOException e) {
-					logger.error("Error while copy [" + vf.getBaseFile().getPath() + "] to [" + vf.getExportFile().getPath() + "]: " + e.getMessage(), e);
-					throw new FatalException("Error while copy [" + vf.getBaseFile().getPath() + "] to [" + vf.getExportFile().getPath() + "]: " + e.getMessage(), e);
-				}
-				this.setHref(vf.getTagSrcForExport(this.pojoHelper.getLevel()));
-			} else
-				this.setHref(vf.getTagSrcForPreview());
+//			VirtualFile vf = new VirtualFile(this.pojoHelper.getSite(), false);
+//			vf.consructFromTagFromView(hrefString);
+//			if (viewMode == ViewMode.EXPORT) {
+//				try {
+//					File srcFile = vf.getBaseFile();
+//					File destFile = vf.getExportFile();
+//					FileUtils.copyFile(srcFile, destFile);
+//					renderData.addFile(vf);
+//				} catch (IOException e) {
+//					logger.error("Error while copy [" + vf.getBaseFile().getPath() + "] to [" + vf.getExportFile().getPath() + "]: " + e.getMessage(), e);
+//					throw new FatalException("Error while copy [" + vf.getBaseFile().getPath() + "] to [" + vf.getExportFile().getPath() + "]: " + e.getMessage(), e);
+//				}
+//				this.setHref(vf.getTagSrcForExport(this.pojoHelper.getLevel()));
+//			} else
+//				this.setHref(vf.getTagSrcForPreview());
+			throw new UnsupportedOperationException();
 		}
 		
 		isExternalLink = false;

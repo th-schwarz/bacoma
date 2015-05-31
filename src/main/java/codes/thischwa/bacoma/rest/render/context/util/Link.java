@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
+
 /**
  * Wrapper object for {@link URI} to find out, if a link is an internal or an external one. 
  * The parameters are decoded with 'default.encoding'.
@@ -44,8 +46,8 @@ public class Link {
 				} else if (schema.equalsIgnoreCase("mailto")) {
 					isMailto = true;
 					isExternal = true;
-				} else if (schema.equalsIgnoreCase("http") && uri.getHost() != null && uri.getHost().equalsIgnoreCase(host)) {
-					isExternal = false;
+//				} else if (schema.equalsIgnoreCase("http") && uri.getHost() != null && uri.getHost().equalsIgnoreCase(host)) {
+//					isExternal = false;
 				} else if (schema.equalsIgnoreCase("http") || schema.equalsIgnoreCase("https") || schema.equalsIgnoreCase("ftp") || schema.equalsIgnoreCase("ftps"))
 					isExternal = true;
 			}
@@ -107,10 +109,10 @@ public class Link {
 		return (path != null && path.startsWith("/"+str));
 	}
 	
-	public boolean isPoormansRequest() {
-		return !isExternal && !isFile 
-				&& (pathStartsWith(Constants.LINK_IDENTICATOR_EDIT) || pathStartsWith(Constants.LINK_IDENTICATOR_PREVIEW) || pathStartsWith(Constants.LINK_IDENTICATOR_SAVE));
-	}
+//	public boolean isPoormansRequest() {
+//		return !isExternal && !isFile 
+//				&& (pathStartsWith(Constants.LINK_IDENTICATOR_EDIT) || pathStartsWith(Constants.LINK_IDENTICATOR_PREVIEW) || pathStartsWith(Constants.LINK_IDENTICATOR_SAVE));
+//	}
 
 	private String decodeQuietly(String str) {
 		try {
@@ -120,19 +122,19 @@ public class Link {
 		}
 	}
 	
-	public static String buildUrl(final String baseUrl, final APoormansObject<?> po, final Action action) {
-		if(po == null || action == null)
-			throw new IllegalArgumentException("all params must be set");
-		StringBuilder sb = new StringBuilder(baseUrl);
-		if(!baseUrl.endsWith("/"))
-			sb.append("/");
-		sb.append(action.getName());
-		sb.append("?");
-		sb.append("id=").append(po.getId());
-		sb.append("&");
-		sb.append(Constants.LINK_TYPE_DESCRIPTOR).append("=").append(ContextUtil.getTypDescriptor(po.getClass()));
-		return sb.toString();
-	}
+//	public static String buildUrl(final String baseUrl, final AbstractBacomaObject<?> po, final Action action) {
+//		if(po == null || action == null)
+//			throw new IllegalArgumentException("all params must be set");
+//		StringBuilder sb = new StringBuilder(baseUrl);
+//		if(!baseUrl.endsWith("/"))
+//			sb.append("/");
+//		sb.append(action.getName());
+//		sb.append("?");
+//		sb.append("id=").append(po.getId());
+//		sb.append("&");
+//		sb.append(Constants.LINK_TYPE_DESCRIPTOR).append("=").append(ContextUtil.getTypDescriptor(po.getClass()));
+//		return sb.toString();
+//	}
 	
 	
 	private class KeyValue {

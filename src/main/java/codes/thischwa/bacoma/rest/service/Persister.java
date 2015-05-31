@@ -11,11 +11,15 @@ public class Persister {
 	
 	public void persist(File dataDir, String user, Site site) throws IOException {
 		File userDir = new File(dataDir, user);
-		if(!userDir.exists())
-			userDir.mkdirs();
+		persist(userDir, site);
+	}
+
+	public void persist(File dir, Site site) throws IOException {
+		if(!dir.exists())
+			dir.mkdirs();
 		
 		ObjectMapper mapper = new ObjectMapper();
-		File dataFile = new File(userDir, String.format("%s.json", site.getUrl()));
+		File dataFile = new File(dir, String.format("%s.json", site.getUrl()));
 		if(dataFile.exists())
 			dataFile.delete();
 		mapper.writeValue(dataFile, site);
@@ -23,7 +27,11 @@ public class Persister {
 	
 	public Site load(File dataDir, String userName, String siteUrl) throws IOException {
 		File userDir = new File(dataDir, userName);
-		File dataFile = new File(userDir, String.format("%s.json", siteUrl));
+		return load(userDir, siteUrl); 
+	}
+	
+	public Site load(File dir, String url) throws IOException {
+		File dataFile = new File(dir, String.format("%s.json", url));
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(dataFile, Site.class);
 	}
