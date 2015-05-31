@@ -30,4 +30,8 @@ public class DefaultConfigurationHolder {
 	public Map<String, String> getVelocityConfiguration() {
 		return ConfigurationUtil.getProperties(defaultConfiguration, "velocity", true);
 	}
+	
+	public Map<String, String> getDefaultConfiguration() {
+		return defaultConfiguration;
+	}
 }

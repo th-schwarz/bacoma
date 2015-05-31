@@ -28,6 +28,7 @@ public class FileSystemUtil {
 	
 	private File dataDir;
 	
+	@Autowired
 	public FileSystemUtil(@Value("${dir.data}") String dataDirStr) {
 		dataDir = new File(dataDirStr);
 	}
