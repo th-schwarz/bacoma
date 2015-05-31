@@ -20,20 +20,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.User;
-import codes.thischwa.bacoma.rest.service.ContextUtility;
+import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @Controller
 public class UserController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private ContextUtility contextObject;
+	private FileSystemUtil fileSystemUtil;
 
 	@RequestMapping(value="/user/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> getAll() {
 		logger.debug("entered #getAll");
 		List<String> users = new ArrayList<>();
-		for(File folder : contextObject.getDataDir().listFiles(new FileFilter() {			
+		for(File folder : fileSystemUtil.getAndCheckSitesDataDir().listFiles(new FileFilter() {			
 			@Override
 			public boolean accept(File file) {
 				return file.isDirectory();
@@ -47,7 +47,7 @@ public class UserController {
 	@RequestMapping(value="/user/create", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> create(@RequestBody User user) {
 		logger.debug("entered #create");
-		File userDir = new File(contextObject.getDataDir(), user.getName());
+		File userDir = new File(fileSystemUtil.getAndCheckSitesDataDir(), user.getName());
 		if(userDir.exists())
 			return new ResponseEntity<>(Response.error("User not found."), HttpStatus.NOT_FOUND); 
 		userDir.mkdirs();
@@ -57,7 +57,7 @@ public class UserController {
 	@RequestMapping(value="/user/{userName}/getSites", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> getSites(@PathVariable String userName) {
 		logger.debug("entered #getSites");
-		File userDir = new File(contextObject.getDataDir(), userName);		
+		File userDir = new File(fileSystemUtil.getAndCheckSitesDataDir(), userName);		
 		List<String> sites = new ArrayList<>();
 		for(File file : userDir.listFiles(new FilenameFilter() {
 			@Override

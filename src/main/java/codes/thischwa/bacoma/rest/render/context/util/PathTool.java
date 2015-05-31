@@ -19,7 +19,6 @@ import codes.thischwa.bacoma.rest.model.OrderableInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
-import codes.thischwa.bacoma.rest.service.ContextUtility;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 
@@ -30,14 +29,9 @@ import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 @Component
 public class PathTool {
 	
-	@Value("${site.export.folder}")
-	private String exportFolder;
-	
 	@Value("${site.export.file.welcome}")
 	private String welcomeFileName;
 	
-	@Autowired
-	private ContextUtility context;
 
 	@Autowired
 	private FileSystemUtil fileSystemUtil;
@@ -122,7 +116,7 @@ public class PathTool {
 	 * @return Export file path of an {@link IRenderable}.
 	 */
 	public File getExportFile(final IRenderable renderable, final String extension) {
-		File exportDirectory = new File(context.getAndCheckSitesDataDir(), exportFolder);
+		File exportDirectory = fileSystemUtil.getSiteExportDirectory();
 		Level parent;
 		AbstractBacomaObject<?> po = (AbstractBacomaObject<?>) renderable;
 //		if (InstanceUtil.isImage(renderable)) {

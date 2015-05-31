@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import codes.thischwa.bacoma.rest.model.pojo._Dummy;
 import codes.thischwa.bacoma.rest.service.ContextUtility;
+import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @Controller
 @RequestMapping("/check")
@@ -23,6 +24,9 @@ public class CheckController {
 	
 	@Autowired
 	private ContextUtility contextUtility;
+	
+	@Autowired
+	private FileSystemUtil fileSystemUtil; 
 
 	@RequestMapping(method = RequestMethod.GET, produces = {"application/json"})
 	public @ResponseBody _Dummy check(@RequestParam(required = false, defaultValue = "no message found") String msg) {
@@ -30,7 +34,7 @@ public class CheckController {
 		_Dummy d = new _Dummy(msg);
 		d.setMsg2(String.format("msg2: %s, count: %d", msg2, contextUtility.getCount()));
 		contextUtility.inc();
-		logger.info("data-dir: {}", contextUtility.getDataDir().getAbsoluteFile());
+		logger.info("data-dir: {}", fileSystemUtil.getDataDir().getAbsoluteFile());
 		return d;
 	}
 }

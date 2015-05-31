@@ -1,12 +1,10 @@
 package codes.thischwa.bacoma.rest.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,6 +15,7 @@ import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqPage;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -26,17 +25,16 @@ public class ContextUtility {
 
 	private Persister persister;
 
-	private File dataDir;
-
 	@Autowired
 	private SiteManager siteManager;
+	
+	@Autowired
+	private FileSystemUtil fileSystemUtil;
 
 	private String user;
 
-	@Autowired
-	public ContextUtility(@Value("${dir.data}") String dataDirStr) {
+	public ContextUtility() {
 		persister = new Persister();
-		dataDir = new File(dataDirStr);
 	}
 
 	public int getCount() {
@@ -47,11 +45,6 @@ public class ContextUtility {
 		count++;
 	}
 
-	@Deprecated
-	public File getDataDir() {
-		return dataDir;
-	}
-
 	public Site getSite() {
 		return (siteManager == null) ? null : siteManager.getSite();
 	}
@@ -59,22 +52,14 @@ public class ContextUtility {
 	public String getUser() {
 		return user;
 	}
-	
-	@Deprecated
-	public File getAndCheckSitesDataDir() {
-		File dir = new File(new File(dataDir, user), getSite().getUrl());
-		if(!dir.exists())
-			dir.mkdirs();
-		return dir;
-	}
 
 	public void persist() throws IOException {
-		persister.persist(getDataDir(), user, getSite());
+		persister.persist(fileSystemUtil.getAndCheckSitesDataDir(), user, getSite());
 	}
 
 	public void load(String userName, String siteUrl) throws IOException {
 		this.user = userName;
-		Site site = persister.load(getDataDir(), userName, siteUrl);
+		Site site = persister.load(fileSystemUtil.getAndCheckSitesDataDir(), userName, siteUrl);
 		siteManager.init(site);
 	}
 

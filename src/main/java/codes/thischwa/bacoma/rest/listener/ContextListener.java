@@ -1,7 +1,5 @@
 package codes.thischwa.bacoma.rest.listener;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -14,10 +12,9 @@ public class ContextListener implements ApplicationListener<ApplicationContextEv
 	
 	@Override
 	public void onApplicationEvent(ApplicationContextEvent event) {
-		FileSystemUtil fu = event.getApplicationContext().getBean(FileSystemUtil.class);
 		try {
-			fu.checkAndCreateDataDir();
-		} catch (IOException e) {
+			event.getApplicationContext().getBean(FileSystemUtil.class);
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		

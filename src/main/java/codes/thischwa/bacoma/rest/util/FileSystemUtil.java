@@ -29,16 +29,20 @@ public class FileSystemUtil {
 	private File dataDir;
 	
 	@Autowired
-	public FileSystemUtil(@Value("${dir.data}") String dataDirStr) {
+	public FileSystemUtil(@Value("${dir.data}") String dataDirStr) throws IOException {
 		dataDir = new File(dataDirStr);
-	}
-	
-	public void checkAndCreateDataDir() throws IOException {
 		if(!dataDir.exists()) {
 			if(!dataDir.mkdirs())
 				throw new IOException(String.format("Couldn't construct directory: %s", dataDir.getAbsolutePath()));
-			logger.info("Data dir created successful: {}", dataDir.getAbsolutePath());
+			else
+				logger.info("Data dir created successful: {}", dataDir.getAbsolutePath());
+		} else {
+			logger.info("Data dir found: {}", dataDir.getAbsolutePath());
 		}
+	}
+	
+	public File getDataDir() {
+		return dataDir;
 	}
 
 	public File getAndCheckSitesDataDir() {
