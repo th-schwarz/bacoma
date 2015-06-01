@@ -30,6 +30,7 @@ import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
+import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.util.ConfigurationUtil;
 
 @Service
@@ -42,16 +43,44 @@ public class SiteManager {
 	private DefaultConfigurationHolder defaultConfigurationHolder;
 	
 	private Map<UUID, AbstractBacomaObject<?>> objectsPerIdentifier = new HashMap<>();
+	
+	private Map<String, String> siteConfig = new HashMap<>();
+	
+	private ViewMode viewMode = ViewMode.PREVIEW;
 
 	public void init(Site site) throws IOException {
 		this.site = site;
 		objectsPerIdentifier.clear();
 		identify(site);
-		velocityEngine = buildVelocityEngine(site);
+		
+		// ** build the configuration of the site
+		siteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "site"));
+		siteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "velocity"));
+		if(site.getConfiguration() != null) {
+			siteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "site"));
+			siteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "velocity"));
+		}
+		
+		velocityEngine = buildVelocityEngine();
 	}
 
 	public Site getSite() {
 		return site;
+	}
+	
+	public ViewMode getViewMode() {
+		return viewMode;
+	}
+	
+	public void setViewMode(ViewMode viewMode) {
+		this.viewMode = viewMode;
+	}
+	
+	/**
+	 * @return the complete site configuration (merged with defaults)
+	 */
+	public Map<String, String> getSiteConfig() {
+		return siteConfig;
 	}
 	
 	public VelocityEngine getVelocityEngine() {
@@ -88,10 +117,9 @@ public class SiteManager {
 		}
 	}
 	
-	private VelocityEngine buildVelocityEngine(Site site) throws IOException {
+	private VelocityEngine buildVelocityEngine() throws IOException {
 		// merge the configs
-		Map<String, String> velConfig = defaultConfigurationHolder.getVelocityConfiguration();
-		velConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "velocity", true));
+		Map<String, String> velConfig = ConfigurationUtil.getProperties(siteConfig, "velocity", true);
 		
 		Properties props = new Properties();
 		props.putAll(velConfig);
@@ -168,6 +196,15 @@ public class SiteManager {
 
 	public void setConfiguration(Map<String, String> config) {
 		site.setConfiguration(config);		
+		siteConfig.putAll(config);
+		VelocityEngine ve = null;
+		try {
+			ve = buildVelocityEngine();
+			velocityEngine = ve;
+		} catch (IOException e) {
+			logger.error("Error while building the VelocityEngine with the new configuration", e);
+			// TODO throw a defined exception for the response status
+		}
 	}
 
 	public UUID setLayoutTemplate(String text) {

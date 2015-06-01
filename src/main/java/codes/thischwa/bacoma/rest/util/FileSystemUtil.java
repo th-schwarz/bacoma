@@ -44,7 +44,7 @@ public class FileSystemUtil {
 	public File getDataDir() {
 		return dataDir;
 	}
-
+	
 	public File getAndCheckSitesDataDir() {
 		if(cu.getUser() == null || sm.getSite() == null)
 			throw new IllegalArgumentException("No current user or site found!");

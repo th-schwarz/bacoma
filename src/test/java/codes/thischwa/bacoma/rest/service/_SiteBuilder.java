@@ -24,7 +24,7 @@ public class _SiteBuilder {
 		site.setTitle("A Test Site");
 		site.setPages(Arrays.asList(new Page[]{buildPage("db47c9ac-3796-435d-ba15-fac8bf64deaf", "707cc97a-b1a3-4278-bce5-acd3874ba527", "frontpage", "welcome", "<h1>This is the welcome page&nbsp;...</h1><p>... of the site object!</p>")}));
 		site.setLayoutTemplate(buildLayoutTemplate());
-		//site.setConfiguration(buildConfig());
+		site.setConfiguration(buildConfig());
 		site.addTemplate(buildPageTemplate());
 		
 		Level lev_1 = buildLevel("d20e9e25-7e34-4411-a70e-90104b8d6001", site, "1_level", "1st Level");
@@ -114,7 +114,7 @@ public class _SiteBuilder {
 	
 	private Map<String, String> buildConfig() {
 		Map<String, String> config = new HashMap<>();
-		config.put("velocity.string.resource.loader.description", "Velocity StringResourceLoader");
+		config.put("site.export.folder", "temp_export");
 		return config;
 	}
 	

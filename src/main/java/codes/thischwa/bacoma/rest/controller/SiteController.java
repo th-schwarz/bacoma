@@ -43,7 +43,7 @@ public class SiteController {
 		}
 		logger.info("site successful loaded: {}", siteUrl);
 		
-		String baseUrl= ServletUtil.getBaseUrl();
+		String baseUrl = ServletUtil.getBaseUrl();
 		logger.info("****** base-url: {}", baseUrl);
 		return ResponseEntity.ok(Response.ok());
 	}

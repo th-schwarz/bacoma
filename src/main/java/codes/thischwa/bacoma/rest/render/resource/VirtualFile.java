@@ -31,7 +31,7 @@ public class VirtualFile implements IVirtualFile {
 	protected String resourceFolder;
 	
 	public void init() {
-		this.forLayout = true;
+		this.forLayout = false;
 	}
 	public void initforLayout() {
 		this.forLayout = true;

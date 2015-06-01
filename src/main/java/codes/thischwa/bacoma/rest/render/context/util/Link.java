@@ -109,11 +109,6 @@ public class Link {
 		return (path != null && path.startsWith("/"+str));
 	}
 	
-//	public boolean isPoormansRequest() {
-//		return !isExternal && !isFile 
-//				&& (pathStartsWith(Constants.LINK_IDENTICATOR_EDIT) || pathStartsWith(Constants.LINK_IDENTICATOR_PREVIEW) || pathStartsWith(Constants.LINK_IDENTICATOR_SAVE));
-//	}
-
 	private String decodeQuietly(String str) {
 		try {
 			return URLDecoder.decode(str, defaultEncoding);

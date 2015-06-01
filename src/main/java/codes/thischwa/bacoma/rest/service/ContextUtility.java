@@ -58,8 +58,8 @@ public class ContextUtility {
 	}
 
 	public void load(String userName, String siteUrl) throws IOException {
+		Site site = persister.load(fileSystemUtil.getDataDir(), userName, siteUrl);
 		this.user = userName;
-		Site site = persister.load(fileSystemUtil.getAndCheckSitesDataDir(), userName, siteUrl);
 		siteManager.init(site);
 	}
 

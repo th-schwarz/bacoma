@@ -5,14 +5,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import codes.thischwa.bacoma.rest.util.ConfigurationUtil;
-
 @Service
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class DefaultConfigurationHolder {
 	
 	private Map<String, String> defaultConfiguration;
@@ -27,10 +22,6 @@ public class DefaultConfigurationHolder {
 		}
 	}
 
-	public Map<String, String> getVelocityConfiguration() {
-		return ConfigurationUtil.getProperties(defaultConfiguration, "velocity", true);
-	}
-	
 	public Map<String, String> getDefaultConfiguration() {
 		return defaultConfiguration;
 	}
