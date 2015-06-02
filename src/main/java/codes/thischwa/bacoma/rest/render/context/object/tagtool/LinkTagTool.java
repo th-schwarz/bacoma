@@ -1,11 +1,10 @@
 package codes.thischwa.bacoma.rest.render.context.object.tagtool;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -13,19 +12,21 @@ import org.springframework.stereotype.Component;
 
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectCommon;
+import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedPojoHelper;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedViewMode;
+import codes.thischwa.bacoma.rest.render.context.PojoHelper;
 import codes.thischwa.bacoma.rest.render.context.RenderData;
 import codes.thischwa.bacoma.rest.render.context.util.Link;
 import codes.thischwa.bacoma.rest.render.context.util.PathTool;
-import codes.thischwa.bacoma.rest.render.resource.VirtualFile;
 
 /**
  * Construct an a-tag. Mainly used by other context objects.
  */
 @Component(value="linktagtool")
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCommon, IContextObjectNeedViewMode {
-	private static Logger logger = Logger.getLogger(LinkTagTool.class);
+public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCommon, IContextObjectNeedPojoHelper, IContextObjectNeedViewMode {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private PojoHelper pojoHelper;
 	private ViewMode viewMode;
 	private boolean isExternalLink = false;
 	
@@ -45,6 +46,11 @@ public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCo
 	@Override
 	public void setViewMode(final ViewMode viewMode) {
 		this.viewMode = viewMode;
+	}
+
+	@Override
+	public void setPojoHelper(PojoHelper pojoHelper) {
+		this.pojoHelper = pojoHelper;
 	}
 
 	public LinkTagTool setHref(final String href) {

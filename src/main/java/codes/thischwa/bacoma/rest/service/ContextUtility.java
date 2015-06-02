@@ -31,8 +31,6 @@ public class ContextUtility {
 	@Autowired
 	private FileSystemUtil fileSystemUtil;
 
-	private String user;
-
 	public ContextUtility() {
 		persister = new Persister();
 	}
@@ -49,17 +47,12 @@ public class ContextUtility {
 		return (siteManager == null) ? null : siteManager.getSite();
 	}
 
-	public String getUser() {
-		return user;
-	}
-
 	public void persist() throws IOException {
-		persister.persist(fileSystemUtil.getAndCheckSitesDataDir(), user, getSite());
+		persister.persist(fileSystemUtil.getAndCheckSitesDataDir(), getSite());
 	}
 
-	public void load(String userName, String siteUrl) throws IOException {
-		Site site = persister.load(fileSystemUtil.getDataDir(), userName, siteUrl);
-		this.user = userName;
+	public void load(String siteUrl) throws IOException {
+		Site site = persister.load(fileSystemUtil.getDataDir(), siteUrl);
 		siteManager.init(site);
 	}
 

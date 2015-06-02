@@ -1,10 +1,10 @@
 package codes.thischwa.bacoma.rest.render;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
@@ -12,11 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.BoInfo;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
-import codes.thischwa.bacoma.rest.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Service
@@ -28,7 +26,7 @@ public class VelocityRenderer {
 	
 
 	/**
-	 * The main render method. It renders a string with respect of possible context objects.
+	 * The *main* render method. It renders a string with respect of possible context objects.
 	 * 
 	 * @param writer
 	 *            Contains the rendered string. It has to be flushed and closed by the caller!
@@ -91,5 +89,26 @@ public class VelocityRenderer {
 //		}
 		throw new UnsupportedOperationException();
 	}
+
+	/**
+	 * Renders a string with respect of possible context objects.
+	 * 
+	 * @param stringToRender
+	 *            A string to render.
+	 * @param contextObjects
+	 *            Context object. It can be null or empty too.
+	 * @return The rendered string.
+	 */
+	public String renderString(final String stringToRender, final Map<String, Object> contextObjects) {
+		if (StringUtils.isBlank(stringToRender))
+			return "";
+
+		StringWriter stringWriter = new StringWriter();
+		renderString(stringWriter, stringToRender, contextObjects);
+		stringWriter.flush();
+		IOUtils.closeQuietly(stringWriter);
+		return stringWriter.toString();
+	}
+
 
 }

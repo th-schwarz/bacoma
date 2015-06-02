@@ -1,12 +1,7 @@
-USER:
-curl -H "Accept:application/json" http://localhost:8080/user/getAll
-curl -H "Accept:application/json" http://localhost:8080/user/admin/getSites
-curl -i -POST -H 'Content-Type: application/json' -d '{"name":"thilo"}' http://localhost:8080/user/create
-
-
 SITE
+curl http://localhost:8080/site/getAll/
+curl http://localhost:8080/site/load/site.test/
 curl http://localhost:8080/site/get/707cc97a-b1a3-4278-bce5-acd3874ba527
-curl http://localhost:8080/site/load/admin/site.test/
 
 Macros bzw. Templates:
 curl -i -POST -H 'Content-Type: application/json' -d '{"id":"707cc97a-b1a3-4278-bce5-acd3874ba527","resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/setSiteResource

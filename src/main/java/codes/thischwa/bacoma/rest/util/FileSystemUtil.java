@@ -46,9 +46,9 @@ public class FileSystemUtil {
 	}
 	
 	public File getAndCheckSitesDataDir() {
-		if(cu.getUser() == null || sm.getSite() == null)
-			throw new IllegalArgumentException("No current user or site found!");
-		File dir = new File(new File(dataDir, cu.getUser()), sm.getSite().getUrl());
+		if(sm.getSite() == null)
+			throw new IllegalArgumentException("No current site found!");
+		File dir = new File(dataDir, sm.getSite().getUrl());
 		if(!dir.exists())
 			dir.mkdirs();
 		return dir;

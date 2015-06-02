@@ -1,9 +1,14 @@
 package codes.thischwa.bacoma.rest.controller;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +29,7 @@ import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.ContextUtility;
+import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 @Controller
@@ -33,10 +39,13 @@ public class SiteController {
 	@Autowired
 	private ContextUtility cu;
 	
-	@RequestMapping(value="/site/load/{userName}/{siteUrl}", method = RequestMethod.GET)
-	public ResponseEntity<Response> load(@PathVariable String userName, @PathVariable String siteUrl) {
+	@Autowired
+	private FileSystemUtil fileSystemUtil;
+	
+	@RequestMapping(value="/site/load/{siteUrl}", method = RequestMethod.GET)
+	public ResponseEntity<Response> load(@PathVariable String siteUrl) {
 		try {
-			cu.load(userName, siteUrl);
+			cu.load(siteUrl);
 		} catch (IOException e) {
 			logger.error("Error while loading a site.", e);
 			return new ResponseEntity<>(Response.error("Site not found!"), HttpStatus.NOT_FOUND);
@@ -48,6 +57,22 @@ public class SiteController {
 		return ResponseEntity.ok(Response.ok());
 	}
 
+	@RequestMapping(value="/site/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> getAll() {
+		logger.debug("entered #getSites");
+		File userDir = fileSystemUtil.getDataDir();		
+		List<String> sites = new ArrayList<>();
+		for(File file : userDir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.toLowerCase().endsWith(".json");
+			}
+		})) {
+			sites.add(FilenameUtils.getBaseName(file.getName()));
+		}
+		return ResponseEntity.ok(Response.ok(sites));
+	}
+	
 	@RequestMapping(value="/site/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> setConfiguration(@RequestBody Map<String, String> config) {
 		Site site = cu.getSite();
