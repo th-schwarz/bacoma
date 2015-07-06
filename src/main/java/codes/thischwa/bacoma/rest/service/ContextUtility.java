@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
@@ -18,7 +16,6 @@ import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ContextUtility {
 
 	private int count = 0;
@@ -44,7 +41,7 @@ public class ContextUtility {
 	}
 
 	public Site getSite() {
-		return (siteManager == null) ? null : siteManager.getSite();
+		return siteManager.getSite();
 	}
 
 	public void persist() throws IOException {

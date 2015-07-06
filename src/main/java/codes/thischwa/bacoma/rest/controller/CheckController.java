@@ -40,7 +40,7 @@ public class CheckController {
 		_Dummy d = new _Dummy(msg);
 		d.setMsg2(String.format("msg2: %s, count: %d", msg2, contextUtility.getCount()));
 		contextUtility.inc();
-		logger.info("data-dir: {}, exportFolder: {}", fileSystemUtil.getDataDir().getAbsoluteFile(), exportFolder);
+		logger.info("data-dir: {}, exportFolder: {}", fileSystemUtil.getDataDir().toFile(), exportFolder);
 		return d;
 	}
 }

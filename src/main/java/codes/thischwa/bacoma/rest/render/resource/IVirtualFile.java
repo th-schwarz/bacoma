@@ -1,6 +1,7 @@
 package codes.thischwa.bacoma.rest.render.resource;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 
@@ -14,7 +15,7 @@ public interface IVirtualFile {
 	 * 
 	 * @return File for export.
 	 */
-	public File getExportFile();
+	public Path getExportFile();
 
 	/**
 	 * Constructs the src-tag for export. 

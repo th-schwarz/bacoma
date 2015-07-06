@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
@@ -40,7 +41,7 @@ public class SiteManager {
 	private VelocityEngine velocityEngine;
 	
 	@Autowired
-	private DefaultConfigurationHolder defaultConfigurationHolder;
+	private ConfigurationHolder defaultConfigurationHolder;
 	
 	private Map<UUID, AbstractBacomaObject<?>> objectsPerIdentifier = new HashMap<>();
 	
@@ -65,6 +66,8 @@ public class SiteManager {
 	}
 
 	public Site getSite() {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		return site;
 	}
 	
@@ -80,10 +83,14 @@ public class SiteManager {
 	 * @return the complete site configuration (merged with defaults)
 	 */
 	public Map<String, String> getSiteConfig() {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		return siteConfig;
 	}
 	
 	public VelocityEngine getVelocityEngine() {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		return velocityEngine;
 	}
 
@@ -118,6 +125,8 @@ public class SiteManager {
 	}
 	
 	private VelocityEngine buildVelocityEngine() throws IOException {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		// merge the configs
 		Map<String, String> velConfig = ConfigurationUtil.getProperties(siteConfig, "velocity", true);
 		
@@ -143,10 +152,14 @@ public class SiteManager {
 	}
 	
 	public AbstractBacomaObject<?> getObject(UUID uuid) {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		return objectsPerIdentifier.get(uuid);
 	}
 	
 	public void setTemplate(ReqTemplate reqTemplate) {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		Template template;
 		if(reqTemplate.isUpdateRequest()) {
 			template = (Template) objectsPerIdentifier.get(reqTemplate.getId());
@@ -163,6 +176,8 @@ public class SiteManager {
 	}
 
 	public void setLevel(ReqLevel reqLevel) {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		Level level;
 		if(reqLevel.isUpdateRequest()) {
 			level = (Level) objectsPerIdentifier.get(reqLevel.getId());
@@ -179,6 +194,8 @@ public class SiteManager {
 	}
 	
 	public void setPage(ReqPage reqPage) {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		Page page;
 		if(reqPage.isUpdateRequest()) {
 			page = (Page) objectsPerIdentifier.get(reqPage.getId());
@@ -195,6 +212,8 @@ public class SiteManager {
 	}
 
 	public void setConfiguration(Map<String, String> config) {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		site.setConfiguration(config);		
 		siteConfig.putAll(config);
 		VelocityEngine ve = null;
@@ -208,6 +227,8 @@ public class SiteManager {
 	}
 
 	public UUID setLayoutTemplate(String text) {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		Template layoutTemplate = new Template();
 		layoutTemplate.setId(UUID.randomUUID());
 		layoutTemplate.setName("layout");
@@ -219,6 +240,8 @@ public class SiteManager {
 	}
 
 	public void setSiteResource(GenericRequestSiteResource reqSiteResource) {
+		if(site == null)
+			throw new SiteNotLoadedException();
 		AbstractSiteResource siteResource;
 		if(reqSiteResource.isUpdateRequest()) {
 			siteResource = (AbstractSiteResource) objectsPerIdentifier.get(reqSiteResource.getId());

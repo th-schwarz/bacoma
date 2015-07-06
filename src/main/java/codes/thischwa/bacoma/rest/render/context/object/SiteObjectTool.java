@@ -1,6 +1,5 @@
 package codes.thischwa.bacoma.rest.render.context.object;
 
-import java.awt.Image;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IOrderable;
-import codes.thischwa.bacoma.rest.model.InstanceUtil;
+import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.OrderableInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
@@ -30,27 +29,24 @@ import codes.thischwa.bacoma.rest.render.context.PojoHelper;
 import codes.thischwa.bacoma.rest.render.context.object.tagtool.LinkTagTool;
 
 /**
- * Context object to provide information about the current site.
+ * Context object to provide information about the current site and dependent objects.
  */
-@Component("sitetool")
+@Component("siteobjecttool")
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class SiteTool implements IContextObjectCommon, IContextObjectNeedPojoHelper, IContextObjectNeedViewMode {
+public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedPojoHelper, IContextObjectNeedViewMode {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private PojoHelper pojoHelper;
 	private Site site;
-	private AbstractBacomaObject<?> po;
+	private IRenderable renderable;
 	private ViewMode viewMode;
 	@Autowired private VelocityRenderer velocityRenderer;
 	@Autowired private LinkTagTool linkTagTool; 
 	
-	/*
-	 * For internal use only.
-	 */
 	@Override
 	public void setPojoHelper(final PojoHelper pojoHelper) {
 		this.pojoHelper = pojoHelper;
-		this.po = (AbstractBacomaObject<?>) this.pojoHelper.getRenderable();
-		site = BoInfo.getSite(po);
+		this.renderable = this.pojoHelper.getRenderable();
+		site = BoInfo.getSite(renderable);
 	}
 
 	@Override
@@ -193,7 +189,7 @@ public class SiteTool implements IContextObjectCommon, IContextObjectNeedPojoHel
 	}
 
 	/**
-	 * @param po
+	 * @param renderable
 	 * @return True, if the desired object is inside the current object path.
 	 */
 	public boolean hierarchyContains(AbstractBacomaObject<?> po) {

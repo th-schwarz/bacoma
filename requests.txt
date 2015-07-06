@@ -1,14 +1,14 @@
 SITE
 curl http://localhost:8080/site/getAll/
 curl http://localhost:8080/site/load/site.test/
+curl http://localhost:8080/site/get/
 curl http://localhost:8080/site/get/707cc97a-b1a3-4278-bce5-acd3874ba527
 
 Macros bzw. Templates:
-curl -i -POST -H 'Content-Type: application/json' -d '{"id":"707cc97a-b1a3-4278-bce5-acd3874ba527","resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/setSiteResource
+curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/setSiteResource
 curl -i -POST -H 'Content-Type: application/json' -d '{"<html><body>$content</body></html>"}' http://localhost:8080/site/setLayoutTemplate
 curl -i -POST -H 'Content-Type: application/json' -d '{"text":"$content","name":"1_page-template","templateType":"PAGE"}' http://localhost:8080/site/setTemplate
 
 curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"cf38ac24-91bf-444c-846e-a5b630d2b6de","name":"1_level"}' http://localhost:8080/site/setLevel
 curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"d20e9e25-7e34-4411-a70e-90104b8d60d0","name":"2_level","title":"2nd Level"}' http://localhost:8080/site/setLevel
-curl -i -POST -H 'Content-Type: application/json' -d '{"id":"951a43ff-9d26-4804-addd-e7862a0572d8","parent":"d20e9e25-7e34-4411-a70e-90104b8d60d0","name":"1_level","title":"1st Level"}' http://localhost:8080/site/setLevel
 

@@ -1,6 +1,7 @@
 package codes.thischwa.bacoma.rest.render.resource;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,8 +39,8 @@ public class VirtualFile implements IVirtualFile {
 	}
 	
 	@Override
-	public File getExportFile() {
-		File exportFile = fileSystemUtil.getSiteExportDirectory();
+	public Path getExportFile() {
+		Path exportFile = fileSystemUtil.getSiteExportDirectory();
 		return exportFile;
 	}
 

@@ -1,8 +1,9 @@
 package codes.thischwa.bacoma.rest.controller;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,6 @@ import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqPage;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.ContextUtility;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
@@ -60,24 +60,26 @@ public class SiteController {
 	@RequestMapping(value="/site/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> getAll() {
 		logger.debug("entered #getSites");
-		File userDir = fileSystemUtil.getDataDir();		
+		Path userDir = fileSystemUtil.getDataDir();		
 		List<String> sites = new ArrayList<>();
-		for(File file : userDir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().endsWith(".json");
+		try {
+			for(Path f : Files.newDirectoryStream(userDir, new DirectoryStream.Filter<Path>() {
+				@Override
+				public boolean accept(Path entry) throws IOException {
+					return Files.isRegularFile(entry) && entry.toString().toLowerCase().endsWith(".json");
+				}
+				})) {
+				sites.add(FilenameUtils.getBaseName(f.getFileName().toString()));			
 			}
-		})) {
-			sites.add(FilenameUtils.getBaseName(file.getName()));
+		} catch (IOException e) {
+			logger.error("Error while getting all sites.", e);
+			return new ResponseEntity<>(Response.error("Error while getting all sites."), HttpStatus.CONFLICT);
 		}
 		return ResponseEntity.ok(Response.ok(sites));
 	}
 	
 	@RequestMapping(value="/site/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> setConfiguration(@RequestBody Map<String, String> config) {
-		Site site = cu.getSite();
-		if(site == null) 
-			return new ResponseEntity<>(Response.error("No site loaded!"), HttpStatus.NOT_FOUND);
 		cu.setConfiguration(config);
 
 		try {
@@ -91,9 +93,6 @@ public class SiteController {
 
 	@RequestMapping(value="/site/setLayoutTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> setLayoutTemplate(@RequestBody String text) {
-		Site site = cu.getSite();
-		if(site == null) 
-			return new ResponseEntity<>(Response.error("No site loaded!"), HttpStatus.NOT_FOUND);
 		if(StringUtils.isEmpty(text))
 			return new ResponseEntity<>(Response.error("Empty request!"), HttpStatus.BAD_REQUEST);
 		UUID id = cu.setLayoutTemplate(text);
@@ -108,8 +107,6 @@ public class SiteController {
 
 	@RequestMapping(value="/site/setSiteResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> setSiteResource(@RequestBody GenericRequestSiteResource siteResource) {
-		if(cu.getSite() == null) 
-			return new ResponseEntity<>(Response.error("No site loaded!"), HttpStatus.NOT_FOUND);
 		if(!siteResource.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.setSiteResource(siteResource);
@@ -124,8 +121,6 @@ public class SiteController {
 
 	@RequestMapping(value="/site/setTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> setTemplate(@RequestBody ReqTemplate template) {
-		if(cu.getSite() == null) 
-			return new ResponseEntity<>(Response.error("No site loaded!"), HttpStatus.NOT_FOUND);
 		if(!template.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.setTemplate(template);
@@ -140,8 +135,6 @@ public class SiteController {
 	
 	@RequestMapping(value="/site/setLevel", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> setLevel(@RequestBody ReqLevel level) {
-		if(cu.getSite() == null) 
-			return new ResponseEntity<>(Response.error("No site loaded!"), HttpStatus.NOT_FOUND);
 		if(!level.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.setLevel(level);
@@ -156,8 +149,6 @@ public class SiteController {
 
 	@RequestMapping(value="/site/setPage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> setPage(@RequestBody ReqPage page) {
-		if(cu.getSite() == null) 
-			return new ResponseEntity<>(Response.error("No site loaded!"), HttpStatus.NOT_FOUND);
 		if(!page.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.addPage(page);
@@ -172,9 +163,12 @@ public class SiteController {
 	
 	@RequestMapping(value="/site/get/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> get(@PathVariable UUID uuid) {
-		if(cu.getSite() == null) 
-			return new ResponseEntity<>(Response.error("No site loaded!"), HttpStatus.NOT_FOUND);
 		AbstractBacomaObject<?> obj = cu.getObject(uuid);
 		return ResponseEntity.ok(Response.ok(obj));
+	}
+	
+	@RequestMapping(value="/site/get", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> getCurrent() {
+		return ResponseEntity.ok(Response.ok(cu.getSite()));
 	}
 }

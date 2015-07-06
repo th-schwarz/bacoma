@@ -1,20 +1,25 @@
 package codes.thischwa.bacoma.rest.render;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
+import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.rest.model.pojo.site.Template;
+import codes.thischwa.bacoma.rest.render.context.ContextObjectManager;
+import codes.thischwa.bacoma.rest.render.context.PojoHelper;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Service
@@ -22,9 +27,11 @@ public class VelocityRenderer {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
+	private ApplicationContext applicationContext;
+	
+	@Autowired
 	private SiteManager siteManager;
 	
-
 	/**
 	 * The *main* render method. It renders a string with respect of possible context objects.
 	 * 
@@ -62,31 +69,33 @@ public class VelocityRenderer {
 	public void render(Writer writer, final IRenderable renderable, final ViewMode viewMode,
 			final Map<String, Object> additionalContextObjects) {
 		logger.debug("Try to render: " + renderable);
-		Site site = BoInfo.getSite(renderable); 
-//		Map<String, Object> contextObjects = ContextObjectManager.get(pojoHelper, viewMode);
-//		if (logger.isDebugEnabled()) {
-//			logger.debug("context objects:");
-//			for (String objName : contextObjects.keySet()) {
-//				logger.debug(" - Object class: " + objName + " - " + contextObjects.get(objName).getClass());
-//			}
-//		}
-//		if (additionalContextObjects != null && !additionalContextObjects.isEmpty())
-//			contextObjects.putAll(additionalContextObjects);
-//		try {
-//			String templateContent = ((Template) siteManager.getObject(renderable.getTemplateID())).getText();
-//			StringWriter contentWriter = new StringWriter();
-//			renderString(contentWriter, templateContent, contextObjects);
-//
-//			String layoutContent = site.getLayoutTemplate().getText();
-//			if (layoutContent != null) {
-//				contentWriter.flush();
-//				contextObjects.put("content", contentWriter.toString());
-//				renderString(writer, layoutContent, contextObjects);
-//			} else
-//				writer.write(contentWriter.toString());
-//		} catch (IOException e) {
-//			throw new RenderException(renderable.getTemplateType(), renderable.getId(), e);
-//		}
+		PojoHelper pojoHelper = new PojoHelper();
+		pojoHelper.putpo((AbstractBacomaObject<?>) renderable);
+		Site site = pojoHelper.getSite();
+		Map<String, Object> contextObjects = ContextObjectManager.get(pojoHelper, viewMode, applicationContext);
+		if (logger.isDebugEnabled()) {
+			logger.debug("context objects:");
+			for (String objName : contextObjects.keySet()) {
+				logger.debug(" - Object class: " + objName + " - " + contextObjects.get(objName).getClass());
+			}
+		}
+		if (additionalContextObjects != null && !additionalContextObjects.isEmpty())
+			contextObjects.putAll(additionalContextObjects);
+		try {
+			String templateContent = ((Template) siteManager.getObject(renderable.getTemplateID())).getText();
+			StringWriter contentWriter = new StringWriter();
+			renderString(contentWriter, templateContent, contextObjects);
+
+			if(site.getLayoutTemplate() != null && StringUtils.isNoneBlank(site.getLayoutTemplate().getText())) {
+				String layoutContent = site.getLayoutTemplate().getText();
+				contentWriter.flush();
+				contextObjects.put("content", contentWriter.toString());
+				renderString(writer, layoutContent, contextObjects);
+			} else
+				writer.write(contentWriter.toString());
+		} catch (IOException e) {
+			throw new RenderException(renderable.getTemplateType(), renderable.getId(), e);
+		}
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,7 @@
 package codes.thischwa.bacoma.rest.controller;
 
+import org.springframework.http.ResponseEntity;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,5 +50,10 @@ public class Response {
 	
 	public static Response error(String message) {
 		return new Response(STATUS.ERROR, message, null);
+	}
+	
+	public static ResponseEntity<Response> buildNoSiteNotLoaded() {
+		Response resp = error("No site loaded!");
+		return ResponseEntity.ok(resp);
 	}
 }

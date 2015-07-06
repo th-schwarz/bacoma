@@ -1,7 +1,9 @@
 package codes.thischwa.bacoma.rest.util;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import codes.thischwa.bacoma.rest.service.ContextUtility;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Service
@@ -20,42 +21,47 @@ public class FileSystemUtil {
 	@Autowired
 	private SiteManager sm;
 	
-	@Autowired
-	private ContextUtility cu;
-	
 	@Value("${site.export.folder}")
 	private String exportFolder;
 	
-	private File dataDir;
+	private Path dataDir;
 	
 	@Autowired
 	public FileSystemUtil(@Value("${dir.data}") String dataDirStr) throws IOException {
-		dataDir = new File(dataDirStr);
-		if(!dataDir.exists()) {
-			if(!dataDir.mkdirs())
-				throw new IOException(String.format("Couldn't construct directory: %s", dataDir.getAbsolutePath()));
-			else
-				logger.info("Data dir created successful: {}", dataDir.getAbsolutePath());
+		dataDir = Paths.get(dataDirStr);
+		if(!Files.exists(dataDir)) {
+			Files.createDirectories(dataDir);
+			logger.info("Data dir created successful: {}", dataDir.toString());
 		} else {
-			logger.info("Data dir found: {}", dataDir.getAbsolutePath());
+			logger.info("Data dir found: {}", dataDir.toString());
 		}
 	}
 	
-	public File getDataDir() {
+	public Path getDataDir() {
 		return dataDir;
 	}
 	
-	public File getAndCheckSitesDataDir() {
+	public Path getDataDir(String... parts) {
+		Path path = Paths.get(dataDir.toAbsolutePath().toString(), parts);
+		return path;
+	}
+	
+	public Path getAndCheckSitesDataDir() throws RuntimeException {
 		if(sm.getSite() == null)
 			throw new IllegalArgumentException("No current site found!");
-		File dir = new File(dataDir, sm.getSite().getUrl());
-		if(!dir.exists())
-			dir.mkdirs();
+		Path dir = Paths.get(dataDir.toString(), sm.getSite().getUrl());
+		if(!Files.exists(dir)) {
+			try {
+				Files.createDirectories(dir);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 		return dir;
 	}
 	
-	public File getSiteExportDirectory() {
-		return new File(getAndCheckSitesDataDir(), exportFolder);
+	public Path getSiteExportDirectory() {
+		return Paths.get(getAndCheckSitesDataDir().toString(), exportFolder);
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.nio.file.Path;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class PathTool {
     public String getURLFromFile(final String fileName, boolean encode) {
         File file = new File(fileName);
         String temp = file.getPath();
-        temp = temp.substring(fileSystemUtil.getAndCheckSitesDataDir().getAbsolutePath().length()); // cut the data dir
+        temp = temp.substring(fileSystemUtil.getAndCheckSitesDataDir().toAbsolutePath().toString().length()); // cut the data dir
         temp = temp.replace(File.separatorChar, '/');
         if(encode)
         	temp = encodePath(temp);
@@ -115,8 +116,8 @@ public class PathTool {
 	/**
 	 * @return Export file path of an {@link IRenderable}.
 	 */
-	public File getExportFile(final IRenderable renderable, final String extension) {
-		File exportDirectory = fileSystemUtil.getSiteExportDirectory();
+	public Path getExportFile(final IRenderable renderable, final String extension) {
+		Path exportDirectory = fileSystemUtil.getSiteExportDirectory();
 		Level parent;
 		AbstractBacomaObject<?> po = (AbstractBacomaObject<?>) renderable;
 //		if (InstanceUtil.isImage(renderable)) {
@@ -125,13 +126,13 @@ public class PathTool {
 //		} else
 			parent = (Level) po.getParent();
 		String containerPath = getFSHierarchicalContainerPathSegment(parent);
-		File outDir;
+		Path outDir;
 		if (StringUtils.isNotBlank(containerPath)) 
-			outDir = new File(exportDirectory, containerPath);
+			outDir = exportDirectory.resolve(containerPath);
 		else
 			outDir = exportDirectory;
 		
-		File outFile = new File(outDir, getExportBaseFilename(renderable, extension));
+		Path outFile = outDir.resolve(getExportBaseFilename(renderable, extension));
 		return outFile;
 	}
 	
