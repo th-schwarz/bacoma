@@ -13,6 +13,8 @@ public class TestServletUtil {
 		assertEquals("image/x-png", ServletUtil.getMimeType("image.png"));
 		assertEquals("image/jpeg", ServletUtil.getMimeType("image.jpg"));
 		assertEquals("text/javascript", ServletUtil.getMimeType("file.js"));
+		assertEquals("text/css", ServletUtil.getMimeType("format.css"));
+		assertEquals("application/json", ServletUtil.getMimeType("file.json"));
 	}
 
 }

@@ -3,6 +3,8 @@ curl http://localhost:8080/site/getAll/
 curl http://localhost:8080/site/load/site.test/
 curl http://localhost:8080/site/get/
 curl http://localhost:8080/site/get/707cc97a-b1a3-4278-bce5-acd3874ba527
+curl http://localhost:8080/site/resource/static/?path=/test.js
+curl http://localhost:8080/site/resource/css/?name=format.css
 
 Macros bzw. Templates:
 curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/setSiteResource

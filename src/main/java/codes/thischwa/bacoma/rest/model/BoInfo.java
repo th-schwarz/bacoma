@@ -7,9 +7,12 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
+import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.Content;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
+import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.Template;
@@ -162,12 +165,12 @@ public class BoInfo {
 	/**
 	 * Generate all breadcrumbs objects for persitentPojo (bottom-up).
 	 * 
-	 * @param po
+	 * @param bo
 	 */
-	public static List<AbstractBacomaObject<?>> getBreadcrumbs(final AbstractBacomaObject<?> po) {
+	public static List<AbstractBacomaObject<?>> getBreadcrumbs(final AbstractBacomaObject<?> bo) {
 		List<AbstractBacomaObject<?>> list = new ArrayList<>();
-		if (po != null) {
-			AbstractBacomaObject<?> temppo = po;
+		if (bo != null) {
+			AbstractBacomaObject<?> temppo = bo;
 			list.add(temppo);
 			while (temppo.getParent() != null) {
 				temppo = (AbstractBacomaObject<?>) temppo.getParent();
@@ -176,5 +179,21 @@ public class BoInfo {
 		}
 		Collections.reverse(list);
 		return list;
+	}
+	
+	public static CascadingStyleSheet getNamedCascadingStyleSheet(Site site, String name) {
+		for(CascadingStyleSheet css : site.getCascadingStyleSheets()) {
+			if(css.getName().equals(name))
+				return css;
+		}
+		throw new ResourceNotFoundException(site, name);
+	}
+
+	public static OtherResource getNamedOtherResource(Site site, String name) {
+		for(OtherResource or : site.getOtherResources()) {
+			if(or.getName().equals(name))
+				return or;
+		}
+		throw new ResourceNotFoundException(site, name);
 	}
 }

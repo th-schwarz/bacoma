@@ -1,0 +1,7 @@
+#parse('content.vm')
+##parse('user_menu.vm')
+
+<div id="content">
+  $content
+#pagemenu()
+</div>

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
 
 @ControllerAdvice
@@ -15,5 +16,10 @@ public class ExceptionHandlingController {
 	public ResponseEntity<Response> handleSiteNotLoaded() {
 		return Response.buildNoSiteNotLoaded();
 	}
-	
+
+	@ResponseBody
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<Response> handleResourceNotFound(ResourceNotFoundException ex) {
+		return Response.build(ex);
+	}
 }

@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestAttributes;
@@ -12,9 +13,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class ServletUtil {
 	private static ConfigurableMimeFileTypeMap mimeTypeMap = new ConfigurableMimeFileTypeMap();
+	public static final MediaType MEDIATYPE_TEXT_CSS = new MediaType("text", "css");
+	
+	static {
+		mimeTypeMap.setMappings("application/json json JSON");
+	}
 	
 	public static String getMimeType(String fileName) {
 		return mimeTypeMap.getContentType(fileName);
+	}
+	
+	public static MediaType parseMediaType(String path) {
+		String mimeType = getMimeType(path);
+		if(mimeType.equals("text/css"))
+			return MEDIATYPE_TEXT_CSS;
+		return MediaType.parseMediaType(mimeType);
 	}
 	
 	public static HttpServletRequest getCurrentRequest() {

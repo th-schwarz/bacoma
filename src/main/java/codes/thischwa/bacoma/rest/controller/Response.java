@@ -6,6 +6,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codes.thischwa.bacoma.rest.exception.AbstractBacomaException;
+import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
+import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+
 public class Response {
 	
 	public enum STATUS {
@@ -55,5 +59,16 @@ public class Response {
 	public static ResponseEntity<Response> buildNoSiteNotLoaded() {
 		Response resp = error("No site loaded!");
 		return ResponseEntity.ok(resp);
+	}
+	
+	public static ResponseEntity<Response> build(AbstractBacomaException e) {
+		Site site = e.getSite();
+		if(e instanceof ResourceNotFoundException) {
+			String resourceName = ((ResourceNotFoundException)e).getName();
+			String msg = String.format("%s: resource [%s] not found!", site.getUrl(), resourceName);
+			return ResponseEntity.ok(error(msg));
+		} else {
+			throw new RuntimeException("Unknown BacomaException"); 
+		}
 	}
 }

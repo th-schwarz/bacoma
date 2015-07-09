@@ -33,8 +33,6 @@ public class ConfigurationHolder {
 	}
 	
 	public String get(Site site, String key) {
-		if(site == null || key == null)
-			throw new IllegalArgumentException();
 		if(site.getConfiguration().containsKey(key))
 			return site.getConfiguration().get(key);
 		return get(key);
