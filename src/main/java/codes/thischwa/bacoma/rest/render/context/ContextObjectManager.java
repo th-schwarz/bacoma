@@ -65,10 +65,10 @@ public class ContextObjectManager {
 			Object contextObject;
 			if (this.contextObjects.containsKey(beanId)) {
 				contextObject = this.contextObjects.get(beanId);
-				logger.debug("- found: ".concat(beanId));
+				logger.debug("- found: {}", beanId);
 			} else {
 				contextObject = beans.get(beanId);
-				logger.debug("- new: ".concat(beanId));
+				logger.debug("- new: {}", beanId);
 			}
 			configureContextObject(contextObject);
 

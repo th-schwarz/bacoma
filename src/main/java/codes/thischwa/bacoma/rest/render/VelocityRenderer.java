@@ -96,7 +96,6 @@ public class VelocityRenderer {
 		} catch (IOException e) {
 			throw new RenderException(renderable.getTemplateType(), renderable.getId(), e);
 		}
-		throw new UnsupportedOperationException();
 	}
 
 	/**

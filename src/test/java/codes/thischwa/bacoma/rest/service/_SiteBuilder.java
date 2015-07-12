@@ -1,7 +1,6 @@
 package codes.thischwa.bacoma.rest.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +51,7 @@ public class _SiteBuilder {
 	
 	private Page buildPage(String id, String templateID, String name, String title, String content) {
 		Content c = new Content();
+		c.setName("content");
 		c.setValue(content);
 		Page page = new Page();
 		page.setId(UUID.fromString(id));

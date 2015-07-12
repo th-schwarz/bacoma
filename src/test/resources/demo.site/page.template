@@ -1,4 +1,4 @@
-#parse('content.vm')
+##parse('content.vm')
 ##parse('user_menu.vm')
 
 <div id="content">
