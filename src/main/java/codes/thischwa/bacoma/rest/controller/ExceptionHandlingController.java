@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
 
+/**
+ * Global exception handling.
+ */
 @ControllerAdvice
 public class ExceptionHandlingController {
 

@@ -12,6 +12,11 @@ public class AbstractBacomaException extends RuntimeException {
 		this.site = site;
 	}
 	
+	public AbstractBacomaException(Site site, Throwable cause) {
+		super(cause);
+		this.site = site;
+	}
+
 	public Site getSite() {
 		return site;
 	}

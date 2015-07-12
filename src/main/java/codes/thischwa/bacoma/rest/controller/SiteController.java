@@ -73,13 +73,7 @@ public class SiteController extends AbstractController {
 	@RequestMapping(value="/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> setConfiguration(@RequestBody Map<String, String> config) {
 		cu.setConfiguration(config);
-
-		try {
-			cu.persist();
-		} catch (IOException e) {
-			logger.error("Error while persisting a site.", e);
-			return new ResponseEntity<>(Response.error("Error while persisting."), HttpStatus.CONFLICT);
-		}
+		cu.persist();
 		return ResponseEntity.ok(Response.ok());
 	}
 
@@ -88,12 +82,7 @@ public class SiteController extends AbstractController {
 		if(StringUtils.isEmpty(text))
 			return new ResponseEntity<>(Response.error("Empty request!"), HttpStatus.BAD_REQUEST);
 		UUID id = cu.setLayoutTemplate(text);
-		try {
-			cu.persist();
-		} catch (IOException e) {
-			logger.error("Error while persisting a site.", e);
-			return new ResponseEntity<>(Response.error("Error while persisting."), HttpStatus.CONFLICT);
-		}
+		cu.persist();
 		return ResponseEntity.ok(Response.ok(id));
 	}
 
@@ -102,12 +91,7 @@ public class SiteController extends AbstractController {
 		if(!siteResource.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.setSiteResource(siteResource);
-		try {
-			cu.persist();
-		} catch (IOException e) {
-			logger.error("Error while persisting a site.", e);
-			return new ResponseEntity<>(Response.error("Error while persisting."), HttpStatus.CONFLICT);
-		}
+		cu.persist();
 		return ResponseEntity.ok(Response.ok(siteResource.getId()));
 	}
 
@@ -116,12 +100,7 @@ public class SiteController extends AbstractController {
 		if(!template.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.setTemplate(template);
-		try {
-			cu.persist();
-		} catch (IOException e) {
-			logger.error("Error while persisting a site.", e);
-			return new ResponseEntity<>(Response.error("Error while persisting."), HttpStatus.CONFLICT);
-		}
+		cu.persist();
 		return ResponseEntity.ok(Response.ok(template.getId()));
 	}
 	
@@ -130,12 +109,7 @@ public class SiteController extends AbstractController {
 		if(!level.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.setLevel(level);
-		try {
-			cu.persist();
-		} catch (IOException e) {
-			logger.error("Error while persisting a site.", e);
-			return new ResponseEntity<>(Response.error("Error while persisting."), HttpStatus.CONFLICT);
-		}
+		cu.persist();
 		return ResponseEntity.ok(Response.ok(level.getId()));
 	}
 
@@ -144,12 +118,7 @@ public class SiteController extends AbstractController {
 		if(!page.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.addPage(page);
-		try {
-			cu.persist();
-		} catch (IOException e) {
-			logger.error("Error while persisting a site.", e);
-			return new ResponseEntity<>(Response.error("Error while persisting."), HttpStatus.CONFLICT);
-		}
+		cu.persist();
 		return ResponseEntity.ok(Response.ok(page.getId()));
 	}
 	

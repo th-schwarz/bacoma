@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codes.thischwa.bacoma.rest.exception.AbstractBacomaException;
+import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 
@@ -67,8 +68,14 @@ public class Response {
 			String resourceName = ((ResourceNotFoundException)e).getName();
 			String msg = String.format("%s: resource [%s] not found!", site.getUrl(), resourceName);
 			return ResponseEntity.ok(error(msg));
+		} else if(e instanceof PersitException) {
+			PersitException pe = (PersitException) e;
+			StringBuilder msg = new StringBuilder(String.format("%s couldn't be persit!", site.getUrl()));
+			if(pe.getCause() != null)
+				msg.append(String.format(" Because of: %s", pe.getCause().getMessage()));
+			return ResponseEntity.ok(error(msg.toString()));
 		} else {
 			throw new RuntimeException("Unknown BacomaException"); 
 		}
 	}
-}
+} 

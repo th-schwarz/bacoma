@@ -4,22 +4,27 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import codes.thischwa.bacoma.rest.exception.PersitException;
+import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 
 public class Persister {
 
-	public void persist(Path dir, Site site) throws IOException {
+	public void persist(Path dir, Site site) throws PersitException {
 		persist(dir.toFile(), site);
 	}
 	
-	public void persist(File dir, Site site) throws IOException {
+	public void persist(File dir, Site site) throws PersitException {
 		ObjectMapper mapper = new ObjectMapper();
 		File dataFile = new File(dir, String.format("%s.json", site.getUrl()));
 		if(dataFile.exists())
 			dataFile.delete();
-		mapper.writeValue(dataFile, site);
+		try {
+			mapper.writeValue(dataFile, site);
+		} catch (IOException e) {
+			throw new PersitException(site, e);
+		}
 	}
 
 	public Site load(Path dataDir, String url) throws IOException {

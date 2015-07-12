@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqPage;
@@ -44,7 +45,7 @@ public class ContextUtility {
 		return siteManager.getSite();
 	}
 
-	public void persist() throws IOException {
+	public void persist() throws PersitException {
 		persister.persist(fileSystemUtil.getAndCheckSitesDataDir(), getSite());
 	}
 
