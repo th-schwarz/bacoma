@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import codes.thischwa.bacoma.rest.exception.AbstractBacomaException;
+import codes.thischwa.bacoma.rest.exception.IsNotARenderableException;
+import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
 
@@ -21,8 +24,8 @@ public class ExceptionHandlingController {
 	}
 
 	@ResponseBody
-	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<Response> handleResourceNotFound(ResourceNotFoundException ex) {
+	@ExceptionHandler({IsNotARenderableException.class, PersitException.class, ResourceNotFoundException.class})
+	public ResponseEntity<Response> handleResourceNotFound(AbstractBacomaException ex) {
 		return Response.build(ex);
 	}
 }
