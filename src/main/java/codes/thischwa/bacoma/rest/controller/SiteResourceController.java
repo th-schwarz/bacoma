@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
@@ -38,13 +38,12 @@ public class SiteResourceController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@RequestMapping(value = "/resource/static", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/resource/static", method = RequestMethod.GET)
 	public ResponseEntity<?> getStaticResource(@RequestParam String path) {
 		logger.debug("enterded #getStaticResource, path={}", path);
 		Path resource = fileSystemUtil.getDataDir(getProperty("site.dir.staticresource"), path);
 		if (!Files.exists(resource)) {
-			return new ResponseEntity<>(Response.error("Resource not found!"), HttpStatus.NOT_FOUND);
+			throw new ResourceNotFoundException(getSite(), path);
 		}
 		MediaType mt = ServletUtil.parseMediaType(path);
 		try {
@@ -52,12 +51,11 @@ public class SiteResourceController extends AbstractController {
 					.body(new InputStreamResource(Files.newInputStream(resource)));
 		} catch (IOException e) {
 			logger.error("Error while fetching a static resource.", e);
-			return new ResponseEntity<>(Response.error("Error while fetching a static resource."), HttpStatus.CONFLICT);
+			return ResponseEntity.ok(Response.error("Error while fetching a static resource."));
 		}
 	}
 
-	@RequestMapping(value = "/resource/css", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/resource/css", method = RequestMethod.GET)
 	public ResponseEntity<?> getNamedCss(@RequestParam String name) {
 		logger.debug("enterded #getNamedCss, name={}", name);
 		CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(cu.getSite(), name);
@@ -66,8 +64,7 @@ public class SiteResourceController extends AbstractController {
 				.body(new ByteArrayResource(cssContent));
 	}
 
-	@RequestMapping(value = "/resource/other", method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/resource/other", method = RequestMethod.GET)
 	public ResponseEntity<?> getNamedOther(@RequestParam String name) {
 		logger.debug("enterded #getNamedOther, name={}", name);
 		OtherResource or = BoInfo.getNamedOtherResource(cu.getSite(), name);

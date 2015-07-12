@@ -1,5 +1,8 @@
 package codes.thischwa.bacoma.rest.controller;
 
+import java.util.UUID;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codes.thischwa.bacoma.rest.exception.AbstractBacomaException;
+import codes.thischwa.bacoma.rest.exception.IsNotARenderableException;
 import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
@@ -59,7 +63,7 @@ public class Response {
 	
 	public static ResponseEntity<Response> buildNoSiteNotLoaded() {
 		Response resp = error("No site loaded!");
-		return ResponseEntity.ok(resp);
+		return ResponseEntity.ok().header("Content-Type", MediaType.APPLICATION_JSON_VALUE).body(resp);
 	}
 	
 	public static ResponseEntity<Response> build(AbstractBacomaException e) {
@@ -74,6 +78,10 @@ public class Response {
 			if(pe.getCause() != null)
 				msg.append(String.format(" Because of: %s", pe.getCause().getMessage()));
 			return ResponseEntity.ok(error(msg.toString()));
+		} else if(e instanceof IsNotARenderableException) {
+			UUID id = ((IsNotARenderableException)e).getId();
+			String msg = String.format("%s: Object#%s isn't a renderable!", site.getUrl(), id);
+			return ResponseEntity.ok(error(msg));
 		} else {
 			throw new RuntimeException("Unknown BacomaException"); 
 		}
