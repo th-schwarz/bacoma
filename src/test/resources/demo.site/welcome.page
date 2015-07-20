@@ -1,0 +1,23 @@
+<h1>This is the welcome page&nbsp;...</h1>
+
+<p>... of the site object!</p>
+
+<p>&nbsp;</p>
+
+<p>I know I&#39;ll never win a css award with this design. ;-) This
+	is just a demo to show you how poormans works.</p>
+
+<p>&nbsp;</p>
+
+<p>Normally this page has another template e.g. for a nice greeting.</p>
+
+<p>&nbsp;</p>
+
+<p>
+	This is a <a href="/resource/static/?path=/test.zip">zip</a> file
+	managed by the FCKeditor!
+</p>
+
+<p class="remark">Hint: If you add the link in the FCKeditor,
+	it&rsquo;s important to set the protocol type to &rsquo;other&rsquo;,
+	because that indicates, that is an internal link!</p>

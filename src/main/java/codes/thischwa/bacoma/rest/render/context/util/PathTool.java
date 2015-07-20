@@ -70,7 +70,7 @@ public class PathTool {
     public String getURLFromFile(final String fileName, boolean encode) {
         File file = new File(fileName);
         String temp = file.getPath();
-        temp = temp.substring(fileSystemUtil.getAndCheckSitesDataDir().toAbsolutePath().toString().length()); // cut the data dir
+        temp = temp.substring(fileSystemUtil.getAndCheckSitesDir().toAbsolutePath().toString().length()); // cut the data dir
         temp = temp.replace(File.separatorChar, '/');
         if(encode)
         	temp = encodePath(temp);

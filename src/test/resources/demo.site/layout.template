@@ -2,8 +2,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-  <title>$siteobjecttool.Site.Title</title>
+  <title>$utils.escape($sitetool.Site.Title)</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" type="text/css" href="$sitelinktool.Css" />
 </head>
 
 <body>
@@ -12,6 +13,10 @@
 <div id="header">
   <h1>This is the header.</h1>
   <p>It is an uneditable text and is hard-coded in the layout.html.</p>
+</div>
+
+<div id="menu_main">
+#mainmenu()
 </div>
 
 <!-- ********** begin content area ********** -->

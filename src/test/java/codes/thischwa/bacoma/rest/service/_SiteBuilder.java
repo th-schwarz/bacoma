@@ -11,32 +11,57 @@ import org.apache.commons.io.IOUtils;
 import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.Content;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
+import codes.thischwa.bacoma.rest.model.pojo.site.Macro;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
 
+/**
+ * UUID-usage:
+ * - d20e9e25-0000-0000-0000-000000000000 : site
+ * - d20e9e25-0001-0000-0000-000000000 : site-resources
+ * - d20e9e25-0002-0000-0000-000000000 : levels
+ * - d20e9e25-0003-0000-0000-000000000 : pages
+ */
 public class _SiteBuilder {
+	
+	final String commonPageTemplateID = "d20e9e25-0001-0000-0000-000000000001";
 
 	public _SiteBuilder(File jsonFile) throws Exception {
 		Persister persister  = new Persister();
 		Site site = new Site();
-		site.setId(UUID.fromString("d20e9e25-7e34-4411-a70e-90104b8d6000"));
+		site.setId(UUID.fromString("d20e9e25-0000-0000-0000-000000000000"));
 		site.setUrl("site.test");
 		site.setTitle("A Test Site");
-		site.getPages().add(buildPage("db47c9ac-3796-435d-ba15-fac8bf64deaf", "707cc97a-b1a3-4278-bce5-acd3874ba527", "frontpage", "welcome", "<h1>This is the welcome page&nbsp;...</h1><p>... of the site object!</p>"));
+		site.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000001", commonPageTemplateID, "frontpage", "welcome", load("welcome.page")));
 		site.setLayoutTemplate(buildLayoutTemplate());
 		site.setConfiguration(buildConfig());
 		site.addTemplate(buildPageTemplate());
 		site.getCascadingStyleSheets().add(builtStyleSheet());
+		site.addMacro(buildMacro());
 		
-		Level lev_1 = buildLevel("d20e9e25-7e34-4411-a70e-90104b8d6001", site, "1_level", "1st Level");
+		Level lev_1 = buildLevel("d20e9e25-0002-0001-0000-000000000000", site, "1_level", "Level with 1 page");
 		site.add(lev_1);
-		lev_1.add(buildPage("d20e9e25-7e34-4411-a70e-90104b8d6010", "707cc97a-b1a3-4278-bce5-acd3874ba527", "frontpage", "welcome", "<h1>This is the welcome page&nbsp;...</h1><p>... of the site object!</p>"));
-		Level lev_2 = buildLevel("d20e9e25-7e34-4411-a70e-90104b8d6002", site, "2_level", "2nd Level");
+		lev_1.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000010", commonPageTemplateID, "frontpage", null, load("lev1_1.page")));
+		
+		Level lev_2 = buildLevel("d20e9e25-0002-0002-0000-000000000000", site, "2_level", "Level with pages");
 		site.add(lev_2);
-		Level lev_2_1 = buildLevel("d20e9e25-7e34-4411-a70e-90104b8d6003", site, "2_1_level", "1st sub-level of the 2nd Level");
-		lev_2.add(lev_2_1);
+		lev_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000021", commonPageTemplateID, "page1", null, load("lev2_1.page")));
+		lev_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000022", commonPageTemplateID, "page2", null, load("lev2_2.page")));
+		lev_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000023", commonPageTemplateID, "page3", null, load("lev2_3.page")));
+		
+		Level lev_3 = buildLevel("d20e9e25-0002-0003-0000-000000000000", site, "3_level", "Level with Levels");
+		site.add(lev_3);
+		lev_3.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000030", commonPageTemplateID, "frontpage", null, load("lev3_1.page")));
+		
+		Level lev_3_1 = buildLevel("d20e9e25-0002-0003-00010-000000000000", site, "1_sub", "Sublevel 1");
+		lev_3.add(lev_3_1);
+		lev_3_1.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000031", commonPageTemplateID, "frontpage", null, load("lev3-1_1.page")));
+
+		Level lev_3_2 = buildLevel("d20e9e25-0002-0003-00020-000000000000", site, "2_sub", "Sublevel 2");
+		lev_3.add(lev_3_2);
+		lev_3_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000032", commonPageTemplateID, "frontpage", null, load("lev3-1_2.page")));
 		
 		persister.persist(jsonFile, site);
 	}
@@ -64,27 +89,39 @@ public class _SiteBuilder {
 	
 	private Template buildLayoutTemplate() throws Exception {
 		Template t = new Template();
-		t.setId(UUID.fromString("f597e595-c1a5-406f-bf7d-467bbfe40631"));
+		t.setId(UUID.fromString("d20e9e25-0001-0000-0000-000000000010"));
 		t.setType(TemplateType.LAYOUT);
-		t.setText(IOUtils.toString(_SiteBuilder.class.getResource("/demo.site/layout.template"), "utf-8"));
+		t.setText(load("layout.template"));
 		return t;
 	}
 	
 	private Template buildPageTemplate() throws Exception {
 		Template t = new Template();
-		t.setId(UUID.fromString("707cc97a-b1a3-4278-bce5-acd3874ba527"));
+		t.setId(UUID.fromString("d20e9e25-0001-0000-0000-000000000001"));
 		t.setType(TemplateType.PAGE);
 		t.setName("Page tamplate");
-		t.setText(IOUtils.toString(_SiteBuilder.class.getResource("/demo.site/page.template"), "utf-8"));
+		t.setText(load("page.template"));
 		return t;
 	}
 	
 	private CascadingStyleSheet builtStyleSheet() throws Exception {
 		CascadingStyleSheet styleSheet = new CascadingStyleSheet();
-		styleSheet.setId(UUID.fromString("d20e9e25-7e34-4411-a70e-90104b8d6100"));
+		styleSheet.setId(UUID.fromString("d20e9e25-0001-0000-0001-000000000000"));
 		styleSheet.setName("format.css");
-		styleSheet.setText(IOUtils.toString(_SiteBuilder.class.getResource("/demo.site/format.css"), "utf-8"));
+		styleSheet.setText(load("format.css"));
 		return styleSheet;
+	}
+	
+	private Macro buildMacro() throws Exception {
+		Macro vm = new Macro();
+		vm.setName("menu.vm");
+		vm.setId(UUID.fromString("d20e9e25-0001-0000-0002-000000000000"));
+		vm.setText(load("menu.vm"));
+		return vm;
+	}
+	
+	private String load(String path) throws Exception {
+		return IOUtils.toString(_SiteBuilder.class.getResource(String.format("/demo.site/%s", path)), "utf-8");
 	}
 	
 	private Map<String, String> buildConfig() {

@@ -41,12 +41,14 @@ public class FileSystemUtil {
 		return dataDir;
 	}
 	
-	public Path getDataDir(String... parts) {
-		Path path = Paths.get(dataDir.toAbsolutePath().toString(), parts);
+	public Path getSitesDir(String... parts) {
+		if(parts == null)
+			return getAndCheckSitesDir();
+		Path path = Paths.get(getAndCheckSitesDir().toAbsolutePath().toString(), parts);
 		return path;
 	}
 	
-	public Path getAndCheckSitesDataDir() throws RuntimeException {
+	public Path getAndCheckSitesDir() throws RuntimeException {
 		if(sm.getSite() == null)
 			throw new IllegalArgumentException("No current site found!");
 		Path dir = Paths.get(dataDir.toString(), sm.getSite().getUrl());
@@ -61,7 +63,7 @@ public class FileSystemUtil {
 	}
 	
 	public Path getSiteExportDirectory() {
-		return Paths.get(getAndCheckSitesDataDir().toString(), exportFolder);
+		return Paths.get(getAndCheckSitesDir().toString(), exportFolder);
 	}
 	
 }

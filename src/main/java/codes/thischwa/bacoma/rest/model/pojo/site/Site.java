@@ -75,7 +75,7 @@ public class Site extends Level {
 	public void addOtherResource(OtherResource otherResource) {
 		otherResources.add(otherResource);
 	}
-	
+			
 	public Template getLayoutTemplate() {
 		return layoutTemplate;
 	}

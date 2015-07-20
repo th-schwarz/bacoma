@@ -31,7 +31,7 @@ import codes.thischwa.bacoma.rest.render.context.object.tagtool.LinkTagTool;
 /**
  * Context object to provide information about the current site and dependent objects.
  */
-@Component("siteobjecttool")
+@Component("sitetool")
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedPojoHelper, IContextObjectNeedViewMode {
 	private final Logger logger = LoggerFactory.getLogger(getClass());

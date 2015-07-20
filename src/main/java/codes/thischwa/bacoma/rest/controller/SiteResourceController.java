@@ -11,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,8 @@ import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.rest.model.pojo.site.SiteResourceType;
+import codes.thischwa.bacoma.rest.util.EnumUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 /**
@@ -33,7 +36,6 @@ import codes.thischwa.bacoma.rest.util.ServletUtil;
  * </ul>
  */
 @Controller
-@RequestMapping(value = "/site")
 public class SiteResourceController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -41,7 +43,7 @@ public class SiteResourceController extends AbstractController {
 	@RequestMapping(value = "/resource/static", method = RequestMethod.GET)
 	public ResponseEntity<?> getStaticResource(@RequestParam String path) {
 		logger.debug("enterded #getStaticResource, path={}", path);
-		Path resource = fileSystemUtil.getDataDir(getProperty("site.dir.staticresource"), path);
+		Path resource = fileSystemUtil.getSitesDir(getProperty("site.dir.staticresource"), path);
 		if (!Files.exists(resource)) {
 			throw new ResourceNotFoundException(getSite(), path);
 		}
@@ -55,23 +57,26 @@ public class SiteResourceController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/resource/css", method = RequestMethod.GET)
-	public ResponseEntity<?> getNamedCss(@RequestParam String name) {
-		logger.debug("enterded #getNamedCss, name={}", name);
-		CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(cu.getSite(), name);
-		byte[] cssContent = css.getText().getBytes(getDefaultCharset());
-		return ResponseEntity.ok().contentLength(cssContent.length).contentType(ServletUtil.MEDIATYPE_TEXT_CSS)
-				.body(new ByteArrayResource(cssContent));
-	}
-
-	@RequestMapping(value = "/resource/other", method = RequestMethod.GET)
-	public ResponseEntity<?> getNamedOther(@RequestParam String name) {
-		logger.debug("enterded #getNamedOther, name={}", name);
-		OtherResource or = BoInfo.getNamedOtherResource(cu.getSite(), name);
-		byte[] orContent = or.getText().getBytes(getDefaultCharset());
+	@RequestMapping(value = "/resource/{type}", method = RequestMethod.GET, params = {"name"})
+	public ResponseEntity<?> getSiteResource(@PathVariable String type, @RequestParam("name") String name) {
+		logger.debug("enterded #getSiteResource: type={}, name={}", type, name);
+		SiteResourceType resourceType = EnumUtil.valueOfIgnoreCase(SiteResourceType.class, type);
+		byte[] content;
+		switch(resourceType) {
+			case CSS: 
+				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(cu.getSite(), name);
+				content = css.getText().getBytes(getDefaultCharset());
+				break;
+			case OTHER:
+				OtherResource or = BoInfo.getNamedOtherResource(cu.getSite(), name);
+				content = or.getText().getBytes(getDefaultCharset());
+				break;
+			default:
+				throw new IllegalArgumentException(String.format("Type not allowed in this context: ", type));
+		}
 		MediaType mt = ServletUtil.parseMediaType(name);
 
-		return ResponseEntity.ok().contentLength(orContent.length).contentType(mt)
-				.body(new ByteArrayResource(orContent));
+		return ResponseEntity.ok().contentLength(content.length).contentType(mt)
+				.body(new ByteArrayResource(content));
 	}
 }

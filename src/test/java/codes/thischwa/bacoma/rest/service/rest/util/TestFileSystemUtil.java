@@ -18,8 +18,11 @@ public class TestFileSystemUtil extends GenericSpringJUnitTest {
 
 	@Test
 	public void testGetDataDir() {
-		Path actual = fileSystemUtil.getDataDir("a", "b");
-		assertEquals(Paths.get(System.getProperty("user.dir"), "data", "a", "b"), actual);
+		Path actual = fileSystemUtil.getSitesDir();
+		assertEquals(Paths.get(System.getProperty("user.dir"), "data", "site.test"), actual);
+		
+		actual = fileSystemUtil.getSitesDir("a", "b");
+		assertEquals(Paths.get(System.getProperty("user.dir"), "data", "site.test", "a", "b"), actual);
 	}
 
 }

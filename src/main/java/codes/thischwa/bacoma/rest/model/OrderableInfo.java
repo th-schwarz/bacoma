@@ -24,12 +24,12 @@ public class OrderableInfo {
 		return (pos < orderable.getFamily().size()-1);
 	}
 
-	public static IOrderable<?> getNext(final IOrderable<?> orderable) {
+	public static <T extends IOrderable<?>> T getNext(final T orderable) {
 		if (!hasNext(orderable))
 			return null;
 
 		@SuppressWarnings("unchecked")
-		List<IOrderable<?>> family = (List<IOrderable<?>>) orderable.getFamily();
+		List<T> family = (List<T>) orderable.getFamily();
 		int wantedPos = family.indexOf(orderable) + 1;
 		return family.get(wantedPos);
 	}
@@ -40,12 +40,12 @@ public class OrderableInfo {
 		return (!isFirst(orderable));
 	}
 
-	public static IOrderable<?> getPrevious(final IOrderable<?> orderable) {
+	public static  <T extends IOrderable<?>> T getPrevious(final T orderable) {
 		if (!hasPrevious(orderable))
 			return null;
 		
 		@SuppressWarnings("unchecked")
-		List<IOrderable<?>> family = (List<IOrderable<?>>) orderable.getFamily();
+		List<T> family = (List<T>) orderable.getFamily();
 		int wantedPos = family.indexOf(orderable) - 1;
 		return family.get(wantedPos);
 	}
