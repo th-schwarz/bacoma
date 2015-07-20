@@ -9,7 +9,7 @@ import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.ContextUtility;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
-public class AbstractController {
+public abstract class AbstractController {
 	
 	private String defaultEncoding;
 	

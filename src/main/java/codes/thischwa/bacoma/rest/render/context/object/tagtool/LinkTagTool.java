@@ -10,11 +10,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import codes.thischwa.bacoma.rest.render.ViewMode;
+import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectCommon;
-import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedPojoHelper;
-import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedViewMode;
-import codes.thischwa.bacoma.rest.render.context.PojoHelper;
+import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedRenderable;
 import codes.thischwa.bacoma.rest.render.context.RenderData;
 import codes.thischwa.bacoma.rest.render.context.util.Link;
 import codes.thischwa.bacoma.rest.render.context.util.PathTool;
@@ -24,10 +22,9 @@ import codes.thischwa.bacoma.rest.render.context.util.PathTool;
  */
 @Component(value="linktagtool")
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCommon, IContextObjectNeedPojoHelper, IContextObjectNeedViewMode {
+public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCommon, IContextObjectNeedRenderable {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	private PojoHelper pojoHelper;
-	private ViewMode viewMode;
+	private IRenderable renderable;
 	private boolean isExternalLink = false;
 	
 	@Autowired
@@ -42,15 +39,9 @@ public class LinkTagTool extends GenericXhtmlTagTool implements IContextObjectCo
 	public LinkTagTool() {
 		super("a");
 	}
-
-	@Override
-	public void setViewMode(final ViewMode viewMode) {
-		this.viewMode = viewMode;
-	}
-
-	@Override
-	public void setPojoHelper(PojoHelper pojoHelper) {
-		this.pojoHelper = pojoHelper;
+	
+	public void setRenderable(IRenderable renderable) {
+		this.renderable = renderable;
 	}
 
 	public LinkTagTool setHref(final String href) {

@@ -34,7 +34,7 @@ public class _SiteBuilder {
 		site.setId(UUID.fromString("d20e9e25-0000-0000-0000-000000000000"));
 		site.setUrl("site.test");
 		site.setTitle("A Test Site");
-		site.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000001", commonPageTemplateID, "frontpage", "welcome", load("welcome.page")));
+		site.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000001", commonPageTemplateID, "frontpage", "Welcome", load("welcome.page")));
 		site.setLayoutTemplate(buildLayoutTemplate());
 		site.setConfiguration(buildConfig());
 		site.addTemplate(buildPageTemplate());

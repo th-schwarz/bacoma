@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Content;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.render.ViewMode;
@@ -20,12 +20,12 @@ import codes.thischwa.bacoma.rest.render.ViewMode;
  */
 public class ContextObjectManager {
 	private final static Logger logger = LoggerFactory.getLogger(ContextObjectManager.class);
-	private PojoHelper pojoHelper;
+	private IRenderable renderable;
 	private ViewMode viewMode;
 	private Map<String, Object> contextObjects = new HashMap<>();
 
-	public ContextObjectManager(final PojoHelper pojoHelper, final ViewMode viewMode, final ApplicationContext applicationContext) {
-		this.pojoHelper = pojoHelper;
+	public ContextObjectManager(final IRenderable renderable, final ViewMode viewMode, final ApplicationContext applicationContext) {
+		this.renderable = renderable;
 		this.viewMode = viewMode;
 		
 		// collect the common objects, because these are always needed
@@ -78,10 +78,8 @@ public class ContextObjectManager {
 
 	private void configureContextObject(Object contextObject) {
 		List<?> interfaces = Arrays.asList(contextObject.getClass().getInterfaces());
-		if (interfaces.contains(IContextObjectNeedPojoHelper.class))
-			((IContextObjectNeedPojoHelper) contextObject).setPojoHelper(pojoHelper);
-		if (interfaces.contains(IContextObjectNeedViewMode.class))
-			((IContextObjectNeedViewMode) contextObject).setViewMode(viewMode);
+		if (interfaces.contains(IContextObjectNeedRenderable.class))
+			((IContextObjectNeedRenderable) contextObject).setRenderable(renderable);
 	}
 
 	/**
@@ -112,11 +110,10 @@ public class ContextObjectManager {
 	 * @param viewMode
 	 * @return Map of context objects.
 	 */
-	public static Map<String, Object> get(final PojoHelper pojoHelper, final ViewMode viewMode, final ApplicationContext applicationContext) {
-		if (pojoHelper == null || viewMode == null)
+	public static Map<String, Object> get(final IRenderable renderable, final ViewMode viewMode, final ApplicationContext applicationContext) {
+		if (renderable == null || viewMode == null)
 			throw new IllegalArgumentException("Missed one or more basic parameters!");
-		ContextObjectManager contextObjectManager = new ContextObjectManager(pojoHelper, viewMode, applicationContext);
-		AbstractBacomaObject<?> renderable = pojoHelper.get();
+		ContextObjectManager contextObjectManager = new ContextObjectManager(renderable, viewMode, applicationContext);
 	
 		// Initializing depended on the TYPE of the IRenderable.
 //		if (InstanceUtil.isGallery(renderable)) {
@@ -139,8 +136,7 @@ public class ContextObjectManager {
 			throw new IllegalArgumentException("Unknown type of PersitentPojo: " + renderable.getClass().getName());
 	
 		// initialization of the basic context objects
-		contextObjectManager.initializeContextObject(IContextObjectNeedPojoHelper.class, applicationContext);
-		contextObjectManager.initializeContextObject(IContextObjectNeedViewMode.class,applicationContext);
+		contextObjectManager.initializeContextObject(IContextObjectNeedRenderable.class, applicationContext);
 		
 		return contextObjectManager.getContextObjects();
 	}

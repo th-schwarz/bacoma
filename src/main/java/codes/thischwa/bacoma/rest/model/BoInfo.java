@@ -196,4 +196,13 @@ public class BoInfo {
 		}
 		throw new ResourceNotFoundException(site, name);
 	}
+
+	public static Level getLevel(IRenderable renderable) {
+		// TODO respect special case for image (gallery)
+		if(InstanceUtil.isPage(renderable)) {
+			Page page = (Page)renderable;
+			return page.getParent();
+		} else
+			throw new UnsupportedOperationException();
+	}
 }

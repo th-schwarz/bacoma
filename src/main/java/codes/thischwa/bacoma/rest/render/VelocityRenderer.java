@@ -14,12 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.render.context.ContextObjectManager;
-import codes.thischwa.bacoma.rest.render.context.PojoHelper;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Service
@@ -68,11 +67,9 @@ public class VelocityRenderer {
 	 */
 	public void render(Writer writer, final IRenderable renderable, final ViewMode viewMode,
 			final Map<String, Object> additionalContextObjects) {
-		logger.debug("Try to render: " + renderable);
-		PojoHelper pojoHelper = new PojoHelper();
-		pojoHelper.putpo((AbstractBacomaObject<?>) renderable);
-		Site site = pojoHelper.getSite();
-		Map<String, Object> contextObjects = ContextObjectManager.get(pojoHelper, viewMode, applicationContext);
+		logger.debug("Try to render: {}", renderable);
+		Site site = BoInfo.getSite(renderable);
+		Map<String, Object> contextObjects = ContextObjectManager.get(renderable, viewMode, applicationContext);
 		if (logger.isDebugEnabled()) {
 			logger.debug("context objects:");
 			for (String objName : contextObjects.keySet()) {

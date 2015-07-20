@@ -1,5 +1,5 @@
 ##parse('content.vm')
-##parse('user_menu.vm')
+#parse('menu.vm')
 
 <div id="content">
   $content

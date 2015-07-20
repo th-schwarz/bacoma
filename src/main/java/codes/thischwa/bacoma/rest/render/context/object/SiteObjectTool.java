@@ -15,17 +15,14 @@ import org.springframework.stereotype.Component;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IOrderable;
 import codes.thischwa.bacoma.rest.model.IRenderable;
+import codes.thischwa.bacoma.rest.model.InstanceUtil;
 import codes.thischwa.bacoma.rest.model.OrderableInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.render.VelocityRenderer;
-import codes.thischwa.bacoma.rest.render.ViewMode;
-import codes.thischwa.bacoma.rest.render.context.IContextObjectCommon;
-import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedPojoHelper;
-import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedViewMode;
-import codes.thischwa.bacoma.rest.render.context.PojoHelper;
+import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedRenderable;
 import codes.thischwa.bacoma.rest.render.context.object.tagtool.LinkTagTool;
 
 /**
@@ -33,27 +30,19 @@ import codes.thischwa.bacoma.rest.render.context.object.tagtool.LinkTagTool;
  */
 @Component("sitetool")
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedPojoHelper, IContextObjectNeedViewMode {
+public class SiteObjectTool implements IContextObjectNeedRenderable {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	private PojoHelper pojoHelper;
 	private Site site;
 	private IRenderable renderable;
-	private ViewMode viewMode;
 	@Autowired private VelocityRenderer velocityRenderer;
 	@Autowired private LinkTagTool linkTagTool; 
 	
 	@Override
-	public void setPojoHelper(final PojoHelper pojoHelper) {
-		this.pojoHelper = pojoHelper;
-		this.renderable = this.pojoHelper.getRenderable();
+	public void setRenderable(IRenderable renderable) {
+		this.renderable = renderable;
 		site = BoInfo.getSite(renderable);
 	}
-
-	@Override
-	public void setViewMode(final ViewMode viewMode) {
-		this.viewMode = viewMode;
-	}
-
+	
 	/**
 	 * @return The current {@link Site}.
 	 */
@@ -65,7 +54,7 @@ public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedP
 	 * @return The current {@link Level} or null.
 	 */
 	public Level getLevel() {
-		return this.pojoHelper.getLevel();
+		return BoInfo.getLevel(renderable);
 	}
 
 	/**
@@ -127,7 +116,7 @@ public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedP
 	 * @return The current {@link Page} or null.
 	 */
 	public Page getPage() {
-		return this.pojoHelper.getPage();
+		return (InstanceUtil.isPage(renderable)) ? (Page)renderable : null;
 	}
 
 //	/**
@@ -163,16 +152,17 @@ public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedP
 	 * @return The content field with the desired name of the current {@link Page}.
 	 */
 	public String getContent(final String fieldName) {
-		if (this.pojoHelper.getPage() == null) {
+		if(InstanceUtil.isPage(renderable)) {
 			logger.warn("No current page found!");
 			return "";
 		}
-		if (CollectionUtils.isEmpty(this.pojoHelper.getPage().getContent())) {
+		Page page = (Page) renderable;
+		if (CollectionUtils.isEmpty(page.getContent())) {
 			logger.debug("Page has no content!");
 			return "";
 		}
 
-		String value = BoInfo.getValue(this.pojoHelper.getPage(), fieldName);
+		String value = BoInfo.getValue(page, fieldName);
 		if (value == null) {
 			logger.warn("No value found for content named: ".concat(fieldName));
 			return "";
@@ -180,8 +170,7 @@ public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedP
 
 //		imageTagTool.setViewMode(viewMode);
 //		imageTagTool.setPojoHelper(this.pojoHelper);
-		linkTagTool.setViewMode(viewMode);
-		linkTagTool.setPojoHelper(this.pojoHelper);
+		linkTagTool.setRenderable(page);
 		Map<String, Object> ctxObjs = new HashMap<>(1);
 //		ctxObjs.put("imagetagtool", imageTagTool);
 		ctxObjs.put("linktagtool", linkTagTool);
@@ -192,8 +181,9 @@ public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedP
 	 * @param renderable
 	 * @return True, if the desired object is inside the current object path.
 	 */
-	public boolean hierarchyContains(AbstractBacomaObject<?> po) {
-		return this.pojoHelper.containsInBreadcrumbs(po);
+	public boolean hierarchyContains(AbstractBacomaObject<?> bo) {
+		List<AbstractBacomaObject<?>> crumbs = BoInfo.getBreadcrumbs((AbstractBacomaObject<?>) renderable);
+		return crumbs.contains(bo);
 	}
 
 //	/**
@@ -217,7 +207,7 @@ public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedP
 	 * @return Welcome page of the {@link Site} or null.
 	 */
 	public Page getWelcomePage() {
-		List<Page> pages = this.pojoHelper.getSite().getPages();
+		List<Page> pages = BoInfo.getSite(renderable).getPages();
 		return (CollectionUtils.isEmpty(pages)) ? null : pages.get(0);
 	}
 
@@ -225,7 +215,7 @@ public class SiteObjectTool implements IContextObjectCommon, IContextObjectNeedP
 	 * @return A list of breadcrumbs without the beginning site object.
 	 */
 	public List<AbstractBacomaObject<?>> getBreadcrumbs() {
-		List<AbstractBacomaObject<?>> crumbs = this.pojoHelper.getCurrentBreadcrumbs();
+		List<AbstractBacomaObject<?>> crumbs = BoInfo.getBreadcrumbs((AbstractBacomaObject<?>) renderable);
 		if (!crumbs.isEmpty())
 			crumbs.remove(0);
 		return crumbs;
