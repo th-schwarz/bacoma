@@ -5,6 +5,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import codes.thischwa.bacoma.rest.model.OrderableInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectCommon;
@@ -31,11 +32,19 @@ public class SiteLinkTool implements IContextObjectCommon {
 		return linkResourceTool.setOther(name).toString();
 	}
 	
-	public String getPage(Page page) {
+	public String get(Page page) {
 		return linkPageTool.set(page).toString();
 	}	
 		
-	public String getLevel(Level level) {
+	public String get(Level level) {
 		return linkPageTool.set(level).toString();
+	}
+	
+	public String getPrevious(Page page) {
+		return linkPageTool.set(OrderableInfo.getPrevious(page)).toString();
+	}
+
+	public String getNext(Page page) {
+		return linkPageTool.set(OrderableInfo.getNext(page)).toString();
 	}
 }

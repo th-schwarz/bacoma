@@ -3,11 +3,11 @@
   #set( $welcomePage = $sitetool.WelcomePage )
   #set( $currentPage = $sitetool.Page)
   <li>
-    <a#if($welcomePage.equals($currentPage)) class="selected"#end href="$sitelinktool.getPage($welcomePage)">$utils.escape($welcomePage.title)</a>
+    <a#if($welcomePage.equals($currentPage)) class="selected"#end href="$sitelinktool.get($welcomePage)">$utils.escape($welcomePage.title)</a>
   </li>#end
-#foreach( $level in $sitetool.Site.sublevels )
+#foreach( $level in $sitetool.Site.Sublevels )
   <li>
-    <a#if($sitetool.hierarchyContains($level)) class="selected"#end href="$sitelinktool.getLevel($level)">$utils.escape($level.title)</a>
+    <a#if($sitetool.hierarchyContains($level)) class="selected"#end href="$sitelinktool.get($level)">$utils.escape($level.title)</a>
     #if($level.hasSublevels())#submenu($level.sublevels)#end
   </li>
 #end
@@ -17,7 +17,7 @@
 
 #macro(submenu $sublevels)
       <ul>
-      #foreach( $sublevel in $sublevels)<li class="menu_main"><a#if($sitetool.hierarchyContains($sublevel)) class="selected"#end href="$sitelinktool.getLevel($sublevel)">$utils.escape($sublevel.title)</a></li>#end
+      #foreach( $sublevel in $sublevels)<li class="menu_main"><a#if($sitetool.hierarchyContains($sublevel)) class="selected"#end href="$sitelinktool.get($sublevel)">$utils.escape($sublevel.title)</a></li>#end
       </ul>
 #end
 
@@ -30,10 +30,10 @@
 <div id="menu_page">
 <p>
 #if($sitetool.getHasPrevious($page))
-  <a href="$sitelinktool.getPreviousPage($page)">previous</a> &nbsp; &nbsp;
+  <a href="$sitelinktool.getPrevious($page)">previous</a> &nbsp; &nbsp;
 #end
 #if($sitetool.getHasNext($page))
-  <a href="$sitelinktool.getNextPage($page)">next</a>
+  <a href="$sitelinktool.getNext($page)">next</a>
 #end
 </p>
 </div>

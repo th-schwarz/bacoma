@@ -37,9 +37,9 @@ public class _SiteBuilder {
 		site.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000001", commonPageTemplateID, "frontpage", "Welcome", load("welcome.page")));
 		site.setLayoutTemplate(buildLayoutTemplate());
 		site.setConfiguration(buildConfig());
-		site.addTemplate(buildPageTemplate());
+		site.getTemplates().add(buildPageTemplate());
 		site.getCascadingStyleSheets().add(builtStyleSheet());
-		site.addMacro(buildMacro());
+		site.getMacros().add(buildMacro());
 		
 		Level lev_1 = buildLevel("d20e9e25-0002-0001-0000-000000000000", site, "1_level", "Level with 1 page");
 		site.add(lev_1);

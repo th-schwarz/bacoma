@@ -58,20 +58,20 @@ public class ContextUtility {
 		return siteManager.getObject(uuid);
 	}
 
-	public void setLevel(ReqLevel level) {
-		siteManager.setLevel(level);
+	public void addLevel(ReqLevel level) {
+		siteManager.addLevel(level);
 	}
 
-	public void setSiteResource(GenericRequestSiteResource macro) {
-		siteManager.setSiteResource(macro);
+	public void addSiteResource(GenericRequestSiteResource macro) {
+		siteManager.addSiteResource(macro);
 	}
 	
-	public void setTemplate(ReqTemplate template) {
-		siteManager.setTemplate(template);
+	public void addTemplate(ReqTemplate template) {
+		siteManager.addTemplate(template);
 	}
 	
 	public void addPage(ReqPage page) {
-		siteManager.setPage(page);
+		siteManager.addPage(page);
 	}
 
 	public void setConfiguration(Map<String, String> config) {
@@ -80,5 +80,9 @@ public class ContextUtility {
 
 	public UUID setLayoutTemplate(String text) {
 		return siteManager.setLayoutTemplate(text);
+	}
+
+	public void remove(UUID uuid) {
+		siteManager.remove(uuid);
 	}
 }

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
@@ -39,21 +40,21 @@ public class SiteManager {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private Site site;
 	private VelocityEngine velocityEngine;
-	
+
 	@Autowired
 	private ConfigurationHolder defaultConfigurationHolder;
-	
+
 	private Map<UUID, AbstractBacomaObject<?>> objectsPerIdentifier = new HashMap<>();
-	
+
 	private Map<String, String> siteConfig = new HashMap<>();
-	
+
 	private ViewMode viewMode = ViewMode.PREVIEW;
 
 	public void init(Site site) throws IOException {
 		this.site = site;
 		objectsPerIdentifier.clear();
 		identify(site);
-		
+
 		// ** build the configuration of the site
 		siteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "site"));
 		siteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "velocity"));
@@ -61,7 +62,7 @@ public class SiteManager {
 			siteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "site"));
 			siteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "velocity"));
 		}
-		
+
 		velocityEngine = buildVelocityEngine();
 	}
 
@@ -70,15 +71,15 @@ public class SiteManager {
 			throw new SiteNotLoadedException();
 		return site;
 	}
-	
+
 	public ViewMode getViewMode() {
 		return viewMode;
 	}
-	
+
 	public void setViewMode(ViewMode viewMode) {
 		this.viewMode = viewMode;
 	}
-	
+
 	/**
 	 * @return the complete site configuration (merged with defaults)
 	 */
@@ -87,7 +88,7 @@ public class SiteManager {
 			throw new SiteNotLoadedException();
 		return siteConfig;
 	}
-	
+
 	public VelocityEngine getVelocityEngine() {
 		if(site == null)
 			throw new SiteNotLoadedException();
@@ -116,48 +117,48 @@ public class SiteManager {
 					identify(t);
 			}
 		} else if(InstanceUtil.isPage(obj)) {
-			Page p = (Page)obj;
+			Page p = (Page) obj;
 			if(p.getContent() != null) {
-				for(Content c : p.getContent()) 
+				for(Content c : p.getContent())
 					objectsPerIdentifier.put(c.getId(), c);
 			}
 		}
 	}
-	
+
 	private VelocityEngine buildVelocityEngine() throws IOException {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		// merge the configs
 		Map<String, String> velConfig = ConfigurationUtil.getProperties(siteConfig, "velocity", true);
-		
+
 		Properties props = new Properties();
 		props.putAll(velConfig);
-		
+
 		VelocityEngine ve = new VelocityEngine();
 		ve.init(props);
-		
+
 		StringResourceRepository repo = StringResourceLoader.getRepository();
 
 		// add site specific macros
-		if (site.getMacros() != null)
-			for (Macro macro : site.getMacros())
+		if(site.getMacros() != null)
+			for(Macro macro : site.getMacros())
 				repo.putStringResource(macro.getName(), macro.getText());
-		
+
 		// add content.vm
-//		String content = IOUtils.toString(SiteManager.class.getResourceAsStream("/vm/content.vm"));
-//		repo.putStringResource("content.vm", content);
-					
+		// String content = IOUtils.toString(SiteManager.class.getResourceAsStream("/vm/content.vm"));
+		// repo.putStringResource("content.vm", content);
+
 		logger.info("*** VelocityEngine successful initialized for: {}", site.getUrl());
 		return ve;
 	}
-	
+
 	public AbstractBacomaObject<?> getObject(UUID uuid) {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		return objectsPerIdentifier.get(uuid);
 	}
-	
-	public void setTemplate(ReqTemplate reqTemplate) {
+
+	public void addTemplate(ReqTemplate reqTemplate) {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		Template template;
@@ -167,7 +168,7 @@ public class SiteManager {
 			template = new Template();
 			template.setId(UUID.randomUUID());
 			objectsPerIdentifier.put(template.getId(), template);
-			site.addTemplate(template);
+			site.getTemplates().add(template);
 			reqTemplate.setId(template.getId());
 		}
 		template.setName(reqTemplate.getName());
@@ -175,7 +176,7 @@ public class SiteManager {
 		template.setType(reqTemplate.getTemplateType());
 	}
 
-	public void setLevel(ReqLevel reqLevel) {
+	public void addLevel(ReqLevel reqLevel) {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		Level level;
@@ -192,8 +193,8 @@ public class SiteManager {
 		level.setName(reqLevel.getName());
 		level.setTitle(reqLevel.getTitle());
 	}
-	
-	public void setPage(ReqPage reqPage) {
+
+	public void addPage(ReqPage reqPage) {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		Page page;
@@ -214,7 +215,7 @@ public class SiteManager {
 	public void setConfiguration(Map<String, String> config) {
 		if(site == null)
 			throw new SiteNotLoadedException();
-		site.setConfiguration(config);		
+		site.setConfiguration(config);
 		siteConfig.putAll(config);
 		VelocityEngine ve = null;
 		try {
@@ -239,7 +240,7 @@ public class SiteManager {
 		return layoutTemplate.getId();
 	}
 
-	public void setSiteResource(GenericRequestSiteResource reqSiteResource) {
+	public void addSiteResource(GenericRequestSiteResource reqSiteResource) {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		AbstractSiteResource siteResource;
@@ -247,27 +248,64 @@ public class SiteManager {
 			siteResource = (AbstractSiteResource) objectsPerIdentifier.get(reqSiteResource.getId());
 		} else {
 			switch(reqSiteResource.getResourceType()) {
-			case CSS:
-				siteResource = new CascadingStyleSheet();
-				site.addCascadingStyleSheet((CascadingStyleSheet) siteResource);
-				break;
-			case MACRO:
-				siteResource = new Macro();
-				site.addMacro((Macro) siteResource);
-				break;
-			case OTHER:
-				siteResource = new OtherResource();
-				site.addOtherResource((OtherResource) siteResource);
-				break;
-			default:
-				throw new IllegalArgumentException(
-						String.format("Forbidden or unknow resource-type: %s", reqSiteResource.getResourceType().toString()));
+				case CSS:
+					siteResource = new CascadingStyleSheet();
+					site.getCascadingStyleSheets().add((CascadingStyleSheet) siteResource);
+					break;
+				case MACRO:
+					siteResource = new Macro();
+					site.getMacros().add((Macro) siteResource);
+					break;
+				case OTHER:
+					siteResource = new OtherResource();
+					site.getOtherResources().add((OtherResource) siteResource);
+					break;
+				default:
+					throw new IllegalArgumentException(
+							String.format("Forbidden or unknow resource-type: %s", reqSiteResource.getResourceType().toString()));
 			}
 			siteResource.setId(UUID.randomUUID());
 			objectsPerIdentifier.put(siteResource.getId(), siteResource);
 			reqSiteResource.setId(siteResource.getId());
 		}
 		siteResource.setName(reqSiteResource.getName());
-		siteResource.setText(reqSiteResource.getText());		
+		siteResource.setText(reqSiteResource.getText());
+	}
+
+	public void remove(UUID id) {
+		if(site == null)
+			throw new SiteNotLoadedException();
+		AbstractBacomaObject<?> bo = objectsPerIdentifier.get(id);
+		if(bo == null)
+			throw new ResourceNotFoundException(site, id);
+		if(InstanceUtil.isSite(bo))
+			throw new IllegalArgumentException("A site-object can't be removed in this context!");
+		
+		if(InstanceUtil.isSiteResource(bo)) {
+			AbstractSiteResource siteResource = (AbstractSiteResource) bo;
+			switch(siteResource.getResourceType()) {
+				case CSS:
+					site.getCascadingStyleSheets().remove((CascadingStyleSheet) bo);
+					break;
+				case TEMPLATE:
+					site.getTemplates().remove((Template) bo);
+					break;
+				case OTHER:
+					site.getOtherResources().remove((OtherResource) bo);
+				default:
+					throw new IllegalArgumentException(String.format("Unknown resource-type: %s", siteResource.getResourceType().toString()));
+			}
+			
+		} else if(InstanceUtil.isJustLevel(bo)) {
+			Level lev = (Level) bo;
+			Level parent = lev.getParent();
+			parent.getSublevels().remove(lev);			
+		
+		} else if(InstanceUtil.isPage(bo)) {
+			Page page = (Page) bo;
+			Level parent = page.getParent();
+			parent.getPages().remove(page);
+			// TODO special handling for galleries and their images
+		}		
 	}
 }

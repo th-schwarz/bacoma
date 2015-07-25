@@ -69,8 +69,14 @@ public class Response {
 	public static ResponseEntity<Response> build(AbstractBacomaException e) {
 		Site site = e.getSite();
 		if(e instanceof ResourceNotFoundException) {
-			String resourceName = ((ResourceNotFoundException)e).getName();
-			String msg = String.format("%s: resource [%s] not found!", site.getUrl(), resourceName);
+			ResourceNotFoundException resourceNotFoundException = (ResourceNotFoundException)e;
+			String resourceName = resourceNotFoundException.getName();
+			UUID id = resourceNotFoundException.getId(); 
+			String msg;
+			if(id != null)
+				msg = String.format("%s: resource with the id [%s] not found!", site.getUrl(), id.toString());
+			else 
+				msg = String.format("%s: resource with the name [%s] not found!", site.getUrl(), resourceName);
 			return ResponseEntity.ok(error(msg));
 		} else if(e instanceof PersitException) {
 			PersitException pe = (PersitException) e;

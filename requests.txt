@@ -3,14 +3,17 @@ curl http://localhost:8080/site/getAll/
 curl http://localhost:8080/site/load/site.test/
 curl http://localhost:8080/site/get/
 curl http://localhost:8080/site/get/707cc97a-b1a3-4278-bce5-acd3874ba527
+curl http://localhost:8080/site/remove/d20e9e25-0003-0000-0000-000000000023
 curl http://localhost:8080/resource/static/?path=/test.js
 curl http://localhost:8080/resource/css/?name=format.css
 
-Macros bzw. Templates:
-curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/setSiteResource
-curl -i -POST -H 'Content-Type: application/json' -d '{"<html><body>$content</body></html>"}' http://localhost:8080/site/setLayoutTemplate
-curl -i -POST -H 'Content-Type: application/json' -d '{"text":"$content","name":"1_page-template","templateType":"PAGE"}' http://localhost:8080/site/setTemplate
+curl http://localhost:8080/render/get/d20e9e25-0003-0000-0000-000000000001
 
-curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"cf38ac24-91bf-444c-846e-a5b630d2b6de","name":"1_level"}' http://localhost:8080/site/setLevel
-curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"d20e9e25-7e34-4411-a70e-90104b8d60d0","name":"2_level","title":"2nd Level"}' http://localhost:8080/site/setLevel
+Macros bzw. Templates:
+curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/addSiteResource
+curl -i -POST -H 'Content-Type: application/json' -d '{"<html><body>$content</body></html>"}' http://localhost:8080/site/setLayoutTemplate
+curl -i -POST -H 'Content-Type: application/json' -d '{"text":"$content","name":"1_page-template","templateType":"PAGE"}' http://localhost:8080/site/addTemplate
+
+curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"cf38ac24-91bf-444c-846e-a5b630d2b6de","name":"1_level"}' http://localhost:8080/site/addLevel
+curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"d20e9e25-7e34-4411-a70e-90104b8d60d0","name":"2_level","title":"2nd Level"}' http://localhost:8080/site/addLevel
 

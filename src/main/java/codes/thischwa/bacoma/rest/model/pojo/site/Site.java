@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import codes.thischwa.bacoma.rest.model.InstanceUtil;
-
 /**
  * Base object for the site.
  */
@@ -35,11 +33,7 @@ public class Site extends Level {
 	public void setTemplates(List<Template> templates) {
 		this.templates = templates;
 	}
-	
-	public void addTemplate(Template template) {
-		templates.add(template);
-	}
-	
+		
 	public List<Macro> getMacros() {
 		return macros;
 	}
@@ -48,20 +42,12 @@ public class Site extends Level {
 		this.macros = macros;
 	}
 
-	public void addMacro(Macro macro) {
-		macros.add(macro);
-	}
-	
 	public List<CascadingStyleSheet> getCascadingStyleSheets() {
 		return cascadingStyleSheets;
 	}
 	
 	public void setCascadingStyleSheets(List<CascadingStyleSheet> cascadingStyleSheets) {
 		this.cascadingStyleSheets = cascadingStyleSheets;
-	}
-	
-	public void addCascadingStyleSheet(CascadingStyleSheet cascadingStyleSheet) {
-		cascadingStyleSheets.add(cascadingStyleSheet);
 	}
 	
 	public List<OtherResource> getOtherResources() {
@@ -71,11 +57,7 @@ public class Site extends Level {
 	public void setOtherResources(List<OtherResource> otherResources) {
 		this.otherResources = otherResources;
 	}
-	
-	public void addOtherResource(OtherResource otherResource) {
-		otherResources.add(otherResource);
-	}
-			
+				
 	public Template getLayoutTemplate() {
 		return layoutTemplate;
 	}
@@ -84,15 +66,6 @@ public class Site extends Level {
 		this.layoutTemplate = layoutTemplate;
 	}
 
-	public void remove(AbstractSiteResource res) {
-		if (InstanceUtil.isTemplate(res))
-			templates.remove(res);
-		else if (InstanceUtil.isMacro(res))
-			macros.remove(res);
-		else
-			throw new IllegalArgumentException("unknown site resource type");
-	}
-	
 	public Map<String, String> getConfiguration() {
 		return configuration;
 	}
