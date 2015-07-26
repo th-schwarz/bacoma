@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 
+import codes.thischwa.bacoma.GenericSpringJUnitTest;
 import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.Content;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
@@ -24,8 +25,7 @@ import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
  * - d20e9e25-0002-0000-0000-000000000 : levels
  * - d20e9e25-0003-0000-0000-000000000 : pages
  */
-public class _SiteBuilder {
-	
+public class _SiteBuilder { 
 	final String commonPageTemplateID = "d20e9e25-0001-0000-0000-000000000001";
 
 	public _SiteBuilder(File jsonFile) throws Exception {
@@ -121,12 +121,12 @@ public class _SiteBuilder {
 	}
 	
 	private String load(String path) throws Exception {
-		return IOUtils.toString(_SiteBuilder.class.getResource(String.format("/demo.site/%s", path)), "utf-8");
+		return IOUtils.toString(GenericSpringJUnitTest.getDemoSitePath().resolve(path).toUri());
 	}
 	
 	private Map<String, String> buildConfig() {
 		Map<String, String> config = new HashMap<>();
-		config.put("site.export.folder", "temp_export");
+		config.put("site.export.dir", "temp_export");
 		return config;
 	}
 	

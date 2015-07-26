@@ -1,6 +1,6 @@
-package codes.thischwa.bacoma.rest.service.rest.util;
+package codes.thischwa.bacoma.rest.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import codes.thischwa.bacoma.GenericSpringJUnitTest;
-import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 public class TestFileSystemUtil extends GenericSpringJUnitTest {
 	
@@ -25,4 +24,9 @@ public class TestFileSystemUtil extends GenericSpringJUnitTest {
 		assertEquals(Paths.get(System.getProperty("user.dir"), "data", "site.test", "a", "b"), actual);
 	}
 
+	@Test
+	public void testGetUniqueName() throws Exception {
+		Path path = GenericSpringJUnitTest.getDemoSitePath();
+		assertEquals("format_1.css", fileSystemUtil.getUniqueName(path, "format.css"));
+	}
 }

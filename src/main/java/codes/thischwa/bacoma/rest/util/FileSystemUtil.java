@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class FileSystemUtil {
 	@Autowired
 	private SiteManager sm;
 	
-	@Value("${site.export.folder}")
-	private String exportFolder;
+	@Value("${site.export.dir}")
+	private String exportDir;
 	
 	private Path dataDir;
 	
@@ -51,7 +52,7 @@ public class FileSystemUtil {
 	public Path getAndCheckSitesDir() throws RuntimeException {
 		if(sm.getSite() == null)
 			throw new IllegalArgumentException("No current site found!");
-		Path dir = Paths.get(dataDir.toString(), sm.getSite().getUrl());
+		Path dir = dataDir.resolve(sm.getSite().getUrl());
 		if(!Files.exists(dir)) {
 			try {
 				Files.createDirectories(dir);
@@ -63,7 +64,26 @@ public class FileSystemUtil {
 	}
 	
 	public Path getSiteExportDirectory() {
-		return Paths.get(getAndCheckSitesDir().toString(), exportFolder);
+		return Paths.get(getAndCheckSitesDir().toString(), exportDir);
+	}
+	
+	public String saveStaticSiteResource(String originalName, byte[] content) {
+		return null;
+	}
+	
+	protected String getUniqueName(Path path, String name) {
+		String baseName = FilenameUtils.getBaseName(name);
+		String extension = FilenameUtils.getExtension(name);
+		if(!extension.isEmpty())
+			extension = ".".concat(extension.toLowerCase());
+		int i = 0;
+		Path temp = path.resolve(name).toAbsolutePath();
+		while(Files.exists(temp)) {
+			i++;
+			String newName = String.format("%s_%d%s", baseName, i, extension);
+			temp = Paths.get(path.toString(), newName);
+		}
+		return temp.getFileName().toString();
 	}
 	
 }

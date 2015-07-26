@@ -240,7 +240,7 @@ public class SiteManager {
 		return layoutTemplate.getId();
 	}
 
-	public void addSiteResource(GenericRequestSiteResource reqSiteResource) {
+	public void addResource(GenericRequestSiteResource reqSiteResource) {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		AbstractSiteResource siteResource;

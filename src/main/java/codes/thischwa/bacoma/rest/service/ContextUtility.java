@@ -62,8 +62,8 @@ public class ContextUtility {
 		siteManager.addLevel(level);
 	}
 
-	public void addSiteResource(GenericRequestSiteResource macro) {
-		siteManager.addSiteResource(macro);
+	public void addResource(GenericRequestSiteResource macro) {
+		siteManager.addResource(macro);
 	}
 	
 	public void addTemplate(ReqTemplate template) {

@@ -10,7 +10,7 @@ curl http://localhost:8080/resource/css/?name=format.css
 curl http://localhost:8080/render/get/d20e9e25-0003-0000-0000-000000000001
 
 Macros bzw. Templates:
-curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/addSiteResource
+curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/addResource
 curl -i -POST -H 'Content-Type: application/json' -d '{"<html><body>$content</body></html>"}' http://localhost:8080/site/setLayoutTemplate
 curl -i -POST -H 'Content-Type: application/json' -d '{"text":"$content","name":"1_page-template","templateType":"PAGE"}' http://localhost:8080/site/addTemplate
 

@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
@@ -86,13 +88,27 @@ public class SiteController extends AbstractController {
 		return ResponseEntity.ok(Response.ok(id));
 	}
 
-	@RequestMapping(value="/addSiteResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> addSiteResource(@RequestBody GenericRequestSiteResource siteResource) {
+	@RequestMapping(value="/addResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addResource(@RequestBody GenericRequestSiteResource siteResource) {
 		if(!siteResource.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
-		cu.addSiteResource(siteResource);
+		cu.addResource(siteResource);
 		cu.persist();
 		return ResponseEntity.ok(Response.ok(siteResource.getId()));
+	}
+	
+	@RequestMapping(value="/addStaticResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addStaticResource(@RequestParam("file") MultipartFile file) {
+    	if (!file.isEmpty()) {
+            try {
+            	String filename = fileSystemUtil.saveStaticSiteResource(file.getName(), file.getBytes());
+                return ResponseEntity.ok(Response.ok(filename));
+            } catch (Exception e) {
+                return ResponseEntity.ok(Response.error(e.getMessage()));
+            }
+        } else {
+            return ResponseEntity.ok(Response.error("Empty file."));
+        }
 	}
 
 	@RequestMapping(value="/addTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})

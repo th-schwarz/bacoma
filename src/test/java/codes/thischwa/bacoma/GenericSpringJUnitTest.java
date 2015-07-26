@@ -3,6 +3,9 @@ package codes.thischwa.bacoma;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,6 +28,14 @@ public class GenericSpringJUnitTest {
 	protected SiteManager siteManager;
 
 	protected static File testFolder = new File("test_temp");
+	
+	public static final Path getDemoSitePath() {
+		try {
+			return Paths.get(GenericSpringJUnitTest.class.getResource("/demo.site/").toURI());
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 	@BeforeClass 
 	public static void setUpBeforeClass() throws Exception {

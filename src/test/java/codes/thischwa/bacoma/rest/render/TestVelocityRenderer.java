@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.service.rest.render;
+package codes.thischwa.bacoma.rest.render;
 
 import static org.junit.Assert.*;
 
