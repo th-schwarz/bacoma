@@ -4,6 +4,7 @@ curl http://localhost:8080/site/load/site.test/
 curl http://localhost:8080/site/get/
 curl http://localhost:8080/site/get/707cc97a-b1a3-4278-bce5-acd3874ba527
 curl http://localhost:8080/site/remove/d20e9e25-0003-0000-0000-000000000023
+curl -i -F "file=@/tmp/test.txt" http://localhost:8080/site/addStaticResource/
 curl http://localhost:8080/resource/static/?path=/test.js
 curl http://localhost:8080/resource/css/?name=format.css
 

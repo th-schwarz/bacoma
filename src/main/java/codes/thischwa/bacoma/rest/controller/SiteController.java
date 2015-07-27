@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.ServletContext;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,8 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
@@ -33,6 +36,7 @@ import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 @Controller
 @RequestMapping(value = "/site")
+@MultipartConfig(location = ServletContext.TEMPDIR)
 public class SiteController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -97,12 +101,13 @@ public class SiteController extends AbstractController {
 		return ResponseEntity.ok(Response.ok(siteResource.getId()));
 	}
 	
-	@RequestMapping(value="/addStaticResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> addStaticResource(@RequestParam("file") MultipartFile file) {
-    	if (!file.isEmpty()) {
+	@RequestMapping(value="/addStaticResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addStaticResource(@RequestPart("file") Part file) {
+		String originalFileName = file.getSubmittedFileName();
+    	if(originalFileName != null) {
             try {
-            	String filename = fileSystemUtil.saveStaticSiteResource(file.getName(), file.getBytes());
-                return ResponseEntity.ok(Response.ok(filename));
+            	String FileName = fileSystemUtil.saveStaticSiteResource(originalFileName, file.getInputStream());
+                return ResponseEntity.ok(Response.ok(FileName));
             } catch (Exception e) {
                 return ResponseEntity.ok(Response.error(e.getMessage()));
             }
@@ -110,7 +115,7 @@ public class SiteController extends AbstractController {
             return ResponseEntity.ok(Response.error("Empty file."));
         }
 	}
-
+	
 	@RequestMapping(value="/addTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> addTemplate(@RequestBody ReqTemplate template) {
 		if(!template.isValid())

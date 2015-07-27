@@ -1,17 +1,22 @@
 package codes.thischwa.bacoma.rest.util;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Service
@@ -21,6 +26,9 @@ public class FileSystemUtil {
 	
 	@Autowired
 	private SiteManager sm;
+	
+	@Autowired
+	private ConfigurationHolder configurationHolder;
 	
 	@Value("${site.export.dir}")
 	private String exportDir;
@@ -67,8 +75,22 @@ public class FileSystemUtil {
 		return Paths.get(getAndCheckSitesDir().toString(), exportDir);
 	}
 	
-	public String saveStaticSiteResource(String originalName, byte[] content) {
-		return null;
+	public String saveStaticSiteResource(String originalName, InputStream in) {
+		Path resourceFolder = getSitesDir(configurationHolder.get(sm.getSite(), "site.dir.staticresource"));
+		String fileName = getUniqueName(resourceFolder, originalName);
+		Path resourceFile = resourceFolder.resolve(fileName); 
+		OutputStream out = null;
+		try {
+			out = Files.newOutputStream(resourceFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+			IOUtils.copy(in, out);
+		} catch (IOException e) {
+			throw new RuntimeException(e); // TODO smarter handling
+		} finally {
+			IOUtils.closeQuietly(out);
+			IOUtils.closeQuietly(in);
+		}
+		
+		return fileName;
 	}
 	
 	protected String getUniqueName(Path path, String name) {

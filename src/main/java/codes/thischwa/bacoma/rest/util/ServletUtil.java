@@ -2,6 +2,7 @@ package codes.thischwa.bacoma.rest.util;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
@@ -54,5 +55,15 @@ public class ServletUtil {
 		String contentType = getMimeType(fileName);
 		if(StringUtils.isNotBlank(contentType))
 			resp.setContentType(contentType);
+	}
+	
+	public static String fetchContent(Part part, String key) {
+		final String partHeader = part.getHeader("content-disposition");
+		for(String content : partHeader.split(";")) {
+			if(content.trim().startsWith(key)) {
+				return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+			}
+		}
+		return null;
 	}
 }
