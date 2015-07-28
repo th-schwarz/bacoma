@@ -54,7 +54,7 @@ public class SiteController extends AbstractController {
 		logger.info("****** base-url: {}", baseUrl);
 		return ResponseEntity.ok(Response.ok());
 	}
-
+	
 	@RequestMapping(value="/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> getAll() {
 		logger.debug("entered #getSites");
@@ -74,6 +74,27 @@ public class SiteController extends AbstractController {
 			return new ResponseEntity<>(Response.error("Error while getting all sites."), HttpStatus.CONFLICT);
 		}
 		return ResponseEntity.ok(Response.ok(sites));
+	}
+	
+
+	@RequestMapping(value="/getAllStaticResources", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> getAllStaticResources() {
+		Path resourceFolder = fileSystemUtil.getStaticResourceDir();
+		List<String> resources = new ArrayList<>();
+		try {
+			for(Path p : Files.newDirectoryStream(resourceFolder, new DirectoryStream.Filter<Path>() {
+				@Override
+				public boolean accept(Path entry) throws IOException {
+					return Files.isRegularFile(entry) && !Files.isHidden(entry);
+				}
+			})) {
+				resources.add(p.getFileName().toString());
+			}
+			return ResponseEntity.ok(Response.ok(resources));
+		} catch (IOException e) {
+			logger.error("Error while getting static resources.", e);
+			return new ResponseEntity<>(Response.error("Error while getting static resources."), HttpStatus.CONFLICT);
+		}
 	}
 	
 	@RequestMapping(value="/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -106,8 +127,9 @@ public class SiteController extends AbstractController {
 		String originalFileName = file.getSubmittedFileName();
     	if(originalFileName != null) {
             try {
-            	String FileName = fileSystemUtil.saveStaticSiteResource(originalFileName, file.getInputStream());
-                return ResponseEntity.ok(Response.ok(FileName));
+            	String fileName = fileSystemUtil.saveStaticSiteResource(originalFileName, file.getInputStream());
+                logger.debug("Static resource added successful: {}", fileName);
+            	return ResponseEntity.ok(Response.ok(fileName));
             } catch (Exception e) {
                 return ResponseEntity.ok(Response.error(e.getMessage()));
             }
@@ -158,6 +180,21 @@ public class SiteController extends AbstractController {
 	public ResponseEntity<Response> remove(@PathVariable UUID uuid) {
 		cu.remove(uuid);
 		return ResponseEntity.ok(Response.ok());
-		
+	}
+	
+	@RequestMapping(value="/removeStaticResource/{name}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> removeStaticResource(@PathVariable String name) {
+		Path resourceFolder = fileSystemUtil.getStaticResourceDir();
+		Path staticResource = resourceFolder.resolve(name);
+		if(!Files.exists(staticResource))
+			return new ResponseEntity<>(Response.error("File not found!"), HttpStatus.BAD_REQUEST);
+		try {
+			Files.delete(staticResource);
+			logger.debug("Static resource successful deleted: {}", staticResource.toString());
+		} catch (IOException e) {
+			logger.error("Error while deleting static resources.", e);
+			return new ResponseEntity<>(Response.error("Error while deleting a static resources."), HttpStatus.CONFLICT);
+		}
+		return ResponseEntity.ok(Response.ok());
 	}
 }

@@ -5,10 +5,12 @@ curl http://localhost:8080/site/get/
 curl http://localhost:8080/site/get/707cc97a-b1a3-4278-bce5-acd3874ba527
 curl http://localhost:8080/site/remove/d20e9e25-0003-0000-0000-000000000023
 curl -i -F "file=@/tmp/test.txt" http://localhost:8080/site/addStaticResource/
-curl http://localhost:8080/resource/static/?path=/test.js
-curl http://localhost:8080/resource/css/?name=format.css
+curl http://localhost:8080/site/getAllStaticResources
+curl http://localhost:8080/site/removeStaticResource/test_3.txt/
+curl http://localhost:8080/site/resource/static/?path=/test.js
+curl http://localhost:8080/site/resource/css/?name=format.css
 
-curl http://localhost:8080/render/get/d20e9e25-0003-0000-0000-000000000001
+curl http://localhost:8080/site/render/get/d20e9e25-0003-0000-0000-000000000001
 
 Macros bzw. Templates:
 curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/addResource

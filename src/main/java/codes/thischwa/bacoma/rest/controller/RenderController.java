@@ -23,6 +23,7 @@ import codes.thischwa.bacoma.rest.render.VelocityRenderer;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 
 @Controller
+@RequestMapping(value = "/site")
 public class RenderController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());

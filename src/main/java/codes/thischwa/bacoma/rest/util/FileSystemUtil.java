@@ -75,8 +75,12 @@ public class FileSystemUtil {
 		return Paths.get(getAndCheckSitesDir().toString(), exportDir);
 	}
 	
+	public Path getStaticResourceDir() {
+		return getSitesDir(configurationHolder.get(sm.getSite(), "site.dir.staticresource"));
+	}
+	
 	public String saveStaticSiteResource(String originalName, InputStream in) {
-		Path resourceFolder = getSitesDir(configurationHolder.get(sm.getSite(), "site.dir.staticresource"));
+		Path resourceFolder = getStaticResourceDir();
 		String fileName = getUniqueName(resourceFolder, originalName);
 		Path resourceFile = resourceFolder.resolve(fileName); 
 		OutputStream out = null;
@@ -89,7 +93,6 @@ public class FileSystemUtil {
 			IOUtils.closeQuietly(out);
 			IOUtils.closeQuietly(in);
 		}
-		
 		return fileName;
 	}
 	

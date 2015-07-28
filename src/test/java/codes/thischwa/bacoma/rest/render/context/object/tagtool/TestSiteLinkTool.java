@@ -19,13 +19,13 @@ public class TestSiteLinkTool extends GenericSpringJUnitTest {
 	
 	@Test
 	public void testGetCss() {
-		assertEquals("/resource/css/?name=format.css", siteLinkTool.getCss("format.css"));
-		assertEquals("/resource/css/?name=format.css", siteLinkTool.getCss());
+		assertEquals("/site/resource/css/?name=format.css", siteLinkTool.getCss("format.css"));
+		assertEquals("/site/resource/css/?name=format.css", siteLinkTool.getCss());
 	}
 
 	@Test
 	public void testGetPage() {
 		AbstractBacomaObject<?> bo = siteManager.getObject(UUID.fromString("d20e9e25-0003-0000-0000-000000000001"));
-		assertEquals("/render/get/d20e9e25-0003-0000-0000-000000000001", siteLinkTool.get((Page)bo));
+		assertEquals("/site/render/get/d20e9e25-0003-0000-0000-000000000001", siteLinkTool.get((Page)bo));
 	}
 }
