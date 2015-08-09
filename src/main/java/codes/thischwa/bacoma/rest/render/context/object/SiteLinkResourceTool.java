@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.model.BoInfo;
+import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
+import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
@@ -19,6 +21,12 @@ class SiteLinkResourceTool {
 	private SiteManager siteManager;
 
 	private AbstractSiteResource resource;
+	
+	private IRenderable renderable;
+	
+	public void setRenderable(IRenderable renderable) {
+		this.renderable = renderable;
+	}
 
 	public SiteLinkResourceTool setCss(String name) {
 		resource = BoInfo.getNamedCascadingStyleSheet(siteManager.getSite(), name);
@@ -32,8 +40,14 @@ class SiteLinkResourceTool {
 
 	@Override
 	public String toString() {
-		if(siteManager.getViewMode() == ViewMode.EXPORT)
-			throw new UnsupportedOperationException();
+		if(siteManager.getViewMode() == ViewMode.EXPORT) {
+			if(renderable == null)
+				throw new IllegalArgumentException("Current renderable not set!");
+			String name = resource.getName();
+			Page currentPage = (Page)renderable;
+			String levelPath = ToolHelperUtilities.getURLRelativePathToRoot(currentPage.getParent());
+			return levelPath.concat(name);
+		}
 		switch(resource.getResourceType()) {
 			case CSS:
 				return Constants.LINK_SITE_CSS.replace("{name}", resource.getName());

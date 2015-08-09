@@ -1,0 +1,70 @@
+package codes.thischwa.bacoma.rest.render;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import codes.thischwa.bacoma.rest.model.BoInfo;
+import codes.thischwa.bacoma.rest.model.IRenderable;
+import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
+import codes.thischwa.bacoma.rest.service.SiteManager;
+import codes.thischwa.bacoma.rest.util.FileSystemUtil;
+
+@Service
+public class ExportRenderer {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private SiteManager sm;
+	
+	@Autowired
+	private FileSystemUtil fileSystemUtil;
+
+	@Autowired
+	private ConfigurationHolder defaultConfigurationHolder;
+	
+	@Autowired
+	private VelocityRenderer velocityRenderer;
+	
+	public void render() throws IOException {
+		logger.info("try to render : {}", sm.getSite().getUrl());
+		Path exportDir = fileSystemUtil.getSiteExportDirectory();
+		if(!Files.exists(exportDir)) {
+			Files.createDirectories(exportDir);
+			logger.debug("Export-dir successful created: {}", exportDir.toString());
+		} else {
+			logger.debug("Export-dir already exists: {}", exportDir.toString());
+			FileUtils.deleteDirectory(exportDir.toFile());
+			Files.createDirectories(exportDir);
+		}
+		
+		StringBuilder messages = new StringBuilder();
+		Set<IRenderable> renderables = BoInfo.collectRenderables(sm.getSite(), messages);
+		if(messages.length() >  0) {
+			logger.warn(messages.toString());
+			return;
+		}
+		 BoPathTool pathTool = new BoPathTool(sm.getSiteConfig());
+		for(IRenderable renderable : renderables) {
+			StringBuilderWriter writer = new StringBuilderWriter();
+			velocityRenderer.render(writer, renderable, ViewMode.EXPORT);
+			Path exportPath = pathTool.getExportFile(renderable, exportDir);
+			Path parent = exportPath.getParent();
+			if(!Files.exists(parent))
+				Files.createDirectories(parent);
+			Files.createFile(exportPath);
+			Files.write(exportPath, writer.toString().getBytes(defaultConfigurationHolder.get(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
+					StandardOpenOption.WRITE);
+		}
+	}
+	
+}

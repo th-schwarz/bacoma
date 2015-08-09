@@ -30,7 +30,7 @@ public class FileSystemUtil {
 	@Autowired
 	private ConfigurationHolder configurationHolder;
 	
-	@Value("${site.export.dir}")
+	@Value("${site.dir.export}")
 	private String exportDir;
 	
 	private Path dataDir;

@@ -16,9 +16,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.service.Persister;
 import codes.thischwa.bacoma.rest.service.SiteManager;
-import codes.thischwa.bacoma.rest.service._SiteBuilder;
+import codes.thischwa.bacoma.rest.service.SiteBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/bacoma-rest.xml")
@@ -39,13 +40,14 @@ public class GenericSpringJUnitTest {
 	
 	@BeforeClass 
 	public static void setUpBeforeClass() throws Exception {
-		new _SiteBuilder(testFolder);
+		new SiteBuilder(testFolder);
 	}
 	
 	@Before
 	public void init() throws Exception {
 		Persister persister = new Persister();
 		Site site = persister.load(testFolder, "site.test");
+		siteManager.setViewMode(ViewMode.PREVIEW);
 		siteManager.init(site);
 	}
 	

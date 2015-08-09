@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
@@ -51,6 +52,11 @@ public class VelocityRenderer {
 		} catch (Exception e) {
 			throw new RenderException("While string rendering: " + e.getMessage(), e);
 		}
+	}
+	
+
+	public void render(StringBuilderWriter writer, IRenderable renderable, ViewMode viewMode) {
+		render(writer, renderable, viewMode, null);
 	}
 	
 	/**
@@ -114,6 +120,4 @@ public class VelocityRenderer {
 		IOUtils.closeQuietly(stringWriter);
 		return stringWriter.toString();
 	}
-
-
 }
