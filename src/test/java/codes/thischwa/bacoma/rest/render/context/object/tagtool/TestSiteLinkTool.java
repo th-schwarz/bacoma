@@ -28,7 +28,7 @@ public class TestSiteLinkTool extends GenericSpringJUnitTest {
 		siteManager.setViewMode(ViewMode.EXPORT);
 		Page page = (Page) siteManager.getObject(SiteBuilder.uuidWelcomePage);
 		siteLinkTool.setRenderable(page);
-		assertEquals("index.html", siteLinkTool.getCss());
+		assertEquals("css/format.css", siteLinkTool.getCss());
 	}
 
 	@Test

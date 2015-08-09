@@ -11,6 +11,7 @@ import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
 import codes.thischwa.bacoma.rest.model.OrderableInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
@@ -22,11 +23,30 @@ class BoPathTool {
 	BoPathTool(Map<String, String> siteConfig) {
 		this.siteConfig = siteConfig;
 	}
+
+	/**
+	 * @return Export file path of an {@link AbstractSiteResource}.
+	 */
+	Path getExportFile(AbstractSiteResource res, Path exportDir) {
+		String folder;
+		switch(res.getResourceType()) {
+			case CSS:
+				folder = siteConfig.get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_CSS);
+				break;
+			case OTHER:
+				folder = siteConfig.get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_OTHER);
+				break;
+			default:
+				throw new IllegalArgumentException(
+						String.format("Illegal resourcee-type in this context: %s", res.getResourceType().toString()));
+		}
+		return exportDir.resolve(folder).resolve(res.getName());	
+	}
 	
 	/**
 	 * @return Export file path of an {@link IRenderable}.
 	 */
-	Path getExportFile(final IRenderable renderable, Path exportDir) {
+	Path getExportFile(IRenderable renderable, Path exportDir) {
 		Level parent;
 		AbstractBacomaObject<?> po = (AbstractBacomaObject<?>) renderable;
 //		if (InstanceUtil.isImage(renderable)) {
@@ -34,7 +54,7 @@ class BoPathTool {
 //			parent = (Level) gallery.getParent();
 //		} else
 			parent = (Level) po.getParent();
-		String containerPath = getFSHierarchicalContainerPathSegment(parent);
+		String containerPath = getFSHierarchicalPathSegment(parent);
 		Path outDir;
 		if (StringUtils.isNotBlank(containerPath)) 
 			outDir = exportDir.resolve(containerPath);
@@ -51,7 +71,7 @@ class BoPathTool {
 	 * @param level
 	 * @return Hierarchical path segment.
 	 */
-	private String getFSHierarchicalContainerPathSegment(final Level level) {
+	private String getFSHierarchicalPathSegment(Level level) {
 		if (level == null)
 			return "";
 		StringBuilder path = new StringBuilder();

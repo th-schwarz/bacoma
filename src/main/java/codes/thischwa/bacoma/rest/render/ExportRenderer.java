@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -11,10 +13,12 @@ import org.apache.commons.io.output.StringBuilderWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.AbstractResource;
 import org.springframework.stereotype.Service;
 
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
+import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
@@ -63,6 +67,17 @@ public class ExportRenderer {
 				Files.createDirectories(parent);
 			Files.createFile(exportPath);
 			Files.write(exportPath, writer.toString().getBytes(defaultConfigurationHolder.get(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
+					StandardOpenOption.WRITE);
+		}
+		List<AbstractSiteResource> resources = new ArrayList<>(sm.getSite().getCascadingStyleSheets());
+		resources.addAll(sm.getSite().getOtherResources());
+		for(AbstractSiteResource res : resources) {
+			Path exportPath = pathTool.getExportFile(res, exportDir);
+			Path parent = exportPath.getParent();
+			if(!Files.exists(parent))
+				Files.createDirectories(parent);
+			Files.createFile(exportPath);
+			Files.write(exportPath, res.getText().getBytes(defaultConfigurationHolder.get(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
 					StandardOpenOption.WRITE);
 		}
 	}

@@ -11,6 +11,7 @@ import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.render.ViewMode;
+import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Component
@@ -43,11 +44,24 @@ class SiteLinkResourceTool {
 		if(siteManager.getViewMode() == ViewMode.EXPORT) {
 			if(renderable == null)
 				throw new IllegalArgumentException("Current renderable not set!");
+			String resourceDir;
+			switch(resource.getResourceType()) {
+				case CSS:
+					resourceDir = siteManager.getSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_CSS);
+					break;
+				case OTHER:
+					resourceDir = siteManager.getSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_OTHER);
+					break;
+				default:
+					throw new IllegalArgumentException(
+							String.format("Illegal resourcee-type in this context: %s", resource.getResourceType().toString()));
+			}
 			String name = resource.getName();
 			Page currentPage = (Page)renderable;
 			String levelPath = ToolHelperUtilities.getURLRelativePathToRoot(currentPage.getParent());
-			return levelPath.concat(name);
+			return levelPath.concat(resourceDir).concat("/").concat(name);
 		}
+		
 		switch(resource.getResourceType()) {
 			case CSS:
 				return Constants.LINK_SITE_CSS.replace("{name}", resource.getName());
