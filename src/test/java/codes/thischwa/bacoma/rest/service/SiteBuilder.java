@@ -25,65 +25,81 @@ import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
  * - d20e9e25-0002-0000-0000-000000000 : levels
  * - d20e9e25-0003-0000-0000-000000000 : pages
  */
-public class _SiteBuilder { 
-	final String commonPageTemplateID = "d20e9e25-0001-0000-0000-000000000001";
+public class SiteBuilder { 
+	public static final UUID uuidCommonPageTemplate = UUID.fromString("d20e9e25-0001-0000-0000-000000000001");
+	public static final UUID uuidWelcomePage = UUID.fromString("d20e9e25-0003-0000-0000-000000000001");
+	
+	public static final UUID uuidLev1 = UUID.fromString("d20e9e25-0002-0001-0000-000000000000");
+	public static final UUID uuidLev1Page1 = UUID.fromString("d20e9e25-0003-0000-0000-000000000010");
+	
+	public static final UUID uuidLev2 = UUID.fromString("d20e9e25-0002-0002-0000-000000000000"); 
+	public static final UUID uuidLev2Page1 = UUID.fromString("d20e9e25-0003-0000-0000-000000000021");
+	public static final UUID uuidLev2Page2 = UUID.fromString("d20e9e25-0003-0000-0000-000000000022");
+	public static final UUID uuidLev2Page3 = UUID.fromString("d20e9e25-0003-0000-0000-000000000023");
+	
+	public static final UUID uuidLev3 = UUID.fromString("d20e9e25-0002-0003-0000-000000000000");
+	public static final UUID uuidLev3Page1 = UUID.fromString("d20e9e25-0003-0000-0000-000000000030");
+	public static final UUID uuidLev3Sub1 = UUID.fromString("d20e9e25-0002-0003-00010-000000000000");
+	public static final UUID uuidLev3Sub1Page1 = UUID.fromString("d20e9e25-0003-0000-0000-000000000031");
+	public static final UUID uuidLev3Sub2 = UUID.fromString("d20e9e25-0002-0003-00020-000000000000");
+	public static final UUID uuidLev3Sub2Page1 = UUID.fromString("d20e9e25-0003-0000-0000-000000000032");
 
-	public _SiteBuilder(File jsonFile) throws Exception {
+	public SiteBuilder(File jsonFile) throws Exception {
 		Persister persister  = new Persister();
 		Site site = new Site();
 		site.setId(UUID.fromString("d20e9e25-0000-0000-0000-000000000000"));
 		site.setUrl("site.test");
 		site.setTitle("A Test Site");
-		site.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000001", commonPageTemplateID, "frontpage", "Welcome", load("welcome.page")));
+		site.getPages().add(buildPage(uuidWelcomePage, uuidCommonPageTemplate, "frontpage", "Welcome", load("welcome.page")));
 		site.setLayoutTemplate(buildLayoutTemplate());
 		site.setConfiguration(buildConfig());
 		site.getTemplates().add(buildPageTemplate());
 		site.getCascadingStyleSheets().add(builtStyleSheet());
 		site.getMacros().add(buildMacro());
 		
-		Level lev_1 = buildLevel("d20e9e25-0002-0001-0000-000000000000", site, "1_level", "Level with 1 page");
+		Level lev_1 = buildLevel(uuidLev1, site, "1_level", "Level with 1 page");
 		site.add(lev_1);
-		lev_1.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000010", commonPageTemplateID, "frontpage", null, load("lev1_1.page")));
+		lev_1.getPages().add(buildPage(uuidLev1Page1, uuidCommonPageTemplate, "frontpage", null, load("lev1_1.page")));
 		
-		Level lev_2 = buildLevel("d20e9e25-0002-0002-0000-000000000000", site, "2_level", "Level with pages");
+		Level lev_2 = buildLevel(uuidLev2, site, "2_level", "Level with pages");
 		site.add(lev_2);
-		lev_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000021", commonPageTemplateID, "page1", null, load("lev2_1.page")));
-		lev_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000022", commonPageTemplateID, "page2", null, load("lev2_2.page")));
-		lev_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000023", commonPageTemplateID, "page3", null, load("lev2_3.page")));
+		lev_2.getPages().add(buildPage(uuidLev2Page1, uuidCommonPageTemplate, "page1", null, load("lev2_1.page")));
+		lev_2.getPages().add(buildPage(uuidLev2Page2, uuidCommonPageTemplate, "page2", null, load("lev2_2.page")));
+		lev_2.getPages().add(buildPage(uuidLev2Page3, uuidCommonPageTemplate, "page3", null, load("lev2_3.page")));
 		
-		Level lev_3 = buildLevel("d20e9e25-0002-0003-0000-000000000000", site, "3_level", "Level with Levels");
+		Level lev_3 = buildLevel(uuidLev3, site, "3_level", "Level with Levels");
 		site.add(lev_3);
-		lev_3.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000030", commonPageTemplateID, "frontpage", null, load("lev3_1.page")));
+		lev_3.getPages().add(buildPage(uuidLev3Page1, uuidCommonPageTemplate, "frontpage", null, load("lev3_1.page")));
 		
-		Level lev_3_1 = buildLevel("d20e9e25-0002-0003-00010-000000000000", site, "1_sub", "Sublevel 1");
+		Level lev_3_1 = buildLevel(uuidLev3Sub1, site, "1_sub", "Sublevel 1");
 		lev_3.add(lev_3_1);
-		lev_3_1.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000031", commonPageTemplateID, "frontpage", null, load("lev3-1_1.page")));
+		lev_3_1.getPages().add(buildPage(uuidLev3Sub1Page1, uuidCommonPageTemplate, "frontpage", null, load("lev3-1_1.page")));
 
-		Level lev_3_2 = buildLevel("d20e9e25-0002-0003-00020-000000000000", site, "2_sub", "Sublevel 2");
+		Level lev_3_2 = buildLevel(uuidLev3Sub2, site, "2_sub", "Sublevel 2");
 		lev_3.add(lev_3_2);
-		lev_3_2.getPages().add(buildPage("d20e9e25-0003-0000-0000-000000000032", commonPageTemplateID, "frontpage", null, load("lev3-1_2.page")));
+		lev_3_2.getPages().add(buildPage(uuidLev3Sub2Page1, uuidCommonPageTemplate, "frontpage", null, load("lev3-1_2.page")));
 		
 		persister.persist(jsonFile, site);
 	}
 	
-	private Level buildLevel(String id, Level parent, String name, String title) {
+	private Level buildLevel(UUID id, Level parent, String name, String title) {
 		Level l = new Level();
-		l.setId(UUID.fromString(id));
+		l.setId(id);
 		l.setName(name);
 		l.setTitle(title);
 		return l;
 	}
 	
-	private Page buildPage(String id, String templateID, String name, String title, String content) {
+	private Page buildPage(UUID id, UUID templateID, String name, String title, String content) {
 		Content c = new Content();
 		c.setName("content");
 		c.setValue(content);
 		Page page = new Page();
-		page.setId(UUID.fromString(id));
+		page.setId(id);
 		page.setName(name);
 		page.setTitle(title);
 		page.setContent(Arrays.asList(new Content[]{c}));
-		page.setTemplateID(UUID.fromString(templateID));
+		page.setTemplateID(templateID);
 		return page;
 	}
 	
@@ -131,6 +147,6 @@ public class _SiteBuilder {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		new _SiteBuilder(new File("test_temp"));
+		new SiteBuilder(new File("test_temp"));
 	}
 }
