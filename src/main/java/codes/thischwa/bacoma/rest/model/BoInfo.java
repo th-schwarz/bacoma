@@ -2,7 +2,9 @@ package codes.thischwa.bacoma.rest.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -205,4 +207,44 @@ public class BoInfo {
 		} else
 			throw new UnsupportedOperationException();
 	}
+	
+
+	public static Set<IRenderable> collectRenderables(final Level level) {
+		return collectRenderables(level, null);
+	}
+	
+	public static Set<IRenderable> collectRenderables(final Level level, StringBuilder messages) {
+		Set<IRenderable> renderables = new HashSet<IRenderable>();
+		collectRenderables(level, renderables, messages);
+		return renderables;
+	}
+	
+	private static void collectRenderables(final Level level, Set<IRenderable> renderables, StringBuilder messages) {
+		for (Level tmpContainer : level.getSublevels()) {
+			if (messages != null && !InstanceUtil.isSite(level) && CollectionUtils.isEmpty(level.getPages())) {
+				messages.append("Level has no page"); //$NON-NLS-1$
+				messages.append(level.getName());
+				messages.append('\n');
+				renderables.clear();
+				return;
+			}
+			collectRenderables(tmpContainer, renderables, messages);
+		}
+		for (Page page : level.getPages()) {
+			renderables.add(page);
+			// TODO respect gallery
+//			if (InstanceUtil.isGallery(page)) {
+//				List<Image> images = ((Gallery)page).getImages();
+//				if (renderables != null && CollectionUtils.isEmpty(images)) {
+//					messages.append(LabelHolder.get("task.export.error.pojo.galleryhasnoimage")); //$NON-NLS-1$
+//					messages.append(page.getDecorationString());
+//					messages.append('\n');
+//					renderables.clear();
+//					return;
+//				} else
+//					renderables.addAll(images);
+//			}
+		}
+	}
+	
 }
