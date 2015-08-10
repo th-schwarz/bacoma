@@ -15,7 +15,7 @@
 	<context:component-scan base-package="codes.thischwa.bacoma.rest.*" />
 	
 	<!-- Context-Listener -->
-	<bean id="eventListenerBean" class="codes.thischwa.bacoma.rest.listener.ContextListener" />
+	<bean id="eventListenerBean" class="codes.thischwa.bacoma.rest.listener.ApplicationContextListener" />
 
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
