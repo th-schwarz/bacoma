@@ -1,6 +1,5 @@
 package codes.thischwa.bacoma.rest;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -11,16 +10,9 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
-
-import codes.thischwa.bacoma.rest.listener.ApplicationContextListener;
 
 public class JettyLaucher {
 	private static final Logger logger = LoggerFactory.getLogger(JettyLaucher.class);
@@ -38,7 +30,7 @@ public class JettyLaucher {
 			IOUtils.closeQuietly(propIn);
 		}
 		
-		Server server = new Server();
+		final Server server = new Server();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {

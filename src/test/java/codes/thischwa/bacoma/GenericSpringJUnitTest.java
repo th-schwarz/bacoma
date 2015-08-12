@@ -22,7 +22,7 @@ import codes.thischwa.bacoma.rest.service.SiteManager;
 import codes.thischwa.bacoma.rest.service.SiteBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/bacoma-rest.xml")
+@ContextConfiguration("classpath:/bacoma-rest.xml")
 public class GenericSpringJUnitTest {
 	
 	@Autowired

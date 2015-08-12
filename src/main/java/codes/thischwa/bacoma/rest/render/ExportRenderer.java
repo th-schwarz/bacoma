@@ -13,7 +13,6 @@ import org.apache.commons.io.output.StringBuilderWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.AbstractResource;
 import org.springframework.stereotype.Service;
 
 import codes.thischwa.bacoma.rest.model.BoInfo;
@@ -69,7 +68,8 @@ public class ExportRenderer {
 			Files.write(exportPath, writer.toString().getBytes(defaultConfigurationHolder.get(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
 					StandardOpenOption.WRITE);
 		}
-		List<AbstractSiteResource> resources = new ArrayList<>(sm.getSite().getCascadingStyleSheets());
+		List<AbstractSiteResource> resources = new ArrayList<>();
+		resources.addAll(sm.getSite().getCascadingStyleSheets());
 		resources.addAll(sm.getSite().getOtherResources());
 		for(AbstractSiteResource res : resources) {
 			Path exportPath = pathTool.getExportFile(res, exportDir);
