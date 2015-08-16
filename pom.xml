@@ -6,6 +6,7 @@
 	<artifactId>bacoma</artifactId>
 	<name>Basic Content Management</name>
 	<version>0.0.1-SNAPSHOT</version>
+	<url>https://github.com/th-schwarz/bacoma</url>
 
 	<licenses>
 		<license>
@@ -14,6 +15,18 @@
 		</license>
 	</licenses>
 
+	<issueManagement>
+		<url>https://github.com/th-schwarz/bacoma/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<scm>
+		<url>https://github.com/th-schwarz/bacoma</url>
+		<connection>scm:git:git://github.com/th-schwarz/bacoma.git</connection>
+		<developerConnection>scm:git:git@github.com:th-schwarz/bacoma.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+	
 	<properties>
 		<java.version>1.8</java.version>
 		<springframework.version>4.1.6.RELEASE</springframework.version>
@@ -119,5 +132,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<url>https://github.com/th-schwarz/bacoma</url>
 </project>
