@@ -19,8 +19,6 @@ import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 @Component
 public class ContextUtility {
 
-	private int count = 0;
-
 	private Persister persister;
 
 	@Autowired
@@ -31,14 +29,6 @@ public class ContextUtility {
 
 	public ContextUtility() {
 		persister = new Persister();
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void inc() {
-		count++;
 	}
 
 	public Site getSite() {

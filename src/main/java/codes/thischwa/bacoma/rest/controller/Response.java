@@ -2,6 +2,7 @@ package codes.thischwa.bacoma.rest.controller;
 
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -48,20 +49,24 @@ public class Response {
 		return object;
 	}
 	
-	public static Response ok() {
-		return new Response(STATUS.OK, null, null);
+	public static ResponseEntity<Response> ok() {
+		return ResponseEntity.ok(new Response(STATUS.OK, null, null));
 	}
 	
-	public static Response ok(Object response) {
-		return new Response(STATUS.OK, null, response);
+	public static ResponseEntity<Response> ok(Object response) {
+		return ResponseEntity.ok(new Response(STATUS.OK, null, response));
 	}
 	
-	public static Response error(String message) {
-		return new Response(STATUS.ERROR, message, null);
+	public static ResponseEntity<Response> error(String message) {
+		return ResponseEntity.ok(new Response(STATUS.ERROR, message, null));
+	}
+	
+	public static ResponseEntity<Response> error(String message, HttpStatus status) {
+		return new ResponseEntity<Response>(new Response(STATUS.ERROR, message, null), status);		
 	}
 	
 	public static ResponseEntity<Response> buildNoSiteNotLoaded() {
-		Response resp = error("No site loaded!");
+		Response resp = new Response(STATUS.ERROR,"No site loaded!", null);
 		return ResponseEntity.ok().header("Content-Type", MediaType.APPLICATION_JSON_VALUE).body(resp);
 	}
 	
@@ -76,13 +81,13 @@ public class Response {
 				msg = String.format("%s: resource with the id [%s] not found!", site.getUrl(), id.toString());
 			else 
 				msg = String.format("%s: resource with the name [%s] not found!", site.getUrl(), resourceName);
-			return ResponseEntity.ok(error(msg));
+			return error(msg);
 		} else if(e instanceof PersitException) {
 			PersitException pe = (PersitException) e;
 			StringBuilder msg = new StringBuilder(String.format("%s couldn't be persit!", site.getUrl()));
 			if(pe.getCause() != null)
 				msg.append(String.format(" Because of: %s", pe.getCause().getMessage()));
-			return ResponseEntity.ok(error(msg.toString()));
+			return error(msg.toString());
 		} else {
 			throw new RuntimeException("Unknown BacomaException"); 
 		}

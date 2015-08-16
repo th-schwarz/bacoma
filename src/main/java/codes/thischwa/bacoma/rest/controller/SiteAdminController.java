@@ -45,13 +45,13 @@ public class SiteAdminController extends AbstractController {
 			cu.load(siteUrl);
 		} catch (IOException e) {
 			logger.error("Error while loading a site.", e);
-			return new ResponseEntity<>(Response.error("Site not found!"), HttpStatus.NOT_FOUND);
+			return Response.error("Site not found!", HttpStatus.NOT_FOUND);
 		}
 		logger.info("site successful loaded: {}", siteUrl);
 		
 		String baseUrl = ServletUtil.getBaseUrl();
 		logger.info("****** base-url: {}", baseUrl);
-		return ResponseEntity.ok(Response.ok());
+		return Response.ok();
 	}
 	
 	@RequestMapping(value="/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -70,9 +70,9 @@ public class SiteAdminController extends AbstractController {
 			}
 		} catch (IOException e) {
 			logger.error("Error while getting all sites.", e);
-			return new ResponseEntity<>(Response.error("Error while getting all sites."), HttpStatus.CONFLICT);
+			return Response.error("Error while getting all sites.", HttpStatus.CONFLICT);
 		}
-		return ResponseEntity.ok(Response.ok(sites));
+		return Response.ok(sites);
 	}
 	
 
@@ -89,10 +89,10 @@ public class SiteAdminController extends AbstractController {
 			})) {
 				resources.add(p.getFileName().toString());
 			}
-			return ResponseEntity.ok(Response.ok(resources));
+			return Response.ok(resources);
 		} catch (IOException e) {
 			logger.error("Error while getting static resources.", e);
-			return new ResponseEntity<>(Response.error("Error while getting static resources."), HttpStatus.CONFLICT);
+			return Response.error("Error while getting static resources.", HttpStatus.CONFLICT);
 		}
 	}
 	
@@ -100,16 +100,16 @@ public class SiteAdminController extends AbstractController {
 	public ResponseEntity<Response> setConfiguration(@RequestBody Map<String, String> config) {
 		cu.setConfiguration(config);
 		cu.persist();
-		return ResponseEntity.ok(Response.ok());
+		return Response.ok();
 	}
 
 	@RequestMapping(value="/setLayoutTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> setLayoutTemplate(@RequestBody String text) {
 		if(StringUtils.isEmpty(text))
-			return new ResponseEntity<>(Response.error("Empty request!"), HttpStatus.BAD_REQUEST);
+			return Response.error("Empty request!", HttpStatus.BAD_REQUEST);
 		UUID id = cu.setLayoutTemplate(text);
 		cu.persist();
-		return ResponseEntity.ok(Response.ok(id));
+		return Response.ok(id);
 	}
 
 	@RequestMapping(value="/addResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -149,36 +149,36 @@ public class SiteAdminController extends AbstractController {
 	@RequestMapping(value="/addLevel", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> addLevel(@RequestBody ReqLevel level) {
 		if(!level.isValid())
-			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
+			return Response.error("Request is incomplete", HttpStatus.BAD_REQUEST);
 		cu.addLevel(level);
 		cu.persist();
-		return ResponseEntity.ok(Response.ok(level.getId()));
+		return Response.ok(level.getId());
 	}
 
 	@RequestMapping(value="/addPage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> addPage(@RequestBody ReqPage page) {
 		if(!page.isValid())
-			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
+			return Response.error("Request is incomplete", HttpStatus.BAD_REQUEST);
 		cu.addPage(page);
 		cu.persist();
-		return ResponseEntity.ok(Response.ok(page.getId()));
+		return Response.ok(page.getId());
 	}
 	
 	@RequestMapping(value="/get/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> get(@PathVariable UUID uuid) {
 		AbstractBacomaObject<?> obj = cu.getObject(uuid);
-		return ResponseEntity.ok(Response.ok(obj));
+		return Response.ok(obj);
 	}
 	
 	@RequestMapping(value="/get", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> getCurrent() {
-		return ResponseEntity.ok(Response.ok(getSite()));
+		return Response.ok(getSite());
 	}
 
 	@RequestMapping(value="/remove/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> remove(@PathVariable UUID uuid) {
 		cu.remove(uuid);
-		return ResponseEntity.ok(Response.ok());
+		return Response.ok();
 	}
 	
 	@RequestMapping(value="/removeStaticResource/{name}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -186,14 +186,14 @@ public class SiteAdminController extends AbstractController {
 		Path resourceFolder = fileSystemUtil.getStaticResourceDir();
 		Path staticResource = resourceFolder.resolve(name);
 		if(!Files.exists(staticResource))
-			return new ResponseEntity<>(Response.error("File not found!"), HttpStatus.BAD_REQUEST);
+			return Response.error("File not found!", HttpStatus.BAD_REQUEST);
 		try {
 			Files.delete(staticResource);
 			logger.debug("Static resource successful deleted: {}", staticResource.toString());
 		} catch (IOException e) {
 			logger.error("Error while deleting static resources.", e);
-			return new ResponseEntity<>(Response.error("Error while deleting a static resources."), HttpStatus.CONFLICT);
+			return Response.error("Error while deleting a static resources.", HttpStatus.CONFLICT);
 		}
-		return ResponseEntity.ok(Response.ok());
+		return Response.ok();
 	}
 }
