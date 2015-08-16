@@ -115,6 +115,10 @@ public class SiteManager {
 					identify(m);
 				for(Template t : s.getTemplates())
 					identify(t);
+				for(CascadingStyleSheet c : s.getCascadingStyleSheets())
+					identify(c);
+				for(OtherResource o : s.getOtherResources())
+					identify(o);
 			}
 		} else if(InstanceUtil.isPage(obj)) {
 			Page p = (Page) obj;

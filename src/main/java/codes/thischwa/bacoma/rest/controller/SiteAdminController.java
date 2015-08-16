@@ -35,9 +35,8 @@ import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 @Controller
-//@RequestMapping(value = "/site")
 @MultipartConfig(location = ServletContext.TEMPDIR)
-public class SiteController extends AbstractController {
+public class SiteAdminController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@RequestMapping(value="/load/{siteUrl}", method = RequestMethod.GET)

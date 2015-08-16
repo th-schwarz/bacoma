@@ -60,6 +60,6 @@ class SiteLinkPageTool {
 			return levelPath.concat(pageName);
 		}
 
-		return Constants.LINK_SITE_PAGE.replace("{uuid}", page.getId().toString());
+		return Constants.LINK_PREVIEW.replace("{uuid}", page.getId().toString());
 	}
 }

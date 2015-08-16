@@ -10,6 +10,7 @@ import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
+import codes.thischwa.bacoma.rest.model.pojo.site.SiteResourceType;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.SiteManager;
@@ -62,14 +63,11 @@ class SiteLinkResourceTool {
 			return levelPath.concat(resourceDir).concat("/").concat(name);
 		}
 		
-		switch(resource.getResourceType()) {
-			case CSS:
-				return Constants.LINK_SITE_CSS.replace("{name}", resource.getName());
-			case OTHER:
-				return Constants.LINK_SITE_OTHER.replace("{name}", resource.getName());
-			default:
-				throw new IllegalArgumentException(
-						String.format("Illegal resourcee-type in this context: %s", resource.getResourceType().toString()));
+		SiteResourceType type = resource.getResourceType();
+		if(type != SiteResourceType.CSS && type != SiteResourceType.OTHER) {
+			throw new IllegalArgumentException(
+						String.format("Illegal resource-type in this context: %s", type.toString()));
 		}
+		return Constants.LINK_PREVIEW.replace("{uuid}", resource.getId().toString());
 	}
 }

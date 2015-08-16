@@ -19,8 +19,9 @@ public class TestSiteLinkTool extends GenericSpringJUnitTest {
 	
 	@Test
 	public void testGetCss() {
-		assertEquals("/site/resource/css/?name=format.css", siteLinkTool.getCss("format.css"));
-		assertEquals("/site/resource/css/?name=format.css", siteLinkTool.getCss());
+		String expected = "/site/render/get/preview/d20e9e25-0001-0000-0001-000000000000";
+		assertEquals(expected, siteLinkTool.getCss("format.css"));
+		assertEquals(expected, siteLinkTool.getCss());
 	}
 
 	@Test
@@ -34,7 +35,7 @@ public class TestSiteLinkTool extends GenericSpringJUnitTest {
 	@Test
 	public void testGetPage() {
 		AbstractBacomaObject<?> bo = siteManager.getObject(SiteBuilder.uuidWelcomePage);
-		assertEquals(String.format("/site/render/get/%s", SiteBuilder.uuidWelcomePage), 
+		assertEquals(String.format("/site/render/get/preview/%s", SiteBuilder.uuidWelcomePage), 
 				siteLinkTool.get((Page)bo));
 	}
 	

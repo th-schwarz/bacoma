@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codes.thischwa.bacoma.rest.exception.AbstractBacomaException;
-import codes.thischwa.bacoma.rest.exception.IsNotARenderableException;
 import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
@@ -84,10 +83,6 @@ public class Response {
 			if(pe.getCause() != null)
 				msg.append(String.format(" Because of: %s", pe.getCause().getMessage()));
 			return ResponseEntity.ok(error(msg.toString()));
-		} else if(e instanceof IsNotARenderableException) {
-			UUID id = ((IsNotARenderableException)e).getId();
-			String msg = String.format("%s: Object#%s isn't a renderable!", site.getUrl(), id);
-			return ResponseEntity.ok(error(msg));
 		} else {
 			throw new RuntimeException("Unknown BacomaException"); 
 		}
