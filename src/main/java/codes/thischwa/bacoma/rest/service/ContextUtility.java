@@ -36,7 +36,7 @@ public class ContextUtility {
 	}
 
 	public void persist() throws PersitException {
-		persister.persist(fileSystemUtil.getAndCheckSitesDir(), getSite());
+		persister.persist(fileSystemUtil.getSitesDir(), getSite());
 	}
 
 	public void load(String siteUrl) throws IOException {

@@ -32,6 +32,9 @@ public class ConfigurationHolder {
 			String key = keyObj.toString();
 			defaultConfiguration.put(key, props.getProperty(key));
 		}
+		String dirWebapp = System.getProperty("dir.webapp");
+		if(dirWebapp != null)
+			defaultConfiguration.put("dir.webapp", dirWebapp);
 	}
 
 	public Map<String, String> getDefaultConfiguration() {

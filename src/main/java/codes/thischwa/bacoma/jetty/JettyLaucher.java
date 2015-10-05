@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest;
+package codes.thischwa.bacoma.jetty;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +18,19 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import codes.thischwa.bacoma.rest.WebConfig;
+
 public class JettyLaucher {
 	private static final Logger logger = LoggerFactory.getLogger(JettyLaucher.class);
+	
+	private final static Server server = new Server();
+	private static ServletContextHandler servletContextHandler;
+	
+	public static void addServletHolder(ServletHolder servletHolder, String pathSpec) {
+		if(server.isRunning()) {
+			servletContextHandler.addServlet(servletHolder, pathSpec);
+		}
+	}
 	
 	public static void main(String[] args) throws Exception {
 		Properties props = new Properties();
@@ -35,7 +46,6 @@ public class JettyLaucher {
 			IOUtils.closeQuietly(propIn);
 		}
 		
-		final Server server = new Server();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -52,25 +62,50 @@ public class JettyLaucher {
 		String host = props.getProperty("host", "127.0.0.1");
 		int port = Integer.parseInt(props.getProperty("port", "8080"));
 		int timeout = Integer.parseInt(props.getProperty("timeoutSec", "900"));
-		logger.info("Try to start server [{}:{}] with connection-timeout: {} sec.", host, port, timeout);
+		String baseDir  = props.getProperty("baseDir", "webapp");
+		logger.info("Try to start server [{}:{}], baseDir={}, connection-timeout={}sec.", host, port, baseDir, timeout);
+		System.setProperty("dir.webapp", baseDir);
+		
 		ServerConnector connector = new ServerConnector(server);
 		connector.setHost(host);
 		connector.setPort(port);
 		connector.setIdleTimeout(timeout * 1000);
 		server.addConnector(connector);
 
-		ServletContextHandler servletContextHandler = new ServletContextHandler();
+		servletContextHandler = new ServletContextHandler();
 		servletContextHandler.addEventListener(new ContextLoaderListener());
 		servletContextHandler.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
-		servletContextHandler.setResourceBase(System.getProperty("java.io.tmpdir"));
 		
-		ServletHolder holder = new ServletHolder("dispatcher", new DispatcherServlet());
-		holder.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
-		holder.setInitParameter("contextConfigLocation", WebConfig.class.getName());
+		ServletHolder springHolder = new ServletHolder("dispatcher", new DispatcherServlet());
+		springHolder.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
+		springHolder.setInitParameter("contextConfigLocation", WebConfig.class.getName());
+		springHolder.setInitOrder(0);
+		servletContextHandler.addServlet(springHolder, "/site/*");
 		
-		servletContextHandler.addServlet(holder, "/site/*");
+		ServletHolder ckeditorHolder = new ServletHolder(ZipProxyServlet.class);
+		ckeditorHolder.setInitParameter("file", baseDir+"/ckeditor.zip");
+		ckeditorHolder.setInitParameter("zipPathToSkip", "ckeditor");
+		ckeditorHolder.setInitOrder(1);
+		servletContextHandler.addServlet(ckeditorHolder, "/ckeditor/*");
+
+		ServletHolder codeEditorHolder = new ServletHolder(ZipProxyServlet.class);
+		codeEditorHolder.setInitParameter("file", baseDir+"/codemirror.zip");
+		codeEditorHolder.setInitParameter("zipPathToSkip", "codemirror");
+		codeEditorHolder.setInitOrder(2);
+		servletContextHandler.addServlet(codeEditorHolder, "/codemirror/*");
+		
+		ServletHolder formLibHolder = new ServletHolder(StaticServlet.class);
+		formLibHolder.setInitParameter("basePath", baseDir+"/form_lib");
+		formLibHolder.setInitOrder(10);
+		servletContextHandler.addServlet(formLibHolder, "/form_lib/*");
+		
 		server.setHandler(servletContextHandler); 
-        server.start();
+        try {
+			server.start();
+		} catch (Exception e) {
+			logger.error("Start of the server failed!", e);
+			System.exit(10);
+		}
         server.join();        
 	}
 }

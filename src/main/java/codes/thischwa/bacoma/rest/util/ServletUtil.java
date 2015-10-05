@@ -1,9 +1,17 @@
 package codes.thischwa.bacoma.rest.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.ConfigurableMimeFileTypeMap;
@@ -65,5 +73,23 @@ public class ServletUtil {
 			}
 		}
 		return null;
+	}
+
+	public static void write(Path reqPath, HttpServletResponse resp) throws IOException {
+		if(!Files.exists(reqPath)) {
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+		InputStream in = Files.newInputStream(reqPath, StandardOpenOption.READ);
+		OutputStream out = resp.getOutputStream();
+		try {
+			int len = IOUtils.copy(in, out);
+			out.flush();
+			resp.setContentLength(len);
+			resp.setStatus(HttpServletResponse.SC_OK);
+		} finally {
+			IOUtils.closeQuietly(out);		
+			IOUtils.closeQuietly(in);
+		}
 	}
 }

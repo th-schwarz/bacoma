@@ -13,6 +13,7 @@ import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.Content;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Macro;
+import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.Template;
@@ -26,6 +27,10 @@ import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
  * - d20e9e25-0003-0000-0000-000000000 : pages
  */
 public class SiteBuilder { 
+	
+	public static final UUID uuidFormatCSS = UUID.fromString("d20e9e25-0001-0000-0001-000000000000");
+	public static final UUID uuidCkstyles = UUID.fromString("d20e9e25-0001-0000-0002-000000000000");
+	
 	public static final UUID uuidCommonPageTemplate = UUID.fromString("d20e9e25-0001-0000-0000-000000000001");
 	public static final UUID uuidWelcomePage = UUID.fromString("d20e9e25-0003-0000-0000-000000000001");
 	
@@ -56,6 +61,7 @@ public class SiteBuilder {
 		site.getTemplates().add(buildPageTemplate());
 		site.getCascadingStyleSheets().add(builtStyleSheet());
 		site.getMacros().add(buildMacro());
+		site.getOtherResources().add(buildFckStyles());
 		
 		Level lev_1 = buildLevel(uuidLev1, site, "1_level", "Level with 1 page");
 		site.add(lev_1);
@@ -122,7 +128,7 @@ public class SiteBuilder {
 	
 	private CascadingStyleSheet builtStyleSheet() throws Exception {
 		CascadingStyleSheet styleSheet = new CascadingStyleSheet();
-		styleSheet.setId(UUID.fromString("d20e9e25-0001-0000-0001-000000000000"));
+		styleSheet.setId(uuidFormatCSS);
 		styleSheet.setName("format.css");
 		styleSheet.setText(load("format.css"));
 		return styleSheet;
@@ -134,6 +140,14 @@ public class SiteBuilder {
 		vm.setId(UUID.fromString("d20e9e25-0001-0000-0002-000000000000"));
 		vm.setText(load("menu.vm"));
 		return vm;
+	}
+	
+	private OtherResource buildFckStyles() throws Exception {
+		OtherResource or = new OtherResource();
+		or.setName("ckstyles.xml");
+		or.setId(uuidCkstyles);
+		or.setText(load("ckstyles.xml"));
+		return or;
 	}
 	
 	private String load(String path) throws Exception {

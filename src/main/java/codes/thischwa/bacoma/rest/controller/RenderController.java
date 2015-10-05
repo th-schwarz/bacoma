@@ -54,7 +54,7 @@ public class RenderController extends AbstractController {
 			content = render(res, vw);
 			mediaType = ServletUtil.parseMediaType(res.getName());
 		} else 
-			throw new IllegalArgumentException("Unkwn object for rendering!");
+			throw new IllegalArgumentException("Unkwon object for rendering!");
 		
 		return ResponseEntity.ok().contentType(mediaType).contentLength(content.length)
 				.body(new ByteArrayResource(content));

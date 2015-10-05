@@ -33,11 +33,13 @@ public class FileSystemUtil {
 	@Value("${site.dir.export}")
 	private String exportDir;
 	
+	@Value("${dir.data}") 
+	String dataDirStr;
+	
 	private Path dataDir;
 	
-	@Autowired
-	public FileSystemUtil(@Value("${dir.data}") String dataDirStr) throws IOException {
-		dataDir = Paths.get(dataDirStr);
+	public void init() throws IOException {
+		dataDir = Paths.get(configurationHolder.get("dir.webapp"), dataDirStr);
 		if(!Files.exists(dataDir)) {
 			Files.createDirectories(dataDir);
 			logger.info("Data dir created successful: {}", dataDir.toString());
@@ -47,6 +49,8 @@ public class FileSystemUtil {
 	}
 	
 	public Path getDataDir() {
+		if(dataDir == null)
+			throw new IllegalStateException("#init was never called!");
 		return dataDir;
 	}
 	
@@ -57,7 +61,7 @@ public class FileSystemUtil {
 		return path;
 	}
 	
-	public Path getAndCheckSitesDir() throws RuntimeException {
+	private Path getAndCheckSitesDir() throws RuntimeException {
 		if(sm.getSite() == null)
 			throw new IllegalArgumentException("No current site found!");
 		Path dir = dataDir.resolve(sm.getSite().getUrl());
