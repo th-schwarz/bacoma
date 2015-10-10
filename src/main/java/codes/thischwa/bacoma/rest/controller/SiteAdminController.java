@@ -39,7 +39,7 @@ import codes.thischwa.bacoma.rest.util.ServletUtil;
 public class SiteAdminController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@RequestMapping(value="/load/{siteUrl}", method = RequestMethod.GET)
+	@RequestMapping(value="/load/{siteUrl}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> load(@PathVariable String siteUrl) {
 		try {
 			cu.load(siteUrl);
