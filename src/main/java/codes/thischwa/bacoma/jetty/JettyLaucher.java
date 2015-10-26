@@ -1,6 +1,5 @@
 package codes.thischwa.bacoma.jetty;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -35,13 +34,13 @@ public class JettyLaucher {
 	public static void main(String[] args) throws Exception {
 		Properties props = new Properties();
 		InputStream propIn = null;
-		String propertiesFile  = System.getProperty("jetty.properties");
+		String propertiesFile  = System.getProperty("bacoma-server.properties");
 		try {
 			propIn = Files.newInputStream(Paths.get(propertiesFile), StandardOpenOption.READ);
 			props.load(propIn);
 			logger.debug("'jetty.properties' successful read.");
-		} catch (IOException e) {
-			logger.warn("System property 'jetty.properties' couldn't be read. Defaults are being used.");
+		} catch (Exception e) {
+			logger.warn("System property 'bacoma-server.properties' couldn't be read. Defaults are being used.");
 		} finally {
 			IOUtils.closeQuietly(propIn);
 		}
