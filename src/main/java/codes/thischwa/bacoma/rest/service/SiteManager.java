@@ -12,8 +12,11 @@ import org.apache.velocity.runtime.resource.util.StringResourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
@@ -34,16 +37,25 @@ import codes.thischwa.bacoma.rest.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.util.ConfigurationUtil;
+import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
+/**
+ * Holds a {@link Site}-object and manage some complex object of/for it.
+ */
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SiteManager {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private Site site;
 	private VelocityEngine velocityEngine;
+	private Persister persister = new Persister();
 
 	@Autowired
 	private ConfigurationHolder defaultConfigurationHolder;
 
+	@Autowired
+	private FileSystemUtil fileSystemUtil;
+	
 	private Map<UUID, AbstractBacomaObject<?>> objectsPerIdentifier = new HashMap<>();
 
 	private Map<String, String> siteConfig = new HashMap<>();
@@ -156,6 +168,10 @@ public class SiteManager {
 		return ve;
 	}
 
+	private void persist() throws PersitException {
+		persister.persist(fileSystemUtil.getDataDir(), site);
+	}
+	
 	public AbstractBacomaObject<?> getObject(UUID uuid) {
 		if(site == null)
 			throw new SiteNotLoadedException();
@@ -178,6 +194,7 @@ public class SiteManager {
 		template.setName(reqTemplate.getName());
 		template.setText(reqTemplate.getText());
 		template.setType(reqTemplate.getTemplateType());
+		persist();
 	}
 
 	public void addLevel(ReqLevel reqLevel) {
@@ -196,6 +213,7 @@ public class SiteManager {
 		}
 		level.setName(reqLevel.getName());
 		level.setTitle(reqLevel.getTitle());
+		persist();
 	}
 
 	public void addPage(ReqPage reqPage) {
@@ -214,6 +232,7 @@ public class SiteManager {
 		page.setName(reqPage.getName());
 		page.setTitle(reqPage.getTitle());
 		page.setTemplateID(reqPage.getTemplate());
+		persist();
 	}
 
 	public void setConfiguration(Map<String, String> config) {
@@ -221,6 +240,7 @@ public class SiteManager {
 			throw new SiteNotLoadedException();
 		site.setConfiguration(config);
 		siteConfig.putAll(config);
+		persist();
 		VelocityEngine ve = null;
 		try {
 			ve = buildVelocityEngine();
@@ -241,6 +261,7 @@ public class SiteManager {
 		layoutTemplate.setText(text);
 		objectsPerIdentifier.put(layoutTemplate.getId(), layoutTemplate);
 		site.setLayoutTemplate(layoutTemplate);
+		persist();
 		return layoutTemplate.getId();
 	}
 
@@ -254,15 +275,15 @@ public class SiteManager {
 			switch(reqSiteResource.getResourceType()) {
 				case CSS:
 					siteResource = new CascadingStyleSheet();
-					site.getCascadingStyleSheets().add((CascadingStyleSheet) siteResource);
+					site.addCascadingStyleSheet((CascadingStyleSheet) siteResource);
 					break;
 				case MACRO:
 					siteResource = new Macro();
-					site.getMacros().add((Macro) siteResource);
+					site.addMacro((Macro) siteResource);
 					break;
 				case OTHER:
 					siteResource = new OtherResource();
-					site.getOtherResources().add((OtherResource) siteResource);
+					site.addOtherResource((OtherResource) siteResource);
 					break;
 				default:
 					throw new IllegalArgumentException(
@@ -274,6 +295,7 @@ public class SiteManager {
 		}
 		siteResource.setName(reqSiteResource.getName());
 		siteResource.setText(reqSiteResource.getText());
+		persist();
 	}
 
 	public void remove(UUID id) {
@@ -289,13 +311,16 @@ public class SiteManager {
 			AbstractSiteResource siteResource = (AbstractSiteResource) bo;
 			switch(siteResource.getResourceType()) {
 				case CSS:
-					site.getCascadingStyleSheets().remove((CascadingStyleSheet) bo);
+					site.getCascadingStyleSheets().remove(siteResource);
 					break;
 				case TEMPLATE:
-					site.getTemplates().remove((Template) bo);
+					site.getTemplates().remove(siteResource);
+					break;
+				case MACRO:
+					site.getMacros().remove(siteResource);
 					break;
 				case OTHER:
-					site.getOtherResources().remove((OtherResource) bo);
+					site.getOtherResources().remove(siteResource);
 				default:
 					throw new IllegalArgumentException(String.format("Unknown resource-type: %s", siteResource.getResourceType().toString()));
 			}
@@ -311,5 +336,6 @@ public class SiteManager {
 			parent.getPages().remove(page);
 			// TODO special handling for galleries and their images
 		}		
+		persist();
 	}
 }

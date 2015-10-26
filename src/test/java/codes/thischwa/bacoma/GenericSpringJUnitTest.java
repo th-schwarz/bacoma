@@ -40,6 +40,7 @@ public class GenericSpringJUnitTest {
 	
 	@BeforeClass 
 	public static void setUpBeforeClass() throws Exception {
+		System.setProperty("dir.webapp", "webapp");
 		new SiteBuilder(testFolder);
 	}
 	

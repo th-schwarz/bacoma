@@ -22,6 +22,7 @@ import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
+import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.SiteResourceType;
 import codes.thischwa.bacoma.rest.render.VelocityRenderer;
 import codes.thischwa.bacoma.rest.render.ViewMode;
@@ -36,22 +37,22 @@ public class RenderController extends AbstractController {
 	@Autowired
 	private VelocityRenderer renderer;
 	
-	@RequestMapping(value = "/render/get/{viewMode}/{uuid}", method = RequestMethod.GET)
-	public ResponseEntity<?> get(@PathVariable String viewMode, @PathVariable UUID uuid) {
-		logger.debug("entered #get: ViewMode={}, UUID={}", viewMode, uuid);
+	@RequestMapping(value = BASEURL + "/render/get/{viewMode}/{uuid}", method = RequestMethod.GET)
+	public ResponseEntity<?> get(@PathVariable String siteUrl, @PathVariable String viewMode, @PathVariable UUID uuid) {
+		logger.debug("entered #get: url={}, ViewMode={}, UUID={}", siteUrl, viewMode, uuid);
 		ViewMode vw = EnumUtil.valueOfIgnoreCase(ViewMode.class, viewMode);
 		if(vw == ViewMode.EXPORT)
 			throw new IllegalArgumentException("'export' isn't allowed in this context!");
-		AbstractBacomaObject<?> bo = cu.getObject(uuid);
+		AbstractBacomaObject<?> bo = cu.getObject(siteUrl, uuid);
 		byte[] content;
 		MediaType mediaType;
 		if(InstanceUtil.isRenderable(bo)) {
 			IRenderable renderable = (IRenderable) bo;
-			content = render(renderable, vw);
+			content = render(siteUrl, renderable, vw);
 			mediaType = MediaType.TEXT_HTML;
 		} else if(InstanceUtil.isSiteResource(bo)) {
 			AbstractSiteResource res = (AbstractSiteResource) bo;
-			content = render(res, vw);
+			content = render(siteUrl, res, vw);
 			mediaType = ServletUtil.parseMediaType(res.getName());
 		} else 
 			throw new IllegalArgumentException("Unkwon object for rendering!");
@@ -60,27 +61,28 @@ public class RenderController extends AbstractController {
 				.body(new ByteArrayResource(content));
 	}
 
-	private byte[] render(IRenderable renderable, ViewMode viewMode) {
+	private byte[] render(String siteUrl, IRenderable renderable, ViewMode viewMode) {
 		StringWriter contentWriter = new StringWriter();
 		renderer.render(contentWriter, renderable, viewMode, null);
-		byte[] content = contentWriter.toString().getBytes(getDefaultCharset());
+		byte[] content = contentWriter.toString().getBytes(getDefaultCharset(siteUrl));
 		contentWriter.flush();
 		IOUtils.closeQuietly(contentWriter);
 		return content;
 	}
 	
-	private byte[] render(AbstractSiteResource siteResource, ViewMode viewMode) {
+	private byte[] render(String siteUrl, AbstractSiteResource siteResource, ViewMode viewMode) {
 		byte[] content;
 		String name = siteResource.getName();
 		SiteResourceType type = siteResource.getResourceType();
+		Site site = getSite(siteUrl);
 		switch(type) {
 			case CSS: 
-				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(cu.getSite(), name);
-				content = css.getText().getBytes(getDefaultCharset());
+				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(site, name);
+				content = css.getText().getBytes(getDefaultCharset(siteUrl));
 				break;
 			case OTHER:
-				OtherResource or = BoInfo.getNamedOtherResource(cu.getSite(), name);
-				content = or.getText().getBytes(getDefaultCharset());
+				OtherResource or = BoInfo.getNamedOtherResource(site, name);
+				content = or.getText().getBytes(getDefaultCharset(siteUrl));
 				break;
 			default:
 				throw new IllegalArgumentException(String.format("Type not allowed in this context: ", type));

@@ -40,12 +40,13 @@ public class SiteResourceController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@RequestMapping(value = "/resource/static", method = RequestMethod.GET)
-	public ResponseEntity<?> getStaticResource(@RequestParam String path) {
-		logger.debug("enterded #getStaticResource, path={}", path);
-		Path resource = fileSystemUtil.getSitesDir(getProperty("site.dir.staticresource"), path);
+	@RequestMapping(value = BASEURL + "/resource/static", method = RequestMethod.GET)
+	public ResponseEntity<?> getStaticResource(@PathVariable String siteUrl, @RequestParam String path) {
+		logger.debug("enterded #getStaticResource, url={}, path={}", siteUrl, path);
+		Site site = getSite(siteUrl);
+		Path resource = fileSystemUtil.getSitesDir(site, getProperty(site, "site.dir.staticresource"), path);
 		if (!Files.exists(resource)) {
-			throw new ResourceNotFoundException(getSite(), path);
+			throw new ResourceNotFoundException(site, path);
 		}
 		MediaType mt = ServletUtil.parseMediaType(path);
 		try {
@@ -57,19 +58,20 @@ public class SiteResourceController extends AbstractController {
 		}
 	}
 
-	@RequestMapping(value = "/resource/{type}", method = RequestMethod.GET, params = {"name"})
-	public ResponseEntity<?> getSiteResource(@PathVariable String type, @RequestParam("name") String name) {
-		logger.debug("enterded #getSiteResource: type={}, name={}", type, name);
+	@RequestMapping(value = BASEURL + "/resource/{type}", method = RequestMethod.GET, params = {"name"})
+	public ResponseEntity<?> getSiteResource(@PathVariable String siteUrl, @PathVariable String type, @RequestParam("name") String name) {
+		logger.debug("enterded #getSiteResource: url={}, type={}, name={}", siteUrl, type, name);
+		Site site = getSite(siteUrl);
 		SiteResourceType resourceType = EnumUtil.valueOfIgnoreCase(SiteResourceType.class, type);
 		byte[] content;
 		switch(resourceType) {
 			case CSS: 
-				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(cu.getSite(), name);
-				content = css.getText().getBytes(getDefaultCharset());
+				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(site, name);
+				content = css.getText().getBytes(getDefaultCharset(site));
 				break;
 			case OTHER:
-				OtherResource or = BoInfo.getNamedOtherResource(cu.getSite(), name);
-				content = or.getText().getBytes(getDefaultCharset());
+				OtherResource or = BoInfo.getNamedOtherResource(site, name);
+				content = or.getText().getBytes(getDefaultCharset(site));
 				break;
 			default:
 				throw new IllegalArgumentException(String.format("Type not allowed in this context: ", type));

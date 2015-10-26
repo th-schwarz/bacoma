@@ -8,24 +8,18 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.render.context.util.PathTool;
-import codes.thischwa.bacoma.rest.service.ContextUtility;
-import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class VirtualFile implements IVirtualFile {
-	@Autowired
-	private PathTool pathTool;
 	
 	@Autowired
-	private ContextUtility cu;
-	
-	@Autowired
-	private FileSystemUtil fileSystemUtil;
-	
+	private PathTool pathTool; 
+		
 	protected Site site;
 	protected boolean forLayout;
 	protected File baseFile;
@@ -40,13 +34,12 @@ public class VirtualFile implements IVirtualFile {
 	
 	@Override
 	public Path getExportFile() {
-		Path exportFile = fileSystemUtil.getSiteExportDirectory();
-		return exportFile;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public String getTagSrcForExport(final Level level) {
-		String path = pathTool.getURLFromFile(baseFile.getAbsolutePath());
+		String path = pathTool.getURLFromFile(BoInfo.getSite(level), baseFile.getAbsolutePath());
 		StringBuilder tag = new StringBuilder(pathTool.getURLRelativePathToRoot(level));
 		tag.append(path.substring(1)); // cut obsolete slash
 		return tag.toString();

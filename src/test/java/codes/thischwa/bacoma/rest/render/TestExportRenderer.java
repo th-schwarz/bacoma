@@ -1,7 +1,5 @@
 package codes.thischwa.bacoma.rest.render;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 
 import org.junit.Test;
@@ -21,7 +19,7 @@ public class TestExportRenderer extends GenericSpringJUnitTest {
 	@Test
 	public void test() throws IOException {
 		siteManager.setViewMode(ViewMode.EXPORT);
-		exportRenderer.render();
+		exportRenderer.render(siteManager);
 	}
 
 }

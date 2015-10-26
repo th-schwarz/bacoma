@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * The base object of all persist-able objects.
  */
-public abstract class AbstractBacomaObject<P> {
+public abstract class AbstractBacomaObject<P extends AbstractBacomaObject<?>> {
 	public final static UUID UNSET_VALUE = null;
 
 	private UUID id = UNSET_VALUE;
@@ -32,7 +32,7 @@ public abstract class AbstractBacomaObject<P> {
 	/**
 	 * Set the parent of this {@link AbstractBacomaObject}.
 	 */
-	protected void setParent(P directParent) {
+	public void setParent(P directParent) {
 		this.parent = directParent;
 	}
 	

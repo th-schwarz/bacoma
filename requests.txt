@@ -1,22 +1,21 @@
 SITE
 curl http://localhost:8080/site/getAll/
-curl http://localhost:8080/site/load/site.test/
-curl http://localhost:8080/site/get/
-curl http://localhost:8080/site/get/707cc97a-b1a3-4278-bce5-acd3874ba527
-curl http://localhost:8080/site/remove/d20e9e25-0003-0000-0000-000000000023
-curl -i -F "file=@/tmp/test.txt" http://localhost:8080/site/addStaticResource/
-curl http://localhost:8080/site/getAllStaticResources
-curl http://localhost:8080/site/removeStaticResource/test_3.txt/
-curl http://localhost:8080/site/resource/static/?path=/test.js
-curl http://localhost:8080/site/resource/css/?name=format.css
+curl http://localhost:8080/site/site.test/get/
+curl http://localhost:8080/site/site.test/get/707cc97a-b1a3-4278-bce5-acd3874ba527
+curl http://localhost:8080/site/site.test/remove/d20e9e25-0003-0000-0000-000000000023
+curl -i -F "file=@/tmp/test.txt" http://localhost:8080/site/site.test/addStaticResource/
+curl http://localhost:8080/site/site.test/getAllStaticResources
+curl http://localhost:8080/site/site.test/removeStaticResource/test_3.txt/
+curl http://localhost:8080/site/site.test/resource/static/?path=/test.js
+curl http://localhost:8080/site/site.test/resource/css/?name=format.css
 
-curl http://localhost:8080/site/render/get/preview/d20e9e25-0003-0000-0000-000000000001
+curl http://localhost:8080/site/site.test/render/get/preview/d20e9e25-0003-0000-0000-000000000001
 
 Macros bzw. Templates:
-curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/addResource
-curl -i -POST -H 'Content-Type: application/json' -d '{"<html><body>$content</body></html>"}' http://localhost:8080/site/setLayoutTemplate
-curl -i -POST -H 'Content-Type: application/json' -d '{"text":"$content","name":"1_page-template","templateType":"PAGE"}' http://localhost:8080/site/addTemplate
+curl -i -POST -H 'Content-Type: application/json' -d '{"resourceType":"macro","name":"test","text":"#veloZeich1"}' http://localhost:8080/site/site.test/addResource
+curl -i -POST -H 'Content-Type: application/json' -d '{"<html><body>$content</body></html>"}' http://localhost:8080/site/site.test/setLayoutTemplate
+curl -i -POST -H 'Content-Type: application/json' -d '{"text":"$content","name":"1_page-template","templateType":"PAGE"}' http://localhost:8080/site/site.test/addTemplate
 
-curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"cf38ac24-91bf-444c-846e-a5b630d2b6de","name":"1_level"}' http://localhost:8080/site/addLevel
-curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"d20e9e25-7e34-4411-a70e-90104b8d60d0","name":"2_level","title":"2nd Level"}' http://localhost:8080/site/addLevel
+curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"cf38ac24-91bf-444c-846e-a5b630d2b6de","name":"1_level"}' http://localhost:8080/site/site.test/addLevel
+curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"d20e9e25-7e34-4411-a70e-90104b8d60d0","name":"2_level","title":"2nd Level"}' http://localhost:8080/site/site.test/addLevel
 

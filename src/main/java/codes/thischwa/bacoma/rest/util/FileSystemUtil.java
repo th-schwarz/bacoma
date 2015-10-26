@@ -16,16 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
-import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Service
 public class FileSystemUtil {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
-	@Autowired
-	private SiteManager sm;
 	
 	@Autowired
 	private ConfigurationHolder configurationHolder;
@@ -54,17 +51,17 @@ public class FileSystemUtil {
 		return dataDir;
 	}
 	
-	public Path getSitesDir(String... parts) {
+	public Path getSitesDir(Site site, String... parts) {
 		if(parts == null)
-			return getAndCheckSitesDir();
-		Path path = Paths.get(getAndCheckSitesDir().toAbsolutePath().toString(), parts);
+			return getAndCheckSitesDir(site);
+		Path path = Paths.get(getAndCheckSitesDir(site).toAbsolutePath().toString(), parts);
 		return path;
 	}
 	
-	private Path getAndCheckSitesDir() throws RuntimeException {
-		if(sm.getSite() == null)
+	private Path getAndCheckSitesDir(Site site) throws RuntimeException {
+		if(site == null)
 			throw new IllegalArgumentException("No current site found!");
-		Path dir = dataDir.resolve(sm.getSite().getUrl());
+		Path dir = dataDir.resolve(site.getUrl());
 		if(!Files.exists(dir)) {
 			try {
 				Files.createDirectories(dir);
@@ -75,16 +72,16 @@ public class FileSystemUtil {
 		return dir;
 	}
 	
-	public Path getSiteExportDirectory() {
-		return Paths.get(getAndCheckSitesDir().toString(), exportDir);
+	public Path getSiteExportDirectory(Site site) {
+		return Paths.get(getAndCheckSitesDir(site).toString(), exportDir);
 	}
 	
-	public Path getStaticResourceDir() {
-		return getSitesDir(configurationHolder.get(sm.getSite(), "site.dir.staticresource"));
+	public Path getStaticResourceDir(Site site) {
+		return getSitesDir(site, configurationHolder.get(site, "site.dir.staticresource"));
 	}
 	
-	public String saveStaticSiteResource(String originalName, InputStream in) {
-		Path resourceFolder = getStaticResourceDir();
+	public String saveStaticSiteResource(Site site, String originalName, InputStream in) {
+		Path resourceFolder = getStaticResourceDir(site);
 		String fileName = getUniqueName(resourceFolder, originalName);
 		Path resourceFile = resourceFolder.resolve(fileName); 
 		OutputStream out = null;

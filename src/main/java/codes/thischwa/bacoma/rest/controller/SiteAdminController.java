@@ -32,31 +32,15 @@ import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqPage;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 @Controller
 @MultipartConfig(location = ServletContext.TEMPDIR)
 public class SiteAdminController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@RequestMapping(value="/load/{siteUrl}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> load(@PathVariable String siteUrl) {
-		try {
-			cu.load(siteUrl);
-		} catch (IOException e) {
-			logger.error("Error while loading a site.", e);
-			return Response.error("Site not found!", HttpStatus.NOT_FOUND);
-		}
-		logger.info("site successful loaded: {}", siteUrl);
-		
-		String baseUrl = ServletUtil.getBaseUrl();
-		logger.info("****** base-url: {}", baseUrl);
-		return Response.ok();
-	}
-	
 	@RequestMapping(value="/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> getAll() {
-		logger.debug("entered #getSites");
+		logger.debug("entered #getAll");
 		Path userDir = fileSystemUtil.getDataDir();		
 		List<String> sites = new ArrayList<>();
 		try {
@@ -75,10 +59,9 @@ public class SiteAdminController extends AbstractController {
 		return Response.ok(sites);
 	}
 	
-
-	@RequestMapping(value="/getAllStaticResources", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> getAllStaticResources() {
-		Path resourceFolder = fileSystemUtil.getStaticResourceDir();
+	@RequestMapping(value = BASEURL + "/getAllStaticResources", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> getAllStaticResources(@PathVariable String siteUrl) {
+		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
 		List<String> resources = new ArrayList<>();
 		try {
 			for(Path p : Files.newDirectoryStream(resourceFolder, new DirectoryStream.Filter<Path>() {
@@ -96,37 +79,34 @@ public class SiteAdminController extends AbstractController {
 		}
 	}
 	
-	@RequestMapping(value="/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> setConfiguration(@RequestBody Map<String, String> config) {
-		cu.setConfiguration(config);
-		cu.persist();
+	@RequestMapping(value = BASEURL + "/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> setConfiguration(@PathVariable String siteUrl, @RequestBody Map<String, String> config) {
+		cu.setConfiguration(siteUrl, config);
 		return Response.ok();
 	}
 
-	@RequestMapping(value="/setLayoutTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> setLayoutTemplate(@RequestBody String text) {
+	@RequestMapping(value = BASEURL + "/setLayoutTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> setLayoutTemplate(@PathVariable String siteUrl, @RequestBody String text) {
 		if(StringUtils.isEmpty(text))
 			return Response.error("Empty request!", HttpStatus.BAD_REQUEST);
-		UUID id = cu.setLayoutTemplate(text);
-		cu.persist();
+		UUID id = cu.setLayoutTemplate(siteUrl, text);
 		return Response.ok(id);
 	}
 
-	@RequestMapping(value="/addResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> addResource(@RequestBody GenericRequestSiteResource siteResource) {
+	@RequestMapping(value = BASEURL + "/addResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addResource(@PathVariable String siteUrl, @RequestBody GenericRequestSiteResource siteResource) {
 		if(!siteResource.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
-		cu.addResource(siteResource);
-		cu.persist();
-		return ResponseEntity.ok(Response.ok(siteResource.getId()));
+		cu.addResource(siteUrl, siteResource);
+		return Response.ok(siteResource.getId());
 	}
 	
-	@RequestMapping(value="/addStaticResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> addStaticResource(@RequestPart("file") Part file) {
+	@RequestMapping(value = BASEURL + "/addStaticResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addStaticResource(@PathVariable String siteUrl, @RequestPart("file") Part file) {
 		String originalFileName = file.getSubmittedFileName();
     	if(originalFileName != null) {
             try {
-            	String fileName = fileSystemUtil.saveStaticSiteResource(originalFileName, file.getInputStream());
+            	String fileName = fileSystemUtil.saveStaticSiteResource(getSite(siteUrl), originalFileName, file.getInputStream());
                 logger.debug("Static resource added successful: {}", fileName);
             	return ResponseEntity.ok(Response.ok(fileName));
             } catch (Exception e) {
@@ -137,53 +117,50 @@ public class SiteAdminController extends AbstractController {
         }
 	}
 	
-	@RequestMapping(value="/addTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> addTemplate(@RequestBody ReqTemplate template) {
+	@RequestMapping(value = BASEURL + "/addTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addTemplate(@PathVariable String siteUrl, @RequestBody ReqTemplate template) {
 		if(!template.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
-		cu.addTemplate(template);
-		cu.persist();
+		cu.addTemplate(siteUrl, template);
 		return ResponseEntity.ok(Response.ok(template.getId()));
 	}
 	
-	@RequestMapping(value="/addLevel", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> addLevel(@RequestBody ReqLevel level) {
+	@RequestMapping(value = BASEURL + "/addLevel", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> addLevel(@PathVariable String siteUrl, @RequestBody ReqLevel level) {
 		if(!level.isValid())
 			return Response.error("Request is incomplete", HttpStatus.BAD_REQUEST);
-		cu.addLevel(level);
-		cu.persist();
+		cu.addLevel(siteUrl, level);
 		return Response.ok(level.getId());
 	}
 
-	@RequestMapping(value="/addPage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> addPage(@RequestBody ReqPage page) {
+	@RequestMapping(value = BASEURL + "/addPage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> addPage(@PathVariable String siteUrl, @RequestBody ReqPage page) {
 		if(!page.isValid())
 			return Response.error("Request is incomplete", HttpStatus.BAD_REQUEST);
-		cu.addPage(page);
-		cu.persist();
+		cu.addPage(siteUrl, page);
 		return Response.ok(page.getId());
 	}
 	
-	@RequestMapping(value="/get/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> get(@PathVariable UUID uuid) {
-		AbstractBacomaObject<?> obj = cu.getObject(uuid);
+	@RequestMapping(value = BASEURL + "/get/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> get(@PathVariable String siteUrl, @PathVariable UUID uuid) {
+		AbstractBacomaObject<?> obj = cu.getObject(siteUrl, uuid);
 		return Response.ok(obj);
 	}
 	
-	@RequestMapping(value="/get", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> getCurrent() {
-		return Response.ok(getSite());
+	@RequestMapping(value = BASEURL + "/get", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> getCurrent(@PathVariable String siteUrl) {
+		return Response.ok(getSite(siteUrl));
 	}
 
-	@RequestMapping(value="/remove/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> remove(@PathVariable UUID uuid) {
-		cu.remove(uuid);
+	@RequestMapping(value = BASEURL + "/remove/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> remove(@PathVariable String siteUrl, @PathVariable UUID uuid) {
+		cu.remove(siteUrl, uuid);
 		return Response.ok();
 	}
 	
-	@RequestMapping(value="/removeStaticResource/{name}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> removeStaticResource(@PathVariable String name) {
-		Path resourceFolder = fileSystemUtil.getStaticResourceDir();
+	@RequestMapping(value = BASEURL + "/removeStaticResource/{name}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> removeStaticResource(@PathVariable String siteUrl, @PathVariable String name) {
+		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
 		Path staticResource = resourceFolder.resolve(name);
 		if(!Files.exists(staticResource))
 			return Response.error("File not found!", HttpStatus.BAD_REQUEST);

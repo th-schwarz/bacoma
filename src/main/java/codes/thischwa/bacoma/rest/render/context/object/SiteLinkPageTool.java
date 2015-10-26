@@ -5,7 +5,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
@@ -60,6 +59,6 @@ class SiteLinkPageTool {
 			return levelPath.concat(pageName);
 		}
 
-		return Constants.LINK_PREVIEW.replace("{uuid}", page.getId().toString());
+		return LinkBuilder.buildPreviewLink(page);
 	}
 }

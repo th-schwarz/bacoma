@@ -20,6 +20,7 @@ import codes.thischwa.bacoma.rest.model.OrderableInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
+import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 
@@ -33,7 +34,6 @@ public class PathTool {
 	@Value("${site.export.file.welcome}")
 	private String welcomeFileName;
 	
-
 	@Autowired
 	private FileSystemUtil fileSystemUtil;
 	
@@ -57,20 +57,21 @@ public class PathTool {
 		return path.toString();
 	}
 
-    public String getURLFromFile(final String fileName) {
-    	return getURLFromFile(fileName, true);
+    public String getURLFromFile(Site site, String fileName) {
+    	return getURLFromFile(site, fileName, true);
     }
 
     /**
      * Changes an application context relative file to an absolute url.
-     * 
+     * @param site 
      * @param fileName
+     * 
      * @return url
      */
-    public String getURLFromFile(final String fileName, boolean encode) {
+    public String getURLFromFile(Site site, final String fileName, boolean encode) {
         File file = new File(fileName);
         String temp = file.getPath();
-        temp = temp.substring(fileSystemUtil.getSitesDir().toAbsolutePath().toString().length()); // cut the data dir
+        temp = temp.substring(fileSystemUtil.getSitesDir(site).toAbsolutePath().toString().length()); // cut the data dir
         temp = temp.replace(File.separatorChar, '/');
         if(encode)
         	temp = encodePath(temp);
@@ -117,7 +118,7 @@ public class PathTool {
 	 * @return Export file path of an {@link IRenderable}.
 	 */
 	public Path getExportFile(final IRenderable renderable, final String extension) {
-		Path exportDirectory = fileSystemUtil.getSiteExportDirectory();
+		Path exportDirectory = fileSystemUtil.getSiteExportDirectory(BoInfo.getSite(renderable));
 		Level parent;
 		AbstractBacomaObject<?> po = (AbstractBacomaObject<?>) renderable;
 //		if (InstanceUtil.isImage(renderable)) {

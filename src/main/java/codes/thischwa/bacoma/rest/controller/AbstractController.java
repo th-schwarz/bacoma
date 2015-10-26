@@ -11,9 +11,7 @@ import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 public abstract class AbstractController {
 	
-	private String defaultEncoding;
-	
-	private Charset defaultCharset;
+	protected static final String BASEURL = "/{siteUrl}";
 
 	@Autowired
 	protected ContextUtility cu;
@@ -24,26 +22,28 @@ public abstract class AbstractController {
 	@Autowired
 	private ConfigurationHolder configurationHolder;
 	
-	protected Site getSite() {
-		return cu.getSite();
+	protected Site getSite(String siteUrl) {
+		return cu.getSite(siteUrl);
 	}
 	
-	protected String getDefaultEncoding() {
-		String enc = getProperty("default.encoding");
-		if(defaultEncoding == null || !defaultEncoding.equalsIgnoreCase(enc)) {
-			defaultEncoding = enc;
-			defaultCharset = Charset.forName(defaultEncoding);
-		}
-		return defaultEncoding;
+	protected Charset getDefaultCharset(String siteUrl) {
+		return getDefaultCharset(getSite(siteUrl));
 	}
 	
-	protected String getProperty(String key) {
-		return configurationHolder.get(getSite(), key);
+	protected Charset getDefaultCharset(Site site) {
+		String enc = getProperty(site, "default.encoding");
+		return Charset.forName(enc);
+	}
+
+	protected String getProperty(String siteUrl, String key) {
+		return getProperty(getSite(siteUrl), key);
 	}
 	
-	protected Charset getDefaultCharset() {
-		if(defaultCharset == null)
-			getDefaultEncoding();
-		return defaultCharset;
+	protected String getProperty(Site site, String key) {
+		return configurationHolder.get(site, key);
+	}
+	
+	protected String getDefaultEncoding(Site site) {
+		return getDefaultCharset(site).name();
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import codes.thischwa.bacoma.rest.model.IOrderable;
+import codes.thischwa.bacoma.rest.util.ChildList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,8 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Level extends AbstractBacomaObject<Level> implements IOrderable<Level> {
 	protected String name;
 	protected String title;
-	protected List<Level> sublevels = new ArrayList<>();
-	protected List<Page> pages = new ArrayList<>();
+	protected ChildList<Level, Level> sublevels = new ChildList<>(this);
+	protected ChildList<Level, Page> pages = new ChildList<>(this);
 	
 	public String getName() {
 		return name;
@@ -33,46 +34,32 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 	}
 	
 	public List<Level> getSublevels() {
-		return sublevels;
+		return sublevels.get();
 	}
 	public void setSublevels(List<Level> sublevels) {
-		this.sublevels = sublevels;
-		if(sublevels != null) {
-			for(Level level : sublevels) {
-				level.setParent(this);
-			}
-		}
+		this.setSublevels(sublevels);
 	}
 	
 	public boolean hasSublevels() {
-		return sublevels.size() > 0;
+		return sublevels.get().size() > 0;
 	}
 	public void add(Level level) {
 		// TODO check if there is already a level with the same name
 		sublevels.add(level);
-		if(level != null)
-			level.setParent(level);
 	}
 	public boolean remove(Level level) {
 		return sublevels.remove(level);
 	}
 	
 	public List<Page> getPages() {
-		return pages;
+		return pages.get();
 	}
 	public void setPages(List<Page> pages) {
-		this.pages = pages;
-		if(pages != null) {
-			for(Page page : pages) {
-				page.setParent(this);
-			}
-		}
+		this.pages.set(pages);
 	}
 	public void add(Page page) {
 		// TODO check if there is already a page with the same name
 		pages.add(page);
-		if(page != null)
-			page.setParent(this);
 	}
 	public boolean remove(Page page) {
 		return pages.remove(page);

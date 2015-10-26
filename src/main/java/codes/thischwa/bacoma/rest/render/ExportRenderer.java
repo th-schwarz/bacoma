@@ -27,9 +27,6 @@ public class ExportRenderer {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private SiteManager sm;
-	
-	@Autowired
 	private FileSystemUtil fileSystemUtil;
 
 	@Autowired
@@ -38,9 +35,9 @@ public class ExportRenderer {
 	@Autowired
 	private VelocityRenderer velocityRenderer;
 	
-	public void render() throws IOException {
+	public void render(SiteManager sm) throws IOException {
 		logger.info("try to render : {}", sm.getSite().getUrl());
-		Path exportDir = fileSystemUtil.getSiteExportDirectory();
+		Path exportDir = fileSystemUtil.getSiteExportDirectory(sm.getSite());
 		if(!Files.exists(exportDir)) {
 			Files.createDirectories(exportDir);
 			logger.debug("Export-dir successful created: {}", exportDir.toString());
