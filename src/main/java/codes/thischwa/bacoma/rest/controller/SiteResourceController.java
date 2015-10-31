@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.model.BoInfo;
+import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
@@ -40,6 +41,15 @@ public class SiteResourceController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
+	/**
+	 * Serves a desired static resource (files in the file system), e.g. 
+	 * <tt>http://localhost:8080/site/site.test/resource/static/?path=/test.js</tt>.<br/>
+	 * The content- / media-type depends on the extension of the 'path'.
+	 * 
+	 * @param siteUrl the url of the referred site
+	 * @param path must start with '/' and could contain sub-folders
+	 * @return
+	 */
 	@RequestMapping(value = BASEURL + "/resource/static", method = RequestMethod.GET)
 	public ResponseEntity<?> getStaticResource(@PathVariable String siteUrl, @RequestParam String path) {
 		logger.debug("enterded #getStaticResource, url={}, path={}", siteUrl, path);
@@ -58,6 +68,15 @@ public class SiteResourceController extends AbstractController {
 		}
 	}
 
+	/**
+	 * Serves a desired {@link AbstractSiteResource} defined by its 'type' and 'name', e.g.
+	 * <tt>http://localhost:8080/site/site.test/resource/css/?name=format.css</tt>
+	 * 
+	 * @param siteUrl the url of the referred site
+	 * @param type the {@link SiteResourceType} of the desired {@link AbstractSiteResource}. Only <tt>CSS</tt> and <tt>OTHER</tt> are allowed.  
+	 * @param name the name of the desired {@link AbstractSiteResource}
+	 * @return
+	 */
 	@RequestMapping(value = BASEURL + "/resource/{type}", method = RequestMethod.GET, params = {"name"})
 	public ResponseEntity<?> getSiteResource(@PathVariable String siteUrl, @PathVariable String type, @RequestParam("name") String name) {
 		logger.debug("enterded #getSiteResource: url={}, type={}, name={}", siteUrl, type, name);
