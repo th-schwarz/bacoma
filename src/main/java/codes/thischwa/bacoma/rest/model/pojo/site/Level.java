@@ -37,7 +37,7 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 		return sublevels.get();
 	}
 	public void setSublevels(List<Level> sublevels) {
-		this.setSublevels(sublevels);
+		this.sublevels.set(sublevels);
 	}
 	
 	public boolean hasSublevels() {
