@@ -1,13 +1,19 @@
 package codes.thischwa.bacoma.rest.controller;
 
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,21 +43,47 @@ import codes.thischwa.bacoma.rest.util.ServletUtil;
  * </ul>
  */
 @Controller
-public class SiteResourceController extends AbstractController {
+@RequestMapping(value = AbstractController.BASEURL + "/resource")
+public class ServeSiteResourceController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
+	@RequestMapping(value = "/static/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Response> getAllStatic(@PathVariable String siteUrl) {
+		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
+		String resDir = resourceFolder.toAbsolutePath().toString();
+		final int resourceFolderLen = resDir.length();
+		final List<String> resources = new ArrayList<>();
+		try {
+			Files.walkFileTree(resourceFolder, new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+					if(!Files.isHidden(file)) {
+						String absolutePath = file.toAbsolutePath().toString(); 
+						String resFile = absolutePath.substring(resourceFolderLen);
+						resources.add(resFile);
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+			return Response.ok(resources);
+		} catch (IOException e) {
+			logger.error("Error while getting static resources.", e);
+			return Response.error("Error while getting static resources.", HttpStatus.CONFLICT);
+		}
+	}
+	
 	/**
 	 * Serves a desired static resource (files in the file system), e.g. 
-	 * <tt>http://localhost:8080/site/site.test/resource/static/?path=/test.js</tt>.<br/>
+	 * <tt>http://localhost:8080/site/site.test/resource/static/get?path=/sub_folder/test.js</tt>.<br/>
 	 * The content- / media-type depends on the extension of the 'path'.
 	 * 
 	 * @param siteUrl the url of the referred site
 	 * @param path must start with '/' and could contain sub-folders
 	 * @return
 	 */
-	@RequestMapping(value = BASEURL + "/resource/static", method = RequestMethod.GET)
-	public ResponseEntity<?> getStaticResource(@PathVariable String siteUrl, @RequestParam String path) {
+	@RequestMapping(value = "/static/get", method = RequestMethod.GET)
+	public ResponseEntity<?> getStatic(@PathVariable String siteUrl, @RequestParam String path) {
 		logger.debug("enterded #getStaticResource, url={}, path={}", siteUrl, path);
 		Site site = getSite(siteUrl);
 		Path resource = fileSystemUtil.getSitesDir(site, getProperty(site, "site.dir.staticresource"), path);
@@ -70,15 +102,15 @@ public class SiteResourceController extends AbstractController {
 
 	/**
 	 * Serves a desired {@link AbstractSiteResource} defined by its 'type' and 'name', e.g.
-	 * <tt>http://localhost:8080/site/site.test/resource/css/?name=format.css</tt>
+	 * <tt>http://localhost:8080/site/site.test/resource/css/format.css</tt>
 	 * 
 	 * @param siteUrl the url of the referred site
 	 * @param type the {@link SiteResourceType} of the desired {@link AbstractSiteResource}. Only <tt>CSS</tt> and <tt>OTHER</tt> are allowed.  
 	 * @param name the name of the desired {@link AbstractSiteResource}
 	 * @return
 	 */
-	@RequestMapping(value = BASEURL + "/resource/{type}", method = RequestMethod.GET, params = {"name"})
-	public ResponseEntity<?> getSiteResource(@PathVariable String siteUrl, @PathVariable String type, @RequestParam("name") String name) {
+	@RequestMapping(value = "/{type}/{name}", method = RequestMethod.GET)
+	public ResponseEntity<?> getSiteResource(@PathVariable String siteUrl, @PathVariable String type, @PathVariable String name) {
 		logger.debug("enterded #getSiteResource: url={}, type={}, name={}", siteUrl, type, name);
 		Site site = getSite(siteUrl);
 		SiteResourceType resourceType = EnumUtil.valueOfIgnoreCase(SiteResourceType.class, type);

@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
+import javax.servlet.MultipartConfigElement;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -17,6 +19,7 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.WebConfig;
 
 public class JettyLaucher {
@@ -43,6 +46,13 @@ public class JettyLaucher {
 			logger.warn("System property 'bacoma-server.properties' couldn't be read. Defaults are being used.");
 		} finally {
 			IOUtils.closeQuietly(propIn);
+		}
+		
+		if(!Files.exists(Constants.DIR_TEMP)) {
+			Files.createDirectories(Constants.DIR_TEMP);
+			logger.info("Temp-directory successful created: {}", Constants.DIR_TEMP);
+		} else {
+			logger.info("Temp-directory found: {}", Constants.DIR_TEMP);
 		}
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -76,9 +86,14 @@ public class JettyLaucher {
 		servletContextHandler.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
 		
 		ServletHolder springHolder = new ServletHolder("dispatcher", new DispatcherServlet());
+		// TODO jetty shouldn't run, if the initialization of the application-context fails
 		springHolder.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
 		springHolder.setInitParameter("contextConfigLocation", WebConfig.class.getName());
 		springHolder.setInitOrder(0);
+		// TODO multiPartConfig must be replaced by spring-like-way
+		// It's an dirty workaround. The filter-stuff of the dispatcher isn't announced to jetty	
+		springHolder.getRegistration().setMultipartConfig(
+				new MultipartConfigElement(Constants.DIR_TEMP.toString()));
 		servletContextHandler.addServlet(springHolder, "/site/*");
 		
 		ServletHolder ckeditorHolder = new ServletHolder(ZipProxyServlet.class);

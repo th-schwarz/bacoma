@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.ServletContext;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.Part;
 
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
@@ -34,7 +34,7 @@ import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 
 @Controller
-@MultipartConfig(location = ServletContext.TEMPDIR)
+@MultipartConfig
 public class SiteAdminController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -47,7 +47,7 @@ public class SiteAdminController extends AbstractController {
 			for(Path f : Files.newDirectoryStream(userDir, new DirectoryStream.Filter<Path>() {
 				@Override
 				public boolean accept(Path entry) throws IOException {
-					return Files.isRegularFile(entry) && entry.toString().toLowerCase().endsWith(".json");
+					return Files.isRegularFile(entry) && !Files.isHidden(entry) && entry.toString().toLowerCase().endsWith(".json");
 				}
 				})) {
 				sites.add(FilenameUtils.getBaseName(f.getFileName().toString()));			
@@ -57,26 +57,6 @@ public class SiteAdminController extends AbstractController {
 			return Response.error("Error while getting all sites.", HttpStatus.CONFLICT);
 		}
 		return Response.ok(sites);
-	}
-	
-	@RequestMapping(value = BASEURL + "/getAllStaticResources", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> getAllStaticResources(@PathVariable String siteUrl) {
-		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
-		List<String> resources = new ArrayList<>();
-		try {
-			for(Path p : Files.newDirectoryStream(resourceFolder, new DirectoryStream.Filter<Path>() {
-				@Override
-				public boolean accept(Path entry) throws IOException {
-					return Files.isRegularFile(entry) && !Files.isHidden(entry);
-				}
-			})) {
-				resources.add(p.getFileName().toString());
-			}
-			return Response.ok(resources);
-		} catch (IOException e) {
-			logger.error("Error while getting static resources.", e);
-			return Response.error("Error while getting static resources.", HttpStatus.CONFLICT);
-		}
 	}
 	
 	@RequestMapping(value = BASEURL + "/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -101,19 +81,19 @@ public class SiteAdminController extends AbstractController {
 		return Response.ok(siteResource.getId());
 	}
 	
-	@RequestMapping(value = BASEURL + "/addStaticResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> addStaticResource(@PathVariable String siteUrl, @RequestPart("file") Part file) {
+	@RequestMapping(value = BASEURL + "/static/add", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addStaticResource(@PathVariable String siteUrl, @RequestPart("file") Part file, @RequestParam String path) {
 		String originalFileName = file.getSubmittedFileName();
     	if(originalFileName != null) {
             try {
-            	String fileName = fileSystemUtil.saveStaticSiteResource(getSite(siteUrl), originalFileName, file.getInputStream());
+            	String fileName = fileSystemUtil.addStaticResource(getSite(siteUrl), path, file.getInputStream());
                 logger.debug("Static resource added successful: {}", fileName);
-            	return ResponseEntity.ok(Response.ok(fileName));
+            	return Response.ok(fileName);
             } catch (Exception e) {
-                return ResponseEntity.ok(Response.error(e.getMessage()));
+                return Response.error(e.getMessage());
             }
         } else {
-            return ResponseEntity.ok(Response.error("Empty file."));
+            return Response.error("Empty file.");
         }
 	}
 	
@@ -122,7 +102,7 @@ public class SiteAdminController extends AbstractController {
 		if(!template.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.addTemplate(siteUrl, template);
-		return ResponseEntity.ok(Response.ok(template.getId()));
+		return Response.ok(template.getId());
 	}
 	
 	@RequestMapping(value = BASEURL + "/addLevel", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -158,7 +138,7 @@ public class SiteAdminController extends AbstractController {
 		return Response.ok();
 	}
 	
-	@RequestMapping(value = BASEURL + "/removeStaticResource/{name}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = BASEURL + "/static/remove/{name}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Response> removeStaticResource(@PathVariable String siteUrl, @PathVariable String name) {
 		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
 		Path staticResource = resourceFolder.resolve(name);

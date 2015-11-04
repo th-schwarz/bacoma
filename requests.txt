@@ -4,10 +4,10 @@ curl http://localhost:8080/site/site.test/get/
 curl http://localhost:8080/site/site.test/get/707cc97a-b1a3-4278-bce5-acd3874ba527
 curl http://localhost:8080/site/site.test/remove/d20e9e25-0003-0000-0000-000000000023
 curl -i -F "file=@/tmp/test.txt" http://localhost:8080/site/site.test/addStaticResource/
-curl http://localhost:8080/site/site.test/getAllStaticResources
+curl http://localhost:8080/site/site.test/resource/static/getAll
+http://localhost:8080/site/site.test/resource/static/get?path=/sub_folder/test.js
 curl http://localhost:8080/site/site.test/removeStaticResource/test_3.txt/
-curl http://localhost:8080/site/site.test/resource/static/?path=/test.js
-curl http://localhost:8080/site/site.test/resource/css/?name=format.css
+curl http://localhost:8080/site/site.test/resource/css/format.css/
 
 curl http://localhost:8080/site/site.test/render/get/preview/d20e9e25-0003-0000-0000-000000000001
 

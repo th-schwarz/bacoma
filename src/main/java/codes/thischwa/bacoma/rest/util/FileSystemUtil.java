@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 
@@ -80,21 +81,27 @@ public class FileSystemUtil {
 		return getSitesDir(site, configurationHolder.get(site, "site.dir.staticresource"));
 	}
 	
-	public String saveStaticSiteResource(Site site, String originalName, InputStream in) {
+	public String addStaticResource(Site site, String requestPath, InputStream in) {
 		Path resourceFolder = getStaticResourceDir(site);
-		String fileName = getUniqueName(resourceFolder, originalName);
-		Path resourceFile = resourceFolder.resolve(fileName); 
+		if(requestPath.startsWith(Constants.FILENAME_SEPARATOR))
+			requestPath = requestPath.substring(Constants.FILENAME_SEPARATOR.length());
+		Path resourceFile = resourceFolder.resolve(requestPath);
 		OutputStream out = null;
 		try {
+			if(!Files.exists(resourceFile.getParent()))
+				Files.createDirectories(resourceFile.getParent());
+			String fileName = getUniqueName(resourceFile.getParent(), resourceFile.getFileName().toString());
+			resourceFile = resourceFile.getParent().resolve(fileName);
 			out = Files.newOutputStream(resourceFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
 			IOUtils.copy(in, out);
+			String uniqiueRequestPath = resourceFile.toAbsolutePath().toString().substring(resourceFolder.toAbsolutePath().toString().length());
+			return uniqiueRequestPath;
 		} catch (IOException e) {
 			throw new RuntimeException(e); // TODO smarter handling
 		} finally {
 			IOUtils.closeQuietly(out);
 			IOUtils.closeQuietly(in);
 		}
-		return fileName;
 	}
 	
 	protected String getUniqueName(Path path, String name) {
