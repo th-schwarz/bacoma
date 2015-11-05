@@ -86,7 +86,6 @@ public class JettyLaucher {
 		servletContextHandler.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
 		
 		ServletHolder springHolder = new ServletHolder("dispatcher", new DispatcherServlet());
-		// TODO jetty shouldn't run, if the initialization of the application-context fails
 		springHolder.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
 		springHolder.setInitParameter("contextConfigLocation", WebConfig.class.getName());
 		springHolder.setInitOrder(0);
