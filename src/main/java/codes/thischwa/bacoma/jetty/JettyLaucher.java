@@ -89,8 +89,8 @@ public class JettyLaucher {
 		springHolder.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
 		springHolder.setInitParameter("contextConfigLocation", WebConfig.class.getName());
 		springHolder.setInitOrder(0);
-		// TODO multiPartConfig must be replaced by spring-like-way
-		// It's an dirty workaround. The filter-stuff of the dispatcher isn't announced to jetty	
+		// TODO set detailed properties for multipartConfig
+		// spring-like multipartConfig doesn't work with embedded jetty
 		springHolder.getRegistration().setMultipartConfig(
 				new MultipartConfigElement(Constants.DIR_TEMP.toString()));
 		servletContextHandler.addServlet(springHolder, "/site/*");
