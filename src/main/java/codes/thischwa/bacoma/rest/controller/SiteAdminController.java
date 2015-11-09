@@ -36,10 +36,10 @@ import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 public class SiteAdminController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@RequestMapping(value="/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> getAll() {
 		logger.debug("entered #getAll");
-		Path userDir = fileSystemUtil.getDataDir();		
+		Path userDir = fileSystemUtil.getDataDir();
 		List<String> sites = new ArrayList<>();
 		try {
 			for(Path f : Files.newDirectoryStream(userDir, new DirectoryStream.Filter<Path>() {
@@ -47,8 +47,8 @@ public class SiteAdminController extends AbstractController {
 				public boolean accept(Path entry) throws IOException {
 					return Files.isRegularFile(entry) && !Files.isHidden(entry) && entry.toString().toLowerCase().endsWith(".json");
 				}
-				})) {
-				sites.add(FilenameUtils.getBaseName(f.getFileName().toString()));			
+			})) {
+				sites.add(FilenameUtils.getBaseName(f.getFileName().toString()));
 			}
 		} catch (IOException e) {
 			logger.error("Error while getting all sites.", e);
@@ -56,54 +56,61 @@ public class SiteAdminController extends AbstractController {
 		}
 		return Response.ok(sites);
 	}
-	
-	@RequestMapping(value = BASEURL + "/setConfiguration", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = BASEURL + "/setConfiguration", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> setConfiguration(@PathVariable String siteUrl, @RequestBody Map<String, String> config) {
+		logger.debug("entered #serConfiguration");
 		cu.setConfiguration(siteUrl, config);
 		return Response.ok();
 	}
 
-	@RequestMapping(value = BASEURL + "/setLayoutTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = BASEURL + "/setLayoutTemplate", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> setLayoutTemplate(@PathVariable String siteUrl, @RequestBody String text) {
+		logger.debug("entered #setLayoutTemplate");
 		if(StringUtils.isEmpty(text))
 			return Response.error("Empty request!", HttpStatus.BAD_REQUEST);
 		UUID id = cu.setLayoutTemplate(siteUrl, text);
 		return Response.ok(id);
 	}
 
-	@RequestMapping(value = BASEURL + "/addResource", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = BASEURL + "/addResource", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> addResource(@PathVariable String siteUrl, @RequestBody GenericRequestSiteResource siteResource) {
 		if(!siteResource.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.addResource(siteUrl, siteResource);
 		return Response.ok(siteResource.getId());
 	}
-	
-	@RequestMapping(value = BASEURL + "/static/add", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = BASEURL + "/static/add", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> addStaticResource(@PathVariable String siteUrl, @RequestPart("file") Part file, @RequestParam String path) {
 		String originalFileName = file.getSubmittedFileName();
-    	if(originalFileName != null) {
-            try {
-            	String fileName = fileSystemUtil.addStaticResource(getSite(siteUrl), path, file.getInputStream());
-                logger.debug("Static resource added successful: {}", fileName);
-            	return Response.ok(fileName);
-            } catch (Exception e) {
-                return Response.error(e.getMessage());
-            }
-        } else {
-            return Response.error("Empty file.");
-        }
+		if(originalFileName != null) {
+			try {
+				String fileName = fileSystemUtil.addStaticResource(getSite(siteUrl), path, file.getInputStream());
+				logger.debug("Static resource added successful: {}", fileName);
+				return Response.ok(fileName);
+			} catch (Exception e) {
+				return Response.error(e.getMessage());
+			}
+		} else {
+			return Response.error("Empty file.");
+		}
 	}
-	
-	@RequestMapping(value = BASEURL + "/addTemplate", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = BASEURL + "/addTemplate", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> addTemplate(@PathVariable String siteUrl, @RequestBody ReqTemplate template) {
 		if(!template.isValid())
 			return new ResponseEntity<>(Response.error("Request is incomplete"), HttpStatus.BAD_REQUEST);
 		cu.addTemplate(siteUrl, template);
 		return Response.ok(template.getId());
 	}
-	
-	@RequestMapping(value = BASEURL + "/addLevel", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = BASEURL + "/addLevel", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> addLevel(@PathVariable String siteUrl, @RequestBody ReqLevel level) {
 		if(!level.isValid())
 			return Response.error("Request is incomplete", HttpStatus.BAD_REQUEST);
@@ -111,32 +118,33 @@ public class SiteAdminController extends AbstractController {
 		return Response.ok(level.getId());
 	}
 
-	@RequestMapping(value = BASEURL + "/addPage", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = BASEURL + "/addPage", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> addPage(@PathVariable String siteUrl, @RequestBody ReqPage page) {
 		if(!page.isValid())
 			return Response.error("Request is incomplete", HttpStatus.BAD_REQUEST);
 		cu.addPage(siteUrl, page);
 		return Response.ok(page.getId());
 	}
-	
-	@RequestMapping(value = BASEURL + "/get/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = BASEURL + "/get/{uuid}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> get(@PathVariable String siteUrl, @PathVariable UUID uuid) {
 		AbstractBacomaObject<?> obj = cu.getObject(siteUrl, uuid);
 		return Response.ok(obj);
 	}
-	
-	@RequestMapping(value = BASEURL + "/get", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = BASEURL + "/get", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> getCurrent(@PathVariable String siteUrl) {
 		return Response.ok(getSite(siteUrl));
 	}
 
-	@RequestMapping(value = BASEURL + "/remove/{uuid}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = BASEURL + "/remove/{uuid}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> remove(@PathVariable String siteUrl, @PathVariable UUID uuid) {
 		cu.remove(siteUrl, uuid);
 		return Response.ok();
 	}
-	
-	@RequestMapping(value = BASEURL + "/static/remove/{name}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = BASEURL + "/static/remove/{name}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> removeStaticResource(@PathVariable String siteUrl, @PathVariable String name) {
 		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
 		Path staticResource = resourceFolder.resolve(name);

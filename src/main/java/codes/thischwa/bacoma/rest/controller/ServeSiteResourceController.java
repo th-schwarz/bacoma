@@ -49,7 +49,8 @@ public class ServeSiteResourceController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@RequestMapping(value = "/static/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Response> getAllStatic(@PathVariable String siteUrl) {
+	public ResponseEntity<Response> getAll(@PathVariable String siteUrl) {
+		logger.debug("entered #getAll");
 		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
 		String resDir = resourceFolder.toAbsolutePath().toString();
 		final int resourceFolderLen = resDir.length();

@@ -39,7 +39,7 @@
 		<springframework.version>4.1.6.RELEASE</springframework.version>
 		<slf4j.version>1.7.12</slf4j.version>
 		<jackson.version>2.5.4</jackson.version>
-		<jetty.version>9.3.2.v20150730</jetty.version>
+		<jetty.version>9.3.5.v20151012</jetty.version>
 	</properties>
 
 	<dependencies>
