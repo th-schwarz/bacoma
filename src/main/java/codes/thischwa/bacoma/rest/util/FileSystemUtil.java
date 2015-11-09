@@ -1,5 +1,6 @@
 package codes.thischwa.bacoma.rest.util;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -79,6 +80,20 @@ public class FileSystemUtil {
 	
 	public Path getStaticResourceDir(Site site) {
 		return getSitesDir(site, configurationHolder.get(site, "site.dir.staticresource"));
+	}
+
+
+	public Path removeStaticResource(Site site, String requestPath) throws IOException {
+		Path resourceFolder = getStaticResourceDir(site);
+		if(requestPath.startsWith(Constants.FILENAME_SEPARATOR))
+			requestPath = requestPath.substring(Constants.FILENAME_SEPARATOR.length());
+		Path resourceFile = resourceFolder.resolve(requestPath);
+		if(Files.exists(resourceFile)) {
+			Files.delete(resourceFile);
+			return resourceFile;
+		} else {
+			throw new FileNotFoundException(String.format("File not found: %s", resourceFile.toString()));
+		}
 	}
 	
 	public String addStaticResource(Site site, String requestPath, InputStream in) {

@@ -99,6 +99,18 @@ public class SiteAdminController extends AbstractController {
 			return Response.error("Empty file.");
 		}
 	}
+	
+	@RequestMapping(value = BASEURL + "/static/remove", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<Response> removeStaticResource(@PathVariable String siteUrl, @RequestParam String path) {
+		try {
+			Path staticResource = fileSystemUtil.removeStaticResource(getSite(siteUrl), path);
+			logger.debug("Static resource successful deleted: {}", staticResource.toString());
+		} catch (IOException e) {
+			logger.error("Error while deleting static resources.", e);
+			return Response.error("Error while deleting a static resources.", HttpStatus.CONFLICT);
+		}
+		return Response.ok();
+	}
 
 	@RequestMapping(value = BASEURL + "/addTemplate", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
@@ -141,22 +153,6 @@ public class SiteAdminController extends AbstractController {
 	@RequestMapping(value = BASEURL + "/remove/{uuid}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> remove(@PathVariable String siteUrl, @PathVariable UUID uuid) {
 		cu.remove(siteUrl, uuid);
-		return Response.ok();
-	}
-
-	@RequestMapping(value = BASEURL + "/static/remove/{name}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Response> removeStaticResource(@PathVariable String siteUrl, @PathVariable String name) {
-		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
-		Path staticResource = resourceFolder.resolve(name);
-		if(!Files.exists(staticResource))
-			return Response.error("File not found!", HttpStatus.BAD_REQUEST);
-		try {
-			Files.delete(staticResource);
-			logger.debug("Static resource successful deleted: {}", staticResource.toString());
-		} catch (IOException e) {
-			logger.error("Error while deleting static resources.", e);
-			return Response.error("Error while deleting a static resources.", HttpStatus.CONFLICT);
-		}
 		return Response.ok();
 	}
 }
