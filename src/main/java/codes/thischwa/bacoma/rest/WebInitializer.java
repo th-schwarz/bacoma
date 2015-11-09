@@ -41,11 +41,18 @@ public class WebInitializer extends WebMvcConfigurerAdapter implements WebApplic
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		logger.info("*** entered #onStartup");
 		WebApplicationContext context = getContext();
+
+	    // Manage the lifecycle of the application context
 		servletContext.addListener(new ContextLoaderListener(context));
-		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher-servlet", new DispatcherServlet(context));
+
+	    // Register and map the dispatcher servlet
+		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher-servlet",
+				new DispatcherServlet(context));
 		dispatcher.setLoadOnStartup(0);
 		dispatcher.addMapping("/site/*");
-		dispatcher.setMultipartConfig(new MultipartConfigElement("/tmp", 1024*1024*20, 1024*1024*5, 0));
+		
+		// TODO properties.driven config of multiPartConfig
+		dispatcher.setMultipartConfig(new MultipartConfigElement(Constants.DIR_TEMP.toString(), 1024*1024*20, 1024*1024*5, 0));
 	}
 
 	private AnnotationConfigWebApplicationContext getContext() {
