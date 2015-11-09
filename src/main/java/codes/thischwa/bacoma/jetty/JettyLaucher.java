@@ -78,15 +78,9 @@ public class JettyLaucher {
 		logger.info("Try to start server [{}:{}], baseDir={}, connection-timeout={}sec.", host, port, baseDir, timeout);
 		System.setProperty("dir.webapp", baseDir);
 
-		//Enable parsing of jndi-related parts of web.xml and jetty-env.xml
-//        ClassList classlist = ClassList.setServerDefault(server);
-//        classlist.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration", 
-//        		"org.eclipse.jetty.plus.webapp.EnvConfiguration", "org.eclipse.jetty.plus.webapp.PlusConfiguration");
-//        classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration", 
-//        		"org.eclipse.jetty.annotations.AnnotationConfiguration");
-
         // Handler for multiple web apps
         HandlerCollection handlers = new HandlerCollection();
+        
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath("/");
         webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern", 
@@ -105,22 +99,6 @@ public class JettyLaucher {
 		connector.setIdleTimeout(timeout * 1000);
 		server.addConnector(connector);
 		 
-         
-
-//		servletContextHandler = new ServletContextHandler();
-//		servletContextHandler.addEventListener(new ContextLoaderListener());
-//		servletContextHandler.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
-//		
-//		ServletHolder springHolder = new ServletHolder("dispatcher", new DispatcherServlet());
-//		springHolder.setInitParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
-//		springHolder.setInitParameter("contextConfigLocation", WebConfig.class.getName());
-//		springHolder.setInitOrder(0);
-//		// TODO set detailed properties for multipartConfig
-//		// spring-like multipartConfig doesn't work with embedded jetty
-//		springHolder.getRegistration().setMultipartConfig(
-//				new MultipartConfigElement(Constants.DIR_TEMP.toString()));
-//		servletContextHandler.addServlet(springHolder, "/site/*");
-		
 //		ServletHolder ckeditorHolder = new ServletHolder(ZipProxyServlet.class);
 //		ckeditorHolder.setInitParameter("file", baseDir+"/ckeditor.zip");
 //		ckeditorHolder.setInitParameter("zipPathToSkip", "ckeditor");
