@@ -54,7 +54,7 @@ class SiteLinkResourceTool {
 					break;
 				default:
 					throw new IllegalArgumentException(
-							String.format("Illegal resourcee-type in this context: %s", resource.getResourceType().toString()));
+							String.format("Illegal resource-type in this context: %s", resource.getResourceType().toString()));
 			}
 			String name = resource.getName();
 			Page currentPage = (Page)renderable;

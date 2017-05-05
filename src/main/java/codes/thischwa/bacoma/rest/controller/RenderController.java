@@ -43,16 +43,17 @@ public class RenderController extends AbstractController {
 		ViewMode vw = EnumUtil.valueOfIgnoreCase(ViewMode.class, viewMode);
 		if(vw == ViewMode.EXPORT)
 			throw new IllegalArgumentException("'export' isn't allowed in this context!");
+		Site site = getSite(siteUrl);
 		AbstractBacomaObject<?> bo = cu.getObject(siteUrl, uuid);
 		byte[] content;
 		MediaType mediaType;
 		if(InstanceUtil.isRenderable(bo)) {
 			IRenderable renderable = (IRenderable) bo;
-			content = render(siteUrl, renderable, vw);
+			content = render(site, renderable, vw);
 			mediaType = MediaType.TEXT_HTML;
 		} else if(InstanceUtil.isSiteResource(bo)) {
 			AbstractSiteResource res = (AbstractSiteResource) bo;
-			content = render(siteUrl, res, vw);
+			content = render(site, res, vw);
 			mediaType = ServletUtil.parseMediaType(res.getName());
 		} else 
 			throw new IllegalArgumentException("Unkwon object for rendering!");
@@ -61,28 +62,27 @@ public class RenderController extends AbstractController {
 				.body(new ByteArrayResource(content));
 	}
 
-	private byte[] render(String siteUrl, IRenderable renderable, ViewMode viewMode) {
+	private byte[] render(Site site, IRenderable renderable, ViewMode viewMode) {
 		StringWriter contentWriter = new StringWriter();
 		renderer.render(contentWriter, renderable, viewMode, null);
-		byte[] content = contentWriter.toString().getBytes(getDefaultCharset(siteUrl));
+		byte[] content = contentWriter.toString().getBytes(getDefaultCharset(site));
 		contentWriter.flush();
 		IOUtils.closeQuietly(contentWriter);
 		return content;
 	}
 	
-	private byte[] render(String siteUrl, AbstractSiteResource siteResource, ViewMode viewMode) {
+	private byte[] render(Site site, AbstractSiteResource siteResource, ViewMode viewMode) {
 		byte[] content;
 		String name = siteResource.getName();
 		SiteResourceType type = siteResource.getResourceType();
-		Site site = getSite(siteUrl);
 		switch(type) {
 			case CSS: 
 				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(site, name);
-				content = css.getText().getBytes(getDefaultCharset(siteUrl));
+				content = css.getText().getBytes(getDefaultCharset(site));
 				break;
 			case OTHER:
 				OtherResource or = BoInfo.getNamedOtherResource(site, name);
-				content = or.getText().getBytes(getDefaultCharset(siteUrl));
+				content = or.getText().getBytes(getDefaultCharset(site));
 				break;
 			default:
 				throw new IllegalArgumentException(String.format("Type not allowed in this context: ", type));

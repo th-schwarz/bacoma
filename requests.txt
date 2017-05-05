@@ -1,7 +1,8 @@
 SITE
 curl http://localhost:8080/site/getAll/
 curl http://localhost:8080/site/site.test/get/
-curl http://localhost:8080/site/site.test/get/707cc97a-b1a3-4278-bce5-acd3874ba527
+curl http://localhost:8080/site/site.test/getConfiguration/
+curl http://localhost:8080/site/site.test/get/d20e9e25-0001-0000-0000-000000000001
 curl http://localhost:8080/site/site.test/remove/d20e9e25-0003-0000-0000-000000000023
 curl -i -F "file=@/tmp/test.js" http://localhost:8080/site/site.test/static/add/?path=/sub/test.js
 curl -i http://localhost:8080/site/site.test/static/remove/?path=/sub/test_3.js

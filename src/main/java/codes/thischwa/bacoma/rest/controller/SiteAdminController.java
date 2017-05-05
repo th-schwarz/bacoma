@@ -35,7 +35,7 @@ import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 @Controller
 public class SiteAdminController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-
+	
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> getAll() {
 		logger.debug("entered #getAll");
@@ -60,9 +60,17 @@ public class SiteAdminController extends AbstractController {
 	@RequestMapping(value = BASEURL + "/setConfiguration", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> setConfiguration(@PathVariable String siteUrl, @RequestBody Map<String, String> config) {
-		logger.debug("entered #serConfiguration");
+		logger.debug("entered #setConfiguration");
 		cu.setConfiguration(siteUrl, config);
 		return Response.ok();
+	}
+	
+	@RequestMapping(value = BASEURL + "/getConfiguration", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<Response> getConfiguration(@PathVariable String siteUrl) {
+		logger.debug("entered #setConfiguration");
+		Map<String, String> config = cu.getConfiguration(siteUrl);
+		return Response.ok(config);
 	}
 
 	@RequestMapping(value = BASEURL + "/setLayoutTemplate", method = RequestMethod.POST, produces = {

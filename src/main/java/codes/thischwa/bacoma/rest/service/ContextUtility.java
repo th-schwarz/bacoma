@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
@@ -22,6 +24,7 @@ import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ContextUtility {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -51,7 +54,7 @@ public class ContextUtility {
 				SiteManager sm = beanFactory.getBean(SiteManager.class);
 				sm.init(site);
 				smCache.put(siteUrl, sm);
-				logger.debug("successful caching of {}", siteUrl);
+				logger.debug("site successful cached: {}", siteUrl);
 			} catch (BeansException | IOException e) {
 				logger.error("Error while init site: " + siteUrl, e);
 				throw new SiteNotLoadedException();
@@ -86,6 +89,10 @@ public class ContextUtility {
 
 	public void setConfiguration(String siteUrl, Map<String, String> config) {
 		getSiteManager(siteUrl).setConfiguration(config);		
+	}
+	
+	public Map<String, String> getConfiguration(String siteUrl) {
+		return getSiteManager(siteUrl).getSiteConfig();
 	}
 
 	public UUID setLayoutTemplate(String siteUrl, String text) {

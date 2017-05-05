@@ -12,8 +12,6 @@ import org.apache.velocity.runtime.resource.util.StringResourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import codes.thischwa.bacoma.rest.exception.PersitException;
@@ -43,7 +41,6 @@ import codes.thischwa.bacoma.rest.util.FileSystemUtil;
  * Holds a {@link Site}-object and manage some complex object of/for it.
  */
 @Service
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SiteManager {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private Site site;
