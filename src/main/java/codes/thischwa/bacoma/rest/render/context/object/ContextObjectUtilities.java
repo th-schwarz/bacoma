@@ -5,9 +5,9 @@ import codes.thischwa.bacoma.rest.model.InstanceUtil;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 
-final class ToolHelperUtilities {
+final class ContextObjectUtilities {
 
-	private ToolHelperUtilities() {
+	private ContextObjectUtilities() {
 	}
 	
     /**

@@ -1,0 +1,57 @@
+<!doctype html>
+#set( $cmddir = '/codemirror' )
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="$cmddir/lib/codemirror.css">
+    <script src="$cmddir/lib/codemirror.js"></script>
+    <script src="$cmddir/addon/mode/loadmode.js"></script>
+    <script src="$cmddir/addon/selection/active-line.js"></script>
+    <style type="text/css">
+		#header {
+			padding: 10px;
+			margin-bottom: 10px;
+			border: 1pt solid black;
+			background-color : #FFFFCC;
+		}
+      .CodeMirror {
+      		border: 1px solid black;
+      		height: 450px;
+      		}
+      .CodeMirror-activeline-background {background: #e8f2ff !important;}
+    </style>
+  </head>
+<body>
+<form method="post">
+<p><label for="mode">Mode: </label>
+<select id="mode" size="1" onchange="change()">
+	<option value="velocity">Velocity</option>
+	<option value="htmlmixed">HTML</option>
+</select>
+</p>
+<p><textarea id="code" name="code"></textarea></p>
+<p><input class="submit_button" type="submit" alt="" value="OK" /></p>
+<div id="result"></div>
+</form>
+
+	<script>      
+		CodeMirror.modeURL = "$cmddir/mode/%N/%N.js";
+		var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+			tabMode : "indent",
+			matchBrackets : true,
+			lineNumbers : true,
+			lineWrapping : true,
+			indentUnit : 4,
+			indentWithTabs : true,
+			styleActiveLine: true
+		});
+		var modeInput = document.getElementById("mode");
+		function change() {
+		   editor.setOption("mode", modeInput.value);
+		   CodeMirror.autoLoadMode(editor, modeInput.value);
+		};
+		// set default
+		//#if($admintool.isMacro()) modeInput.selectedIndex=0; #elseif($admintool.isTemplate()) modeInput.selectedIndex=1; #end
+		change();
+	</script>
+</body>

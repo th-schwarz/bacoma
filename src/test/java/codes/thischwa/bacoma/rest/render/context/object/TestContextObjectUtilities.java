@@ -10,7 +10,7 @@ import org.junit.Test;
 import codes.thischwa.bacoma.GenericSpringJUnitTest;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 
-public class TestToolHelperUtilities extends GenericSpringJUnitTest {
+public class TestContextObjectUtilities extends GenericSpringJUnitTest {
 	
 	private Level lev1;
 	private Level Lev3_sub1;
@@ -25,13 +25,13 @@ public class TestToolHelperUtilities extends GenericSpringJUnitTest {
 	
 	@Test
 	public void testGetURLRelativePathToRoot() {
-		assertEquals("../", ToolHelperUtilities.getURLRelativePathToRoot(lev1));
-		assertEquals("../../", ToolHelperUtilities.getURLRelativePathToRoot(Lev3_sub1));
+		assertEquals("../", ContextObjectUtilities.getURLRelativePathToRoot(lev1));
+		assertEquals("../../", ContextObjectUtilities.getURLRelativePathToRoot(Lev3_sub1));
 	}
 
 	@Test
 	public void testGetURLRelativePathToLevel() {
-		assertEquals("../3_level/1_sub/", ToolHelperUtilities.getURLRelativePathToLevel(lev1, Lev3_sub1));
+		assertEquals("../3_level/1_sub/", ContextObjectUtilities.getURLRelativePathToLevel(lev1, Lev3_sub1));
 	}
 
 }

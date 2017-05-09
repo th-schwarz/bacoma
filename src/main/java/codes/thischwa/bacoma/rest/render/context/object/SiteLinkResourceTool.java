@@ -58,7 +58,7 @@ class SiteLinkResourceTool {
 			}
 			String name = resource.getName();
 			Page currentPage = (Page)renderable;
-			String levelPath = ToolHelperUtilities.getURLRelativePathToRoot(currentPage.getParent());
+			String levelPath = ContextObjectUtilities.getURLRelativePathToRoot(currentPage.getParent());
 			return levelPath.concat(resourceDir).concat("/").concat(name);
 		}
 		

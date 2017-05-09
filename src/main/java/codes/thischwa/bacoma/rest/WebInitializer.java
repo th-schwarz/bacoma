@@ -1,5 +1,9 @@
 package codes.thischwa.bacoma.rest;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -17,9 +21,12 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import codes.thischwa.bacoma.Constants;
 
 @Configuration
 @EnableWebMvc
@@ -45,6 +52,11 @@ public class WebInitializer extends WebMvcConfigurerAdapter implements WebApplic
 	    // Manage the lifecycle of the application context
 		servletContext.addListener(new ContextLoaderListener(context));
 
+		// add spring-security
+	    DelegatingFilterProxy securityFilter = new DelegatingFilterProxy("springSecurityFilterChain");
+	    securityFilter.setServletContext(servletContext);
+	    servletContext.addFilter("springSecurityFilterChain", securityFilter).addMappingForUrlPatterns(null, true, "/*");	    
+	    
 	    // Register and map the dispatcher servlet
 		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher-servlet",
 				new DispatcherServlet(context));
@@ -53,6 +65,9 @@ public class WebInitializer extends WebMvcConfigurerAdapter implements WebApplic
 		
 		// TODO properties.driven config of multiPartConfig
 		dispatcher.setMultipartConfig(new MultipartConfigElement(Constants.DIR_TEMP.toString(), 1024*1024*20, 1024*1024*5, 0));
+
+		FilterRegistration.Dynamic resourceFilter = servletContext.addFilter("resourceFilter", ClassPathResourceFilter.class);
+		resourceFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/ui/*");
 	}
 
 	private AnnotationConfigWebApplicationContext getContext() {

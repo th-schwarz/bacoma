@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.service.Persister;
-import codes.thischwa.bacoma.rest.service.SiteManager;
 import codes.thischwa.bacoma.rest.service.SiteBuilder;
+import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/bacoma-rest.xml")

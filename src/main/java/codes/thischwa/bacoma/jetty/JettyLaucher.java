@@ -23,7 +23,7 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import codes.thischwa.bacoma.rest.Constants;
+import codes.thischwa.bacoma.Constants;
 
 public class JettyLaucher {
 	private static final Logger logger = LoggerFactory.getLogger(JettyLaucher.class);
@@ -99,24 +99,6 @@ public class JettyLaucher {
 		connector.setIdleTimeout(timeout * 1000);
 		server.addConnector(connector);
 		 
-//		ServletHolder ckeditorHolder = new ServletHolder(ZipProxyServlet.class);
-//		ckeditorHolder.setInitParameter("file", baseDir+"/ckeditor.zip");
-//		ckeditorHolder.setInitParameter("zipPathToSkip", "ckeditor");
-//		ckeditorHolder.setInitOrder(1);
-//		servletContextHandler.addServlet(ckeditorHolder, "/ckeditor/*");
-//
-//		ServletHolder codeEditorHolder = new ServletHolder(ZipProxyServlet.class);
-//		codeEditorHolder.setInitParameter("file", baseDir+"/codemirror.zip");
-//		codeEditorHolder.setInitParameter("zipPathToSkip", "codemirror");
-//		codeEditorHolder.setInitOrder(2);
-//		servletContextHandler.addServlet(codeEditorHolder, "/codemirror/*");
-//		
-//		ServletHolder formLibHolder = new ServletHolder(StaticServlet.class);
-//		formLibHolder.setInitParameter("basePath", baseDir+"/form_lib");
-//		formLibHolder.setInitOrder(10);
-//		servletContextHandler.addServlet(formLibHolder, "/form_lib/*");
-		
-		//server.setHandler(servletContextHandler);
 		server.setHandler(handlers);
         try {
 			server.start();

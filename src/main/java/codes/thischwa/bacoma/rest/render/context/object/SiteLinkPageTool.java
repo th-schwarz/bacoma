@@ -55,7 +55,7 @@ class SiteLinkPageTool {
 				pageName = page.getName().concat(".").concat(siteManager.getSiteConfig().get("site.export.file.extension"));
 			
 			Page currentPage = (Page)renderable;
-			String levelPath = ToolHelperUtilities.getURLRelativePathToLevel(currentPage.getParent(), page.getParent());
+			String levelPath = ContextObjectUtilities.getURLRelativePathToLevel(currentPage.getParent(), page.getParent());
 			return levelPath.concat(pageName);
 		}
 

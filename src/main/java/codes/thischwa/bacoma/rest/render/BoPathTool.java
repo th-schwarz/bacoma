@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-import codes.thischwa.bacoma.rest.Constants;
+import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
 import codes.thischwa.bacoma.rest.model.OrderableInfo;

@@ -12,11 +12,10 @@
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler />
 	<!-- mvc:resources mapping="/resources/**" location="/resources/" / -->
-	<context:component-scan base-package="codes.thischwa.bacoma.rest.*" />
+	<context:component-scan base-package="codes.thischwa.bacoma.rest.*">
+		<context:exclude-filter type="regex" expression="codes.thischwa.bacoma.rest.listener.*"/>
+	</context:component-scan>
 	
-	<!-- Context-Listener -->
-	<bean id="eventListenerBean" class="codes.thischwa.bacoma.rest.listener.ApplicationContextListener" />
-
 	<bean
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="locations">
