@@ -9,9 +9,9 @@ import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.ContextUtility;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
-public abstract class AbstractController {
+abstract class AbstractRestController {
 	
-	protected static final String BASEURL = "/{siteUrl}";
+	protected static final String BASEURL = "/site/{siteUrl}";
 
 	@Autowired
 	protected ContextUtility cu;
@@ -31,7 +31,7 @@ public abstract class AbstractController {
 	}
 	
 	protected Charset getDefaultCharset(Site site) {
-		String enc = getProperty(site, "default.encoding");
+		String enc = getProperty(site, ConfigurationHolder.KEY_DEFAULT_ENCODING);
 		return Charset.forName(enc);
 	}
 
@@ -40,7 +40,7 @@ public abstract class AbstractController {
 	}
 	
 	protected String getProperty(Site site, String key) {
-		return configurationHolder.get(site, key);
+		return configurationHolder.getMergedProperty(site, key);
 	}
 	
 	protected String getDefaultEncoding(Site site) {

@@ -92,7 +92,7 @@ public class ContextUtility {
 	}
 	
 	public Map<String, String> getConfiguration(String siteUrl) {
-		return getSiteManager(siteUrl).getSiteConfig();
+		return getSiteManager(siteUrl).getMergedSiteConfig();
 	}
 
 	public UUID setLayoutTemplate(String siteUrl, String text) {

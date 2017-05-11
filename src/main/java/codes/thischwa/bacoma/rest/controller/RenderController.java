@@ -38,7 +38,7 @@ import codes.thischwa.bacoma.rest.util.EnumUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 @Controller
-public class RenderController extends AbstractController {
+public class RenderController extends AbstractRestController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -83,7 +83,7 @@ public class RenderController extends AbstractController {
 		return content;
 	}
 	
-	private String fixLinksForPreview(Site site, String fullContent) {
+	String fixLinksForPreview(Site site, String fullContent) {
 		try {
 			String resourceDir = "/".concat(getProperty(site, ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_STATIC));
 			Document doc = Jsoup.parse(fullContent);
@@ -93,6 +93,14 @@ public class RenderController extends AbstractController {
 					String path = UriComponentsBuilder.fromUri(new URI(href)).build().getQueryParams().getFirst("path");
 					String newHref = buildSiteResourceLink(site, path);
 					aEl.attr("href", newHref);
+				}
+			}
+			for(Element aEl : doc.select("img[src]")) {
+				String href = aEl.attr("src");
+				if(href.startsWith(resourceDir)) {
+					String path = UriComponentsBuilder.fromUri(new URI(href)).build().getQueryParams().getFirst("path");
+					String newSrc = buildSiteResourceLink(site, path);
+					aEl.attr("src", newSrc);
 				}
 			}
 			return doc.toString();

@@ -47,10 +47,10 @@ class SiteLinkResourceTool {
 			String resourceDir;
 			switch(resource.getResourceType()) {
 				case CSS:
-					resourceDir = siteManager.getSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_CSS);
+					resourceDir = siteManager.getMergedSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_CSS);
 					break;
 				case OTHER:
-					resourceDir = siteManager.getSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_OTHER);
+					resourceDir = siteManager.getMergedSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_OTHER);
 					break;
 				default:
 					throw new IllegalArgumentException(

@@ -53,7 +53,7 @@ public class ExportRenderer {
 			logger.warn(messages.toString());
 			return;
 		}
-		 BoPathTool pathTool = new BoPathTool(sm.getSiteConfig());
+		 BoPathTool pathTool = new BoPathTool(sm.getMergedSiteConfig());
 		for(IRenderable renderable : renderables) {
 			StringBuilderWriter writer = new StringBuilderWriter();
 			velocityRenderer.render(writer, renderable, ViewMode.EXPORT);
@@ -62,7 +62,7 @@ public class ExportRenderer {
 			if(!Files.exists(parent))
 				Files.createDirectories(parent);
 			Files.createFile(exportPath);
-			Files.write(exportPath, writer.toString().getBytes(defaultConfigurationHolder.get(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
+			Files.write(exportPath, writer.toString().getBytes(defaultConfigurationHolder.getDefaultProperty(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
 					StandardOpenOption.WRITE);
 		}
 		List<AbstractSiteResource> resources = new ArrayList<>();
@@ -74,7 +74,7 @@ public class ExportRenderer {
 			if(!Files.exists(parent))
 				Files.createDirectories(parent);
 			Files.createFile(exportPath);
-			Files.write(exportPath, res.getText().getBytes(defaultConfigurationHolder.get(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
+			Files.write(exportPath, res.getText().getBytes(defaultConfigurationHolder.getDefaultProperty(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
 					StandardOpenOption.WRITE);
 		}
 	}

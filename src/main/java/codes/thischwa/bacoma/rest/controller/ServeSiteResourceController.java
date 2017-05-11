@@ -43,8 +43,8 @@ import codes.thischwa.bacoma.rest.util.ServletUtil;
  * </ul>
  */
 @Controller
-@RequestMapping(value = AbstractController.BASEURL + "/resource")
-public class ServeSiteResourceController extends AbstractController {
+@RequestMapping(value = AbstractRestController.BASEURL + "/resource")
+public class ServeSiteResourceController extends AbstractRestController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 

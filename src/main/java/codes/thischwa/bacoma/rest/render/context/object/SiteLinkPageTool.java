@@ -50,9 +50,9 @@ class SiteLinkPageTool {
 			
 			String pageName;
 			if(BoInfo.isWelcomePage(page) || OrderableInfo.isFirst(page)) 
-				pageName = siteManager.getSiteConfig().get("site.export.file.welcome");
+				pageName = siteManager.getMergedSiteConfig().get("site.export.file.welcome");
 			else
-				pageName = page.getName().concat(".").concat(siteManager.getSiteConfig().get("site.export.file.extension"));
+				pageName = page.getName().concat(".").concat(siteManager.getMergedSiteConfig().get("site.export.file.extension"));
 			
 			Page currentPage = (Page)renderable;
 			String levelPath = ContextObjectUtilities.getURLRelativePathToLevel(currentPage.getParent(), page.getParent());

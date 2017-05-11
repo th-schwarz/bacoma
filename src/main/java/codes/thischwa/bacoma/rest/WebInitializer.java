@@ -1,9 +1,5 @@
 package codes.thischwa.bacoma.rest;
 
-import java.util.EnumSet;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -18,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
@@ -27,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.listener.ContextListener;
 
 @Configuration
 @EnableWebMvc
@@ -43,31 +39,27 @@ public class WebInitializer extends WebMvcConfigurerAdapter implements WebApplic
 		propertySources.setLocation(new ClassPathResource("bacoma.properties"));
 		return propertySources;
 	}
-	
+
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		logger.info("*** entered #onStartup");
 		WebApplicationContext context = getContext();
 
-	    // Manage the lifecycle of the application context
-		servletContext.addListener(new ContextLoaderListener(context));
+		// Manage the lifecycle of the application context and stop jetty, if the initialization of the context fails
+		servletContext.addListener(new ContextListener(context));
 
 		// add spring-security
-	    DelegatingFilterProxy securityFilter = new DelegatingFilterProxy("springSecurityFilterChain");
-	    securityFilter.setServletContext(servletContext);
-	    servletContext.addFilter("springSecurityFilterChain", securityFilter).addMappingForUrlPatterns(null, true, "/*");	    
-	    
-	    // Register and map the dispatcher servlet
-		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher-servlet",
-				new DispatcherServlet(context));
-		dispatcher.setLoadOnStartup(0);
-		dispatcher.addMapping("/site/*");
-		
-		// TODO properties.driven config of multiPartConfig
-		dispatcher.setMultipartConfig(new MultipartConfigElement(Constants.DIR_TEMP.toString(), 1024*1024*20, 1024*1024*5, 0));
+		DelegatingFilterProxy securityFilter = new DelegatingFilterProxy("springSecurityFilterChain");
+		securityFilter.setServletContext(servletContext);
+		servletContext.addFilter("springSecurityFilterChain", securityFilter).addMappingForUrlPatterns(null, true, "/*");
 
-		FilterRegistration.Dynamic resourceFilter = servletContext.addFilter("resourceFilter", ClassPathResourceFilter.class);
-		resourceFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/ui/*");
+		// Register and map the dispatcher servlet
+		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher-servlet", new DispatcherServlet(context));
+		dispatcher.setLoadOnStartup(0);
+		dispatcher.addMapping("/*");
+
+		// TODO properties.driven config of multiPartConfig
+		dispatcher.setMultipartConfig(new MultipartConfigElement(Constants.DIR_TEMP.toString(), 1024 * 1024 * 20, 1024 * 1024 * 5, 0));
 	}
 
 	private AnnotationConfigWebApplicationContext getContext() {

@@ -24,7 +24,7 @@ import codes.thischwa.bacoma.rest.render.VelocityRenderer;
  * Manage the different web editors.
  */
 @Controller
-public class EditorController extends AbstractController {
+public class EditorController extends AbstractRestController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired

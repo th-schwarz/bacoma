@@ -27,11 +27,15 @@ public class ConfigurationHolder {
 	public ConfigurationHolder() throws IOException {
 		defaultConfiguration = new TreeMap<>();
 		Properties props = new Properties();
+		
+		// loading the default-properties from the class-path 
 		props.load(ConfigurationHolder.class.getResourceAsStream("/bacoma.properties"));
 		for(Object keyObj : props.keySet()) {
 			String key = keyObj.toString();
 			defaultConfiguration.put(key, props.getProperty(key));
 		}
+		
+		// loading properties of the application an merge it with the default one
 		String dirWebapp = System.getProperty("dir.webapp");
 		if(dirWebapp != null)
 			defaultConfiguration.put("dir.webapp", dirWebapp);
@@ -41,13 +45,13 @@ public class ConfigurationHolder {
 		return defaultConfiguration;
 	}
 	
-	public String get(String key) {
+	public String getDefaultProperty(String key) {
 		return defaultConfiguration.get(key);
 	}
 	
-	public String get(Site site, String key) {
+	public String getMergedProperty(Site site, String key) {
 		if(site.getConfiguration().containsKey(key))
 			return site.getConfiguration().get(key);
-		return get(key);
+		return getDefaultProperty(key);
 	}
 }

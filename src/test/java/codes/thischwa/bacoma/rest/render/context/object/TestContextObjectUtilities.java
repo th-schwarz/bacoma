@@ -2,6 +2,7 @@ package codes.thischwa.bacoma.rest.render.context.object;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -17,7 +18,7 @@ public class TestContextObjectUtilities extends GenericSpringJUnitTest {
 
 	@Before
 	@Override
-	public void init() throws Exception {
+	public void init() throws IOException {
 		super.init();
 		lev1 = (Level) siteManager.getObject(UUID.fromString("d20e9e25-0002-0001-0000-000000000000"));
 		Lev3_sub1 = (Level) siteManager.getObject(UUID.fromString("d20e9e25-0002-0003-0010-000000000000"));

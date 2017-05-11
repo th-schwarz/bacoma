@@ -38,7 +38,7 @@ public class FileSystemUtil {
 	private Path dataDir;
 	
 	public void init() throws IOException {
-		dataDir = Paths.get(configurationHolder.get("dir.webapp"), dataDirStr);
+		dataDir = Paths.get(configurationHolder.getDefaultProperty("dir.webapp"), dataDirStr);
 		if(!Files.exists(dataDir)) {
 			Files.createDirectories(dataDir);
 			logger.info("Data dir created successful: {}", dataDir.toString());
@@ -79,7 +79,7 @@ public class FileSystemUtil {
 	}
 	
 	public Path getStaticResourceDir(Site site) {
-		return getSitesDir(site, configurationHolder.get(site, "site.dir.staticresource"));
+		return getSitesDir(site, configurationHolder.getMergedProperty(site, "site.dir.staticresource"));
 	}
 
 

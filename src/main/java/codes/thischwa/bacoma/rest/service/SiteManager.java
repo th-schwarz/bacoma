@@ -55,7 +55,7 @@ public class SiteManager {
 	
 	private Map<UUID, AbstractBacomaObject<?>> objectsPerIdentifier = new HashMap<>();
 
-	private Map<String, String> siteConfig = new HashMap<>();
+	private Map<String, String> mergedSiteConfig = new HashMap<>();
 
 	private ViewMode viewMode = ViewMode.PREVIEW;
 
@@ -65,11 +65,11 @@ public class SiteManager {
 		identify(site);
 
 		// ** build the configuration of the site
-		siteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "site"));
-		siteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "velocity"));
+		mergedSiteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "site"));
+		mergedSiteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "velocity"));
 		if(site.getConfiguration() != null) {
-			siteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "site"));
-			siteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "velocity"));
+			mergedSiteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "site"));
+			mergedSiteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "velocity"));
 		}
 
 		velocityEngine = buildVelocityEngine();
@@ -92,10 +92,10 @@ public class SiteManager {
 	/**
 	 * @return the complete site configuration (merged with defaults)
 	 */
-	public Map<String, String> getSiteConfig() {
+	public Map<String, String> getMergedSiteConfig() {
 		if(site == null)
 			throw new SiteNotLoadedException();
-		return siteConfig;
+		return mergedSiteConfig;
 	}
 
 	public VelocityEngine getVelocityEngine() {
@@ -142,7 +142,7 @@ public class SiteManager {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		// merge the configs
-		Map<String, String> velConfig = ConfigurationUtil.getProperties(siteConfig, "velocity", true);
+		Map<String, String> velConfig = ConfigurationUtil.getProperties(mergedSiteConfig, "velocity", true);
 
 		Properties props = new Properties();
 		props.putAll(velConfig);
@@ -236,7 +236,7 @@ public class SiteManager {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		site.setConfiguration(config);
-		siteConfig.putAll(config);
+		mergedSiteConfig.putAll(config);
 		persist();
 		VelocityEngine ve = null;
 		try {

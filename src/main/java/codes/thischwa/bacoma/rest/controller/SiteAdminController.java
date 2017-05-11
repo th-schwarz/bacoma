@@ -33,7 +33,7 @@ import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 
 @Controller
-public class SiteAdminController extends AbstractController {
+public class SiteAdminController extends AbstractRestController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
