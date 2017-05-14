@@ -10,6 +10,9 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import codes.thischwa.bacoma.ui.controller.FilemanagerConfigBuilderImpl;
+import codes.thischwa.c5c.PropertiesLoader;
+
 public class Starter {
 
 	private static final Logger logger = LoggerFactory.getLogger(Starter.class);
@@ -35,6 +38,9 @@ public class Starter {
 		} else {
 			logger.info("Temp-directory found: {}", Constants.DIR_TEMP);
 		}
+
+		PropertiesLoader.setProperty("connector.filemanagerConfigImpl", FilemanagerConfigBuilderImpl.class.getName());
+		PropertiesLoader.setProperty("connector.configEnabled", "true");
 		
 		new JettyLaucher(props).start();
 	}

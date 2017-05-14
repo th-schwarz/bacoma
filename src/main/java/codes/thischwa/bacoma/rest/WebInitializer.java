@@ -47,15 +47,15 @@ public class WebInitializer extends WebMvcConfigurerAdapter implements WebApplic
 
 		// Manage the lifecycle of the application context and stop jetty, if the initialization of the context fails
 		servletContext.addListener(new ContextListener(context));
-
+		
 		// add spring-security
 		DelegatingFilterProxy securityFilter = new DelegatingFilterProxy("springSecurityFilterChain");
 		securityFilter.setServletContext(servletContext);
 		servletContext.addFilter("springSecurityFilterChain", securityFilter).addMappingForUrlPatterns(null, true, "/*");
-
+		
 		// Register and map the dispatcher servlet
 		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher-servlet", new DispatcherServlet(context));
-		dispatcher.setLoadOnStartup(0);
+		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("/*");
 
 		// TODO properties.driven config of multiPartConfig
