@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.AbstractController;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
@@ -38,14 +39,14 @@ import codes.thischwa.bacoma.rest.util.EnumUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 @Controller
-public class RenderController extends AbstractRestController {
+public class RenderController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private VelocityRenderer renderer;
 		
-	@RequestMapping(value = BASEURL + "/render/get/{viewMode}/{uuid}", method = RequestMethod.GET)
+	@RequestMapping(value = Constants.BASEURL_REST + "/render/get/{viewMode}/{uuid}", method = RequestMethod.GET)
 	public ResponseEntity<?> get(@PathVariable String siteUrl, @PathVariable String viewMode, @PathVariable UUID uuid) {
 		logger.debug("entered #get: url={}, ViewMode={}, UUID={}", siteUrl, viewMode, uuid);
 		ViewMode vm = EnumUtil.valueOfIgnoreCase(ViewMode.class, viewMode);

@@ -22,3 +22,5 @@ curl -i -POST -H 'Content-Type: application/json' -d '{"text":"$content","name":
 curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"cf38ac24-91bf-444c-846e-a5b630d2b6de","name":"1_level"}' http://localhost:8080/site/site.test/addLevel
 curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"d20e9e25-7e34-4411-a70e-90104b8d60d0","name":"2_level","title":"2nd Level"}' http://localhost:8080/site/site.test/addLevel
 
+Filemanager:
+http://localhost:8080/site.test/filemanager/index.html?CKEditor=field&CKEditorFuncNum=1&langCode=de

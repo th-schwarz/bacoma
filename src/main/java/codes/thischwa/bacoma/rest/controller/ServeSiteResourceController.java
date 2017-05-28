@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.AbstractController;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
@@ -43,8 +45,8 @@ import codes.thischwa.bacoma.rest.util.ServletUtil;
  * </ul>
  */
 @Controller
-@RequestMapping(value = AbstractRestController.BASEURL + "/resource")
-public class ServeSiteResourceController extends AbstractRestController {
+@RequestMapping(value = Constants.BASEURL_REST + "/resource")
+public class ServeSiteResourceController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 

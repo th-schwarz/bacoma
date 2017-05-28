@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.controller;
+package codes.thischwa.bacoma.rest;
 
 import java.nio.charset.Charset;
 
@@ -9,10 +9,8 @@ import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.ContextUtility;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
-abstract class AbstractRestController {
+public abstract class AbstractController {
 	
-	protected static final String BASEURL = "/site/{siteUrl}";
-
 	@Autowired
 	protected ContextUtility cu;
 

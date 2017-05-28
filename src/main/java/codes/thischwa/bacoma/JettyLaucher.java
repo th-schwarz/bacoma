@@ -28,7 +28,7 @@ class JettyLaucher {
 		int timeout = Integer.parseInt(props.getProperty("timeoutSec", "900"));
 		String baseDir  = props.getProperty("baseDir", "webapp");
 		logger.info("Try to start server [{}:{}], baseDir={}, connection-timeout={}sec.", host, port, baseDir, timeout);
-		System.setProperty("dir.webapp", baseDir);
+		System.setProperty(Constants.SYSPROP_DIR_WEBAPP, baseDir);
 
         // Handler for multiple web apps
         HandlerCollection handlers = new HandlerCollection();

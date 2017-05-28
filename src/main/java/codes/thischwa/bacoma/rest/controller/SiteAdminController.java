@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
+import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.AbstractController;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
 import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqPage;
@@ -33,7 +35,7 @@ import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 
 @Controller
-public class SiteAdminController extends AbstractRestController {
+public class SiteAdminController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -57,7 +59,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok(sites);
 	}
 
-	@RequestMapping(value = BASEURL + "/setConfiguration", method = RequestMethod.POST, produces = {
+	@RequestMapping(value = Constants.BASEURL_REST + "/setConfiguration", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> setConfiguration(@PathVariable String siteUrl, @RequestBody Map<String, String> config) {
 		logger.debug("entered #setConfiguration");
@@ -65,7 +67,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok();
 	}
 	
-	@RequestMapping(value = BASEURL + "/getConfiguration", method = RequestMethod.GET, produces = {
+	@RequestMapping(value = Constants.BASEURL_REST + "/getConfiguration", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> getConfiguration(@PathVariable String siteUrl) {
 		logger.debug("entered #setConfiguration");
@@ -73,7 +75,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok(config);
 	}
 
-	@RequestMapping(value = BASEURL + "/setLayoutTemplate", method = RequestMethod.POST, produces = {
+	@RequestMapping(value = Constants.BASEURL_REST + "/setLayoutTemplate", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> setLayoutTemplate(@PathVariable String siteUrl, @RequestBody String text) {
 		logger.debug("entered #setLayoutTemplate");
@@ -83,7 +85,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok(id);
 	}
 
-	@RequestMapping(value = BASEURL + "/addResource", method = RequestMethod.POST, produces = {
+	@RequestMapping(value = Constants.BASEURL_REST + "/addResource", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> addResource(@PathVariable String siteUrl, @RequestBody GenericRequestSiteResource siteResource) {
 		if(!siteResource.isValid())
@@ -92,7 +94,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok(siteResource.getId());
 	}
 
-	@RequestMapping(value = BASEURL + "/static/add", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = Constants.BASEURL_REST + "/static/add", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> addStaticResource(@PathVariable String siteUrl, @RequestPart("file") Part file, @RequestParam String path) {
 		String originalFileName = file.getSubmittedFileName();
 		if(originalFileName != null) {
@@ -108,7 +110,7 @@ public class SiteAdminController extends AbstractRestController {
 		}
 	}
 	
-	@RequestMapping(value = BASEURL + "/static/remove", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = Constants.BASEURL_REST + "/static/remove", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> removeStaticResource(@PathVariable String siteUrl, @RequestParam String path) {
 		try {
 			Path staticResource = fileSystemUtil.removeStaticResource(getSite(siteUrl), path);
@@ -120,7 +122,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok();
 	}
 
-	@RequestMapping(value = BASEURL + "/addTemplate", method = RequestMethod.POST, produces = {
+	@RequestMapping(value = Constants.BASEURL_REST + "/addTemplate", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<?> addTemplate(@PathVariable String siteUrl, @RequestBody ReqTemplate template) {
 		if(!template.isValid())
@@ -129,7 +131,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok(template.getId());
 	}
 
-	@RequestMapping(value = BASEURL + "/addLevel", method = RequestMethod.POST, produces = {
+	@RequestMapping(value = Constants.BASEURL_REST + "/addLevel", method = RequestMethod.POST, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> addLevel(@PathVariable String siteUrl, @RequestBody ReqLevel level) {
 		if(!level.isValid())
@@ -138,7 +140,7 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok(level.getId());
 	}
 
-	@RequestMapping(value = BASEURL + "/addPage", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+	@RequestMapping(value = Constants.BASEURL_REST + "/addPage", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> addPage(@PathVariable String siteUrl, @RequestBody ReqPage page) {
 		if(!page.isValid())
@@ -147,18 +149,18 @@ public class SiteAdminController extends AbstractRestController {
 		return Response.ok(page.getId());
 	}
 
-	@RequestMapping(value = BASEURL + "/get/{uuid}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = Constants.BASEURL_REST + "/get/{uuid}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> get(@PathVariable String siteUrl, @PathVariable UUID uuid) {
 		AbstractBacomaObject<?> obj = cu.getObject(siteUrl, uuid);
 		return Response.ok(obj);
 	}
 
-	@RequestMapping(value = BASEURL + "/get", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = Constants.BASEURL_REST + "/get", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> getCurrent(@PathVariable String siteUrl) {
 		return Response.ok(getSite(siteUrl));
 	}
 
-	@RequestMapping(value = BASEURL + "/remove/{uuid}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = Constants.BASEURL_REST + "/remove/{uuid}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> remove(@PathVariable String siteUrl, @PathVariable UUID uuid) {
 		cu.remove(siteUrl, uuid);
 		return Response.ok();

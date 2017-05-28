@@ -18,19 +18,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.AbstractController;
 import codes.thischwa.bacoma.rest.render.VelocityRenderer;
 
 /**
  * Manage the different web editors.
  */
 @Controller
-public class EditorController extends AbstractRestController {
+public class EditorController extends AbstractController {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private VelocityRenderer renderer;
 	
-	@RequestMapping(value = BASEURL + "/editPage", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+	@RequestMapping(value = Constants.BASEURL_REST + "/editPage", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
 	public @ResponseBody String editPage(@PathVariable String siteUrl) throws IOException {
 		logger.info("#entered #editPage");
 		InputStream in = null;

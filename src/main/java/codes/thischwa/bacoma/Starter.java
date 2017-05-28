@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import codes.thischwa.bacoma.ui.controller.FilemanagerConfigBuilderImpl;
+import codes.thischwa.bacoma.ui.controller.FilemanagerPathBuilder;
 import codes.thischwa.c5c.PropertiesLoader;
 
 public class Starter {
@@ -40,6 +41,7 @@ public class Starter {
 		}
 
 		PropertiesLoader.setProperty("connector.filemanagerConfigImpl", FilemanagerConfigBuilderImpl.class.getName());
+		PropertiesLoader.setProperty("connector.userPathBuilderImpl", FilemanagerPathBuilder.class.getName());
 		PropertiesLoader.setProperty("connector.configEnabled", "true");
 		
 		new JettyLaucher(props).start();

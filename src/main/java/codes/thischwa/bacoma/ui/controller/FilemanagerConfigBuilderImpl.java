@@ -13,22 +13,24 @@ public class FilemanagerConfigBuilderImpl extends GlobalFilemanagerLibConfig {
 
 	@Override
 	protected void postLoadConfigFileHook() {
-		userConfig.setComment("Built by DEMO.");
+		userConfig.setComment("Built by bacoma.");
 		userConfig.getSecurity().setUploadPolicy(UPLOAD_POLICY.ALLOW_ALL);
 		userConfig.getUpload().setFileSizeLimit(3);
-		userConfig.getOptions().setFileRoot("/userfiles/");
+
 		userConfig.getOptions().setTheme("default");
-		userConfig.getImages().getResize().setEnabled(false);
+		userConfig.getOptions().setServerRoot(false);
+		userConfig.getOptions().setFileRoot("/");
 		userConfig.getOptions().setSplitterWidth(150);
 		userConfig.getOptions().setSplitterMinWidth(150);
-		
+
+		userConfig.getImages().getResize().setEnabled(false);
 		userConfig.getAudios().setShowPlayer(false);
 		userConfig.getVideos().setShowPlayer(false);
 		userConfig.getPdfs().setShowReader(false);
-		
+
 		userConfig.getOptions().setDefaultViewMode(VIEW_MODE.LIST);
 		userConfig.getOptions().setFileSorting(FILE_SORTING.DEFAULT);
 
-		logger.debug("DEMO related configuration done.");
+		logger.debug("BACOMA related configuration done.");
 	}
 }
