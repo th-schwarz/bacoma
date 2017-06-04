@@ -1,5 +1,5 @@
 <!doctype html>
-#set( $cmddir = '/codemirror' )
+#set( $cmddir = '/ui/codemirror' )
 <html>
   <head>
     <meta charset="utf-8">
@@ -23,15 +23,15 @@
   </head>
 <body>
 <form method="post">
-<p><label for="mode">Mode: </label>
-<select id="mode" size="1" onchange="change()">
-	<option value="velocity">Velocity</option>
-	<option value="htmlmixed">HTML</option>
-</select>
-</p>
-<p><textarea id="code" name="code"></textarea></p>
-<p><input class="submit_button" type="submit" alt="" value="OK" /></p>
-<div id="result"></div>
+	<p><label for="mode">Mode: </label>
+	<select id="mode" size="1" onchange="change()">
+		<option value="velocity">Velocity</option>
+		<option value="htmlmixed">HTML</option>
+	</select>
+	</p>
+	<p><textarea id="code" name="code"></textarea></p>
+	<p><input class="submit_button" type="submit" alt="" value="OK" /></p>
+	<div id="result"></div>
 </form>
 
 	<script>      
@@ -51,7 +51,8 @@
 		   CodeMirror.autoLoadMode(editor, modeInput.value);
 		};
 		// set default
-		//#if($admintool.isMacro()) modeInput.selectedIndex=0; #elseif($admintool.isTemplate()) modeInput.selectedIndex=1; #end
+		// ##if($admintool.isMacro()) modeInput.selectedIndex=0; #elseif($admintool.isTemplate()) modeInput.selectedIndex=1; #end
+		
 		change();
 	</script>
 </body>

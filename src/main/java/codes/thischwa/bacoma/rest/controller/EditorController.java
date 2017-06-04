@@ -31,8 +31,8 @@ public class EditorController extends AbstractController {
 
 	@Autowired
 	private VelocityRenderer renderer;
-	
-	@RequestMapping(value = Constants.BASEURL_REST + "/editPage", method = RequestMethod.GET, produces = {MediaType.TEXT_HTML_VALUE})
+
+	@RequestMapping(value = Constants.BASEURL_REST + "/editSource", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
 	public @ResponseBody String editPage(@PathVariable String siteUrl) throws IOException {
 		logger.info("#entered #editPage");
 		InputStream in = null;
@@ -43,15 +43,15 @@ public class EditorController extends AbstractController {
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}
-		
+
 		return renderer.renderString(writer.toString(), null);
 	}
-	
-	@RequestMapping(value="/test", method=RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE}, 
-			consumes = {MediaType.APPLICATION_JSON_VALUE})
+
+	@RequestMapping(value = "/test", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Response> test(@RequestBody Map<String, String> var) {
 		logger.info("#entered #test  entries:{}", var.size());
-		
+
 		String msg = "Okay: " + var.get("mode");
 		ResponseEntity<Response> resp = Response.ok(msg);
 		return resp;

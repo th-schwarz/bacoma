@@ -35,11 +35,9 @@ import codes.thischwa.bacoma.rest.util.EnumUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 /**
- * Controller which serves all resources of a {@link Site}, which are required
- * for the final rendered site. Resources are:
+ * Controller which serves all resources of a {@link Site}, which are required for the final rendered site. Resources are:
  * <ul>
- * <li>static resources: files in the file system like javascript, additional
- * css, images (won't be rendered)
+ * <li>static resources: files in the file system like javascript, additional css, images (won't be rendered)
  * <li>css from a {@link Site}-object
  * <li>other text-base resources from a {@link Site}-object
  * </ul>
@@ -50,7 +48,7 @@ public class ServeSiteResourceController extends AbstractController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@RequestMapping(value = "/static/getAll", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(value = "/static/getAll", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Response> getAll(@PathVariable String siteUrl) {
 		logger.debug("entered #getAll");
 		Path resourceFolder = fileSystemUtil.getStaticResourceDir(getSite(siteUrl));
@@ -62,7 +60,7 @@ public class ServeSiteResourceController extends AbstractController {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if(!Files.isHidden(file)) {
-						String absolutePath = file.toAbsolutePath().toString(); 
+						String absolutePath = file.toAbsolutePath().toString();
 						String resFile = absolutePath.substring(resourceFolderLen);
 						resources.add(resFile);
 					}
@@ -75,14 +73,16 @@ public class ServeSiteResourceController extends AbstractController {
 			return Response.error("Error while getting static resources.", HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	/**
-	 * Serves a desired static resource (files in the file system), e.g. 
+	 * Serves a desired static resource (files in the file system), e.g.
 	 * <tt>http://localhost:8080/site/site.test/resource/static/get?path=/sub_folder/test.js</tt>.<br/>
 	 * The content- / media-type depends on the extension of the 'path'.
 	 * 
-	 * @param siteUrl the url of the referred site
-	 * @param path must start with '/' and could contain sub-folders
+	 * @param siteUrl
+	 *            the url of the referred site
+	 * @param path
+	 *            must start with '/' and could contain sub-folders
 	 * @return
 	 */
 	@RequestMapping(value = "/static/get", method = RequestMethod.GET)
@@ -90,7 +90,7 @@ public class ServeSiteResourceController extends AbstractController {
 		logger.debug("enterded #getStaticResource, url={}, path={}", siteUrl, path);
 		Site site = getSite(siteUrl);
 		Path resource = fileSystemUtil.getSitesDir(site, getProperty(site, "site.dir.staticresource"), path);
-		if (!Files.exists(resource)) {
+		if(!Files.exists(resource)) {
 			throw new ResourceNotFoundException(site, path);
 		}
 		MediaType mt = ServletUtil.parseMediaType(path);
@@ -107,9 +107,13 @@ public class ServeSiteResourceController extends AbstractController {
 	 * Serves a desired {@link AbstractSiteResource} defined by its 'type' and 'name', e.g.
 	 * <tt>http://localhost:8080/site/site.test/resource/css/format.css</tt>
 	 * 
-	 * @param siteUrl the url of the referred site
-	 * @param type the {@link SiteResourceType} of the desired {@link AbstractSiteResource}. Only <tt>CSS</tt> and <tt>OTHER</tt> are allowed.  
-	 * @param name the name of the desired {@link AbstractSiteResource}
+	 * @param siteUrl
+	 *            the url of the referred site
+	 * @param type
+	 *            the {@link SiteResourceType} of the desired {@link AbstractSiteResource}. Only <tt>CSS</tt> and <tt>OTHER</tt> are
+	 *            allowed.
+	 * @param name
+	 *            the name of the desired {@link AbstractSiteResource}
 	 * @return
 	 */
 	@RequestMapping(value = "/{type}/{name}", method = RequestMethod.GET)
@@ -119,7 +123,7 @@ public class ServeSiteResourceController extends AbstractController {
 		SiteResourceType resourceType = EnumUtil.valueOfIgnoreCase(SiteResourceType.class, type);
 		byte[] content;
 		switch(resourceType) {
-			case CSS: 
+			case CSS:
 				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(site, name);
 				content = css.getText().getBytes(getDefaultCharset(site));
 				break;
@@ -132,7 +136,6 @@ public class ServeSiteResourceController extends AbstractController {
 		}
 		MediaType mt = ServletUtil.parseMediaType(name);
 
-		return ResponseEntity.ok().contentLength(content.length).contentType(mt)
-				.body(new ByteArrayResource(content));
+		return ResponseEntity.ok().contentLength(content.length).contentType(mt).body(new ByteArrayResource(content));
 	}
 }

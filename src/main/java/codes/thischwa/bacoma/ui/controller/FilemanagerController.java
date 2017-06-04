@@ -27,7 +27,7 @@ import codes.thischwa.c5c.UserObjectProxy;
 import codes.thischwa.c5c.filemanager.FilemanagerConfig;
 
 /**
- * Filter for serving all filemanager files and respect the special handling of the configuration files.
+ * Controller for serving all filemanager files and respect the special handling of the configuration files and connector-request.
  */
 @Controller
 public class FilemanagerController extends AbstractController {
@@ -43,8 +43,6 @@ public class FilemanagerController extends AbstractController {
 		String urlPath = ServletUriComponentsBuilder.fromRequest(req).build().getPath();
 		urlPath = urlPath.substring(urlPath.indexOf(siteUrl) + siteUrl.length());
 		if(urlPath.startsWith(BASEURL + "scripts") && urlPath.contains("filemanager.config")) {
-			// set some default headers
-			// ConnectorServlet.initResponseHeader(resp);
 			logger.debug("Filemanager config request: {}", urlPath);
 			FilemanagerConfig config = (urlPath.endsWith(".default.json")) ? UserObjectProxy.getFilemanagerDefaultConfig()
 					: UserObjectProxy.getFilemanagerUserConfig(req);
