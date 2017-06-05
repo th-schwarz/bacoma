@@ -1,14 +1,15 @@
 package codes.thischwa.bacoma.rest.model.pojo.site;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-
-import codes.thischwa.bacoma.rest.model.IOrderable;
-import codes.thischwa.bacoma.rest.model.IRenderable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import codes.thischwa.bacoma.rest.model.IOrderable;
+import codes.thischwa.bacoma.rest.model.IRenderable;
 
 /**
  * Base object for a page.
@@ -19,7 +20,7 @@ public class Page extends AbstractBacomaObject<Level> implements IRenderable, IO
 	protected String name;
 	protected String title;
 	private UUID templateID;
-	private List<Content> content = new ArrayList<>();
+	private Set<Content> content = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -39,16 +40,23 @@ public class Page extends AbstractBacomaObject<Level> implements IRenderable, IO
 		templateID = uuid;
 	}
 
-	public List<Content> getContent() {
+	public Set<Content> getContent() {
 		return this.content;
 	}
 
-	public void setContent(List<Content> content) {
+	public void setContent(Set<Content> content) {
 		this.content = content;
 	}
 	
-	public void add(Content content) {
-		this.content.add(content);
+	public void add(Content contentItem) {
+		String  currentContentName = contentItem.getName();
+		for(Content c : this.content) {
+			if(c.getName().equalsIgnoreCase(currentContentName))
+				throw new IllegalArgumentException(String.format("A content-item#%s already exists!", currentContentName));
+		}
+		if(contentItem.getId() == null)
+			contentItem.setId(UUID.randomUUID());
+		this.content.add(contentItem);
 	}
 
 	public String getTitle() {

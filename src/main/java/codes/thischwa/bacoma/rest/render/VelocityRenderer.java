@@ -89,6 +89,7 @@ public class VelocityRenderer {
 			StringWriter contentWriter = new StringWriter();
 			renderString(contentWriter, templateContent, contextObjects);
 
+			// wrap the template, if available
 			if(site.getLayoutTemplate() != null && StringUtils.isNoneBlank(site.getLayoutTemplate().getText())) {
 				String layoutContent = site.getLayoutTemplate().getText();
 				contentWriter.flush();

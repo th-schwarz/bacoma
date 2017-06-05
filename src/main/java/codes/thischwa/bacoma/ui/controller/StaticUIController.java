@@ -7,9 +7,12 @@ import java.nio.file.Paths;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +25,8 @@ public class StaticUIController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StaticUIController.class);
 
+	private static ByteArrayResource defaultFavicon = null;
+
 	@RequestMapping(value = "/ui/**", method = RequestMethod.GET)
 	public void handleClassPathResource(HttpServletRequest req, HttpServletResponse resp) {
 		String path = ServletUriComponentsBuilder.fromRequest(req).build().getPath();
@@ -31,7 +36,7 @@ public class StaticUIController {
 			logger.warn("Error while reading requested resource: {}", path, e);
 		}
 	}
-	
+
 	@RequestMapping(value = "/webapp/**", method = RequestMethod.GET)
 	public void handleWebappResource(HttpServletRequest req, HttpServletResponse resp) {
 		String baseDir = System.getProperty("dir.webapp");
@@ -45,5 +50,16 @@ public class StaticUIController {
 		} catch (IOException e) {
 			logger.warn("Error while reading requested resource: {}", urlPath, e);
 		}
+	}
+
+	@RequestMapping("/favicon.ico")
+	public ResponseEntity<ByteArrayResource> getDefaultFavicon() {
+		try {
+			if(defaultFavicon == null)
+				defaultFavicon = new ByteArrayResource(IOUtils.toByteArray(getClass().getResourceAsStream("/favicon.ico")));
+		} catch (IOException e) {
+			logger.error("favicon.ico not found");
+		}
+		return ResponseEntity.ok(defaultFavicon);
 	}
 }

@@ -1,7 +1,6 @@
 package codes.thischwa.bacoma.rest.service;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,6 +24,7 @@ import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
  * - d20e9e25-0001-0000-0000-000000000 : site-resources
  * - d20e9e25-0002-0000-0000-000000000 : levels
  * - d20e9e25-0003-0000-0000-000000000 : pages
+ * - d20e9e25-0004-0000-0000-000000000 : contents
  */
 public class SiteBuilder { 
 	
@@ -96,15 +96,15 @@ public class SiteBuilder {
 		return l;
 	}
 	
-	private Page buildPage(UUID id, UUID templateID, String name, String title, String content) {
+	private Page buildPage(UUID pageID, UUID templateID, String name, String title, String content) {
 		Content c = new Content();
 		c.setName("content");
 		c.setValue(content);
 		Page page = new Page();
-		page.setId(id);
+		page.setId(pageID);
 		page.setName(name);
 		page.setTitle(title);
-		page.setContent(Arrays.asList(new Content[]{c}));
+		page.add(c);
 		page.setTemplateID(templateID);
 		return page;
 	}

@@ -2,6 +2,7 @@ package codes.thischwa.bacoma.rest.model.pojo.site;
 
 /**
  * Base object - content of a {@link Page}.
+ * Content#name should be unique in a collection of content.
  */
 public class Content extends AbstractBacomaObject<Page> {
 	private String name;
@@ -25,5 +26,28 @@ public class Content extends AbstractBacomaObject<Page> {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(obj == null)
+			return false;
+		if(!(obj instanceof Content))
+			return false;
+		Content other = (Content) obj;
+		if(name == null) {
+			if(other.name != null)
+				return false;
+		} else if(!name.equals(other.name))
+			return false;
+		return true;
 	}
 }
