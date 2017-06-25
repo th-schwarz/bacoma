@@ -8,10 +8,10 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import codes.thischwa.bacoma.GenericSpringJUnitTest;
+import codes.thischwa.bacoma.AbstractBacomaTest;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 
-public class TestContextObjectUtilities extends GenericSpringJUnitTest {
+public class TestContextObjectUtilities extends AbstractBacomaTest {
 	
 	private Level lev1;
 	private Level Lev3_sub1;

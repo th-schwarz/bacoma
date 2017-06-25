@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import codes.thischwa.bacoma.rest.model.IOrderable;
-import codes.thischwa.bacoma.rest.util.ChildList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -13,18 +12,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * {@link Site} is inherited from this object.
  */
 public class Level extends AbstractBacomaObject<Level> implements IOrderable<Level> {
-	protected String name;
 	protected String title;
 	protected ChildList<Level, Level> sublevels = new ChildList<>(this);
 	protected ChildList<Level, Page> pages = new ChildList<>(this);
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+		
 	public String getTitle() {
 		return title;
 	}
@@ -44,7 +35,6 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 		return sublevels.get().size() > 0;
 	}
 	public void add(Level level) {
-		// TODO check if there is already a level with the same name
 		sublevels.add(level);
 	}
 	public boolean remove(Level level) {
@@ -58,7 +48,6 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 		this.pages.set(pages);
 	}
 	public void add(Page page) {
-		// TODO check if there is already a page with the same name
 		pages.add(page);
 	}
 	public boolean remove(Page page) {
@@ -72,12 +61,7 @@ public class Level extends AbstractBacomaObject<Level> implements IOrderable<Lev
 	public int getHierarchy() {
 		return (getParent() == null) ? 0 : (getParent().getHierarchy() + 1);
 	}
-	
-	@Override
-	public String toString() {
-		return name;
-	}
-	
+
 	@JsonIgnore
 	@Override
 	public List<Level> getFamily() {

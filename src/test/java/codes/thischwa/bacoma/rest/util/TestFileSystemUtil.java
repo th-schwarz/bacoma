@@ -8,9 +8,9 @@ import java.nio.file.Paths;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codes.thischwa.bacoma.GenericSpringJUnitTest;
+import codes.thischwa.bacoma.AbstractBacomaTest;
 
-public class TestFileSystemUtil extends GenericSpringJUnitTest {
+public class TestFileSystemUtil extends AbstractBacomaTest {
 	
 	@Autowired
 	private FileSystemUtil fileSystemUtil;
@@ -26,7 +26,7 @@ public class TestFileSystemUtil extends GenericSpringJUnitTest {
 
 	@Test
 	public void testGetUniqueName() throws Exception {
-		Path path = GenericSpringJUnitTest.getDemoSitePath();
+		Path path = AbstractBacomaTest.getDemoSitePath();
 		assertEquals("format_1.css", fileSystemUtil.getUniqueName(path, "format.css"));
 	}
 }

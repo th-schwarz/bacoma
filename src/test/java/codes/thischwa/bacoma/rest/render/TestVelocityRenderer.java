@@ -9,12 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codes.thischwa.bacoma.GenericSpringJUnitTest;
+import codes.thischwa.bacoma.AbstractBacomaTest;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.Persister;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
-public class TestVelocityRenderer extends GenericSpringJUnitTest {
+public class TestVelocityRenderer extends AbstractBacomaTest {
 	
 	@Autowired
 	private VelocityRenderer velocityRenderer;

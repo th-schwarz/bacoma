@@ -17,19 +17,10 @@ import codes.thischwa.bacoma.rest.model.IRenderable;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Page extends AbstractBacomaObject<Level> implements IRenderable, IOrderable<Page> {
-	protected String name;
 	protected String title;
 	private UUID templateID;
 	private Set<Content> content = new HashSet<>();
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	@Override
 	public UUID getTemplateID() {
 		return this.templateID;
@@ -49,7 +40,7 @@ public class Page extends AbstractBacomaObject<Level> implements IRenderable, IO
 	}
 	
 	public void add(Content contentItem) {
-		String  currentContentName = contentItem.getName();
+		String currentContentName = contentItem.getName();
 		for(Content c : this.content) {
 			if(c.getName().equalsIgnoreCase(currentContentName))
 				throw new IllegalArgumentException(String.format("A content-item#%s already exists!", currentContentName));
@@ -71,11 +62,6 @@ public class Page extends AbstractBacomaObject<Level> implements IRenderable, IO
 	@Override
 	public TemplateType getTemplateType() {
 		return TemplateType.PAGE;
-	}
-
-	@Override
-	public String toString() {
-		return name;
 	}
 
 	@JsonIgnore

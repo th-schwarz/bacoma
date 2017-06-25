@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import codes.thischwa.bacoma.rest.util.ChildList;
-
 /**
  * Base object for the site.
  */

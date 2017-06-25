@@ -30,7 +30,8 @@ public class Content extends AbstractBacomaObject<Page> {
 
 	@Override
 	public int hashCode() {
-		int result = ((name == null) ? 0 : name.hashCode());
+		int result = 1;
+		result += ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 

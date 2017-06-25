@@ -5,14 +5,14 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codes.thischwa.bacoma.GenericSpringJUnitTest;
+import codes.thischwa.bacoma.AbstractBacomaTest;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.render.context.object.SiteLinkTool;
 import codes.thischwa.bacoma.rest.service.SiteBuilder;
 
-public class TestSiteLinkTool extends GenericSpringJUnitTest {
+public class TestSiteLinkTool extends AbstractBacomaTest {
 
 	@Autowired
 	private SiteLinkTool siteLinkTool;

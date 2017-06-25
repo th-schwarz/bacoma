@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 
-import codes.thischwa.bacoma.GenericSpringJUnitTest;
+import codes.thischwa.bacoma.AbstractBacomaTest;
 import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.rest.model.pojo.site.Content;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
@@ -151,7 +151,7 @@ public class SiteBuilder {
 	}
 	
 	private String load(String path) throws Exception {
-		return IOUtils.toString(GenericSpringJUnitTest.getDemoSitePath().resolve(path).toUri());
+		return IOUtils.toString(AbstractBacomaTest.getDemoSitePath().resolve(path).toUri());
 	}
 	
 	private Map<String, String> buildConfig() {

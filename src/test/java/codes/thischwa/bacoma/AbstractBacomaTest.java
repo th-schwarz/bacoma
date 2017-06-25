@@ -26,7 +26,7 @@ import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/bacoma-rest.xml")
-public class GenericSpringJUnitTest extends AbstractJUnit4SpringContextTests {
+public class AbstractBacomaTest extends AbstractJUnit4SpringContextTests {
 	
 	@Autowired
 	protected SiteManager siteManager;
@@ -35,7 +35,7 @@ public class GenericSpringJUnitTest extends AbstractJUnit4SpringContextTests {
 	
 	public static final Path getDemoSitePath() {
 		try {
-			return Paths.get(GenericSpringJUnitTest.class.getResource("/demo.site/").toURI());
+			return Paths.get(AbstractBacomaTest.class.getResource("/demo.site/").toURI());
 		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}

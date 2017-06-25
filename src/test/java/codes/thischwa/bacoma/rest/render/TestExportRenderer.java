@@ -5,10 +5,10 @@ import java.io.IOException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codes.thischwa.bacoma.GenericSpringJUnitTest;
+import codes.thischwa.bacoma.AbstractBacomaTest;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
-public class TestExportRenderer extends GenericSpringJUnitTest {
+public class TestExportRenderer extends AbstractBacomaTest {
 
 	@Autowired
 	private ExportRenderer exportRenderer;
