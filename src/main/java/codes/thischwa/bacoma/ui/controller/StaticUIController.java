@@ -25,7 +25,16 @@ public class StaticUIController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StaticUIController.class);
 
-	private static ByteArrayResource defaultFavicon = null;
+	private static final ByteArrayResource defaultFavicon = initFavicon();
+
+	private static ByteArrayResource initFavicon() {
+		try {
+			return new ByteArrayResource(IOUtils.toByteArray(StaticUIController.class.getResourceAsStream("/favicon.ico")));
+		} catch (IOException e) {
+			// should never happened
+			throw new Error("favicon.ico not found", e);
+		}
+	}
 
 	@RequestMapping(value = "/ui/**", method = RequestMethod.GET)
 	public void handleClassPathResource(HttpServletRequest req, HttpServletResponse resp) {
@@ -54,12 +63,6 @@ public class StaticUIController {
 
 	@RequestMapping("/favicon.ico")
 	public ResponseEntity<ByteArrayResource> getDefaultFavicon() {
-		try {
-			if(defaultFavicon == null)
-				defaultFavicon = new ByteArrayResource(IOUtils.toByteArray(getClass().getResourceAsStream("/favicon.ico")));
-		} catch (IOException e) {
-			logger.error("favicon.ico not found");
-		}
 		return ResponseEntity.ok(defaultFavicon);
 	}
 }
