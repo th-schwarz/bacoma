@@ -6,3 +6,6 @@ BaCoMa is a further development of the [Poor Man's CMS](https://github.com/th-sc
 
 ## State
 Early alpha.
+
+
+[![Build Status](https://travis-ci.org/th-schwarz/bacoma.svg?branch=master)](https://travis-ci.org/th-schwarz/bacoma)
