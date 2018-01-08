@@ -9,5 +9,3 @@ Early alpha.
 
 
 [![Build Status](https://travis-ci.org/th-schwarz/bacoma.svg?branch=master)](https://travis-ci.org/th-schwarz/bacoma)
-
-[![Build Status](https://travis-ci.org/th-schwarz/bacoma.svg?branch=master)](https://travis-ci.org/th-schwarz/bacoma)
