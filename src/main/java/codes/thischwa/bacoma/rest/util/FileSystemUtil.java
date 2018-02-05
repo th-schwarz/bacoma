@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -18,27 +20,31 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.SiteConfiguration;
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
-import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 
 @Service
 public class FileSystemUtil {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+		
 	@Autowired
-	private ConfigurationHolder configurationHolder;
+	private SiteConfiguration siteConfiguration;
 	
 	@Value("${site.dir.export}")
 	private String exportDir;
 	
 	@Value("${dir.data}") 
-	String dataDirStr;
+	private String dataDirStr;
+
+	@Value("${dir.webapp}") 
+	private String dirWebapp;
 	
 	private Path dataDir;
 	
+	@PostConstruct
 	public void init() throws IOException {
-		dataDir = Paths.get(configurationHolder.getDefaultProperty("dir.webapp"), dataDirStr);
+		dataDir = Paths.get(dirWebapp, dataDirStr);
 		if(!Files.exists(dataDir)) {
 			Files.createDirectories(dataDir);
 			logger.info("Data dir created successful: {}", dataDir.toString());
@@ -79,7 +85,7 @@ public class FileSystemUtil {
 	}
 	
 	public Path getStaticResourceDir(Site site) {
-		return getSitesDir(site, configurationHolder.getMergedProperty(site, "site.dir.staticresource"));
+		return getSitesDir(site, siteConfiguration.getSite().get(SiteConfiguration.KEY_DIR_STATICRESOURCE));
 	}
 
 

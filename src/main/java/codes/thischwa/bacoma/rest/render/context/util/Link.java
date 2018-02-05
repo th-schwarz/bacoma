@@ -7,13 +7,14 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import codes.thischwa.bacoma.Constants;
 
 /**
  * Wrapper object for {@link URI} to find out, if a link is an internal or an external one. 
@@ -29,8 +30,6 @@ public class Link {
 	private String path = null;
 	private Map<String, String> parameters = new HashMap<>();
 
-	@Value("${default.encoding}")
-	private String defaultEncoding;
 
 	public void init(final String link) {
 		try {
@@ -109,7 +108,7 @@ public class Link {
 	
 	private String decodeQuietly(String str) {
 		try {
-			return URLDecoder.decode(str, defaultEncoding);
+			return URLDecoder.decode(str, Constants.DEFAULT_CHARSET.displayName());
 		} catch (UnsupportedEncodingException e) {
 			return "Couldn't decode! Charset not found!";
 		}

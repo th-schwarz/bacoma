@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.nio.file.Path;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.rest.model.IRenderable;
@@ -14,9 +14,8 @@ import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Level;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
-import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 
-class BoPathTool {
+class BoPathTool implements Constants {
 
 	private Map<String, String> siteConfig;
 	
@@ -31,10 +30,10 @@ class BoPathTool {
 		String folder;
 		switch(res.getResourceType()) {
 			case CSS:
-				folder = siteConfig.get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_CSS);
+				folder = siteConfig.get(KEY_EXPORT_DIR_RESOURCES_CSS);
 				break;
 			case OTHER:
-				folder = siteConfig.get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_OTHER);
+				folder = siteConfig.get(KEY_EXPORT_DIR_RESOURCES_OTHER);
 				break;
 			default:
 				throw new IllegalArgumentException(
@@ -100,11 +99,11 @@ class BoPathTool {
     	if (InstanceUtil.isPage(renderable)) {
     		Page page = (Page) renderable;
             if (OrderableInfo.isFirst(page))
-            	name.append(siteConfig.get(ConfigurationHolder.KEY_EXPORT_FILE_WELCOME));
+            	name.append(siteConfig.get(KEY_EXPORT_FILE_WELCOME));
             else {
                 name.append(page.getName());
             	name.append('.');
-            	name.append(siteConfig.get(ConfigurationHolder.KEY_EXPORT_FILE_EXTENSION));
+            	name.append(siteConfig.get(KEY_EXPORT_FILE_EXTENSION));
             }
 //    	} else if (InstanceUtil.isImage(renderable)) {
 //    		Image image = (Image) renderable;

@@ -102,7 +102,7 @@ public class ServeSiteResourceController extends AbstractController {
 			return ResponseEntity.ok(Response.error("Error while fetching a static resource."));
 		}
 	}
-
+	
 	/**
 	 * Serves a desired {@link AbstractSiteResource} defined by its 'type' and 'name', e.g.
 	 * <tt>http://localhost:8080/site/site.test/resource/css/format.css</tt>
@@ -125,11 +125,11 @@ public class ServeSiteResourceController extends AbstractController {
 		switch(resourceType) {
 			case CSS:
 				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(site, name);
-				content = css.getText().getBytes(getDefaultCharset(site));
+				content = css.getText().getBytes(Constants.DEFAULT_CHARSET);
 				break;
 			case OTHER:
 				OtherResource or = BoInfo.getNamedOtherResource(site, name);
-				content = or.getText().getBytes(getDefaultCharset(site));
+				content = or.getText().getBytes(Constants.DEFAULT_CHARSET);
 				break;
 			default:
 				throw new IllegalArgumentException(String.format("Type not allowed in this context: ", type));

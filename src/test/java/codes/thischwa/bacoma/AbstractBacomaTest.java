@@ -13,9 +13,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.render.ViewMode;
@@ -24,8 +24,8 @@ import codes.thischwa.bacoma.rest.service.SiteBuilder;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/bacoma-rest.xml")
+@SpringBootTest
+@RunWith(SpringRunner.class) 
 public class AbstractBacomaTest extends AbstractJUnit4SpringContextTests {
 	
 	@Autowired

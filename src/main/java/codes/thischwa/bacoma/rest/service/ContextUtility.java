@@ -87,14 +87,6 @@ public class ContextUtility {
 		getSiteManager(siteUrl).addPage(page);
 	}
 
-	public void setConfiguration(String siteUrl, Map<String, String> config) {
-		getSiteManager(siteUrl).setConfiguration(config);		
-	}
-	
-	public Map<String, String> getConfiguration(String siteUrl) {
-		return getSiteManager(siteUrl).getMergedSiteConfig();
-	}
-
 	public UUID setLayoutTemplate(String siteUrl, String text) {
 		return getSiteManager(siteUrl).setLayoutTemplate(text);
 	}

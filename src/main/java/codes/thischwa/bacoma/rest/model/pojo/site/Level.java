@@ -3,9 +3,9 @@ package codes.thischwa.bacoma.rest.model.pojo.site;
 import java.util.ArrayList;
 import java.util.List;
 
-import codes.thischwa.bacoma.rest.model.IOrderable;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import codes.thischwa.bacoma.rest.model.IOrderable;
 
 /**
  * Base object for the level of a {@link Site}, a structural container element with no content. 

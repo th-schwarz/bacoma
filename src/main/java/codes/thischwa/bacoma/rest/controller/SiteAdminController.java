@@ -59,21 +59,21 @@ public class SiteAdminController extends AbstractController {
 		return Response.ok(sites);
 	}
 
-	@RequestMapping(value = Constants.BASEURL_REST
-			+ "/setConfiguration", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> setConfiguration(@PathVariable String siteUrl, @RequestBody Map<String, String> config) {
-		logger.debug("entered #setConfiguration");
-		cu.setConfiguration(siteUrl, config);
-		return Response.ok();
-	}
-
-	@RequestMapping(value = Constants.BASEURL_REST
-			+ "/getConfiguration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> getConfiguration(@PathVariable String siteUrl) {
-		logger.debug("entered #setConfiguration");
-		Map<String, String> config = cu.getConfiguration(siteUrl);
-		return Response.ok(config);
-	}
+//	@RequestMapping(value = Constants.BASEURL_REST
+//			+ "/setConfiguration", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<Response> setConfiguration(@PathVariable String siteUrl, @RequestBody Map<String, String> config) {
+//		logger.debug("entered #setConfiguration");
+//		cu.setConfiguration(siteUrl, config);
+//		return Response.ok();
+//	}
+//
+//	@RequestMapping(value = Constants.BASEURL_REST
+//			+ "/getConfiguration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<Response> getConfiguration(@PathVariable String siteUrl) {
+//		logger.debug("entered #setConfiguration");
+//		Map<String, String> config = cu.getConfiguration(siteUrl);
+//		return Response.ok(config);
+//	}
 
 	@RequestMapping(value = Constants.BASEURL_REST
 			+ "/setLayoutTemplate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

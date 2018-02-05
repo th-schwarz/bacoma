@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.rest.SiteConfiguration;
 import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
@@ -34,7 +35,6 @@ import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
 import codes.thischwa.bacoma.rest.render.ViewMode;
-import codes.thischwa.bacoma.rest.util.ConfigurationUtil;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 /**
@@ -48,14 +48,12 @@ public class SiteManager {
 	private Persister persister = new Persister();
 
 	@Autowired
-	private ConfigurationHolder defaultConfigurationHolder;
-
-	@Autowired
 	private FileSystemUtil fileSystemUtil;
 	
+	@Autowired
+	private SiteConfiguration siteConfiguration;
+	
 	private Map<UUID, AbstractBacomaObject<?>> objectsPerIdentifier = new HashMap<>();
-
-	private Map<String, String> mergedSiteConfig = new HashMap<>();
 
 	private ViewMode viewMode = ViewMode.PREVIEW;
 
@@ -64,14 +62,7 @@ public class SiteManager {
 		objectsPerIdentifier.clear();
 		identify(site);
 
-		// ** build the configuration of the site
-		mergedSiteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "site"));
-		mergedSiteConfig.putAll(ConfigurationUtil.getProperties(defaultConfigurationHolder.getDefaultConfiguration(), "velocity"));
-		if(site.getConfiguration() != null) {
-			mergedSiteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "site"));
-			mergedSiteConfig.putAll(ConfigurationUtil.getProperties(site.getConfiguration(), "velocity"));
-		}
-
+		// ** TODO respect site-configuration
 		velocityEngine = buildVelocityEngine();
 	}
 
@@ -87,15 +78,6 @@ public class SiteManager {
 
 	public void setViewMode(ViewMode viewMode) {
 		this.viewMode = viewMode;
-	}
-
-	/**
-	 * @return the complete site configuration (merged with defaults)
-	 */
-	public Map<String, String> getMergedSiteConfig() {
-		if(site == null)
-			throw new SiteNotLoadedException();
-		return mergedSiteConfig;
 	}
 
 	public VelocityEngine getVelocityEngine() {
@@ -142,7 +124,7 @@ public class SiteManager {
 		if(site == null)
 			throw new SiteNotLoadedException();
 		// merge the configs
-		Map<String, String> velConfig = ConfigurationUtil.getProperties(mergedSiteConfig, "velocity", true);
+		Map<String, String> velConfig = siteConfiguration.getVelocity();
 
 		Properties props = new Properties();
 		props.putAll(velConfig);
@@ -230,22 +212,6 @@ public class SiteManager {
 		page.setTitle(reqPage.getTitle());
 		page.setTemplateID(reqPage.getTemplate());
 		persist();
-	}
-
-	public void setConfiguration(Map<String, String> config) {
-		if(site == null)
-			throw new SiteNotLoadedException();
-		site.setConfiguration(config);
-		mergedSiteConfig.putAll(config);
-		persist();
-		VelocityEngine ve = null;
-		try {
-			ve = buildVelocityEngine();
-			velocityEngine = ve;
-		} catch (IOException e) {
-			logger.error("Error while building the VelocityEngine with the new configuration", e);
-			// TODO throw a defined exception for the response status
-		}
 	}
 
 	public UUID setLayoutTemplate(String text) {

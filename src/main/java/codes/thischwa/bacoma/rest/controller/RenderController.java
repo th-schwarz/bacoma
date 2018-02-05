@@ -34,7 +34,6 @@ import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.model.pojo.site.SiteResourceType;
 import codes.thischwa.bacoma.rest.render.VelocityRenderer;
 import codes.thischwa.bacoma.rest.render.ViewMode;
-import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.util.EnumUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
@@ -78,7 +77,7 @@ public class RenderController extends AbstractController {
 		if(viewMode == ViewMode.PREVIEW) {
 			contentStr = fixLinksForPreview(site, contentStr);
 		}
-		byte[] content = contentStr.getBytes(getDefaultCharset(site));
+		byte[] content = contentStr.getBytes(Constants.DEFAULT_CHARSET);
 		contentWriter.flush();
 		IOUtils.closeQuietly(contentWriter);
 		return content;
@@ -86,7 +85,7 @@ public class RenderController extends AbstractController {
 	
 	String fixLinksForPreview(Site site, String fullContent) {
 		try {
-			String resourceDir = "/".concat(getProperty(site, ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_STATIC));
+			String resourceDir = "/".concat(getProperty(site, Constants.KEY_EXPORT_DIR_RESOURCES_STATIC));
 			Document doc = Jsoup.parse(fullContent);
 			for(Element aEl : doc.select("a[href]")) {
 				String href = aEl.attr("href");
@@ -123,11 +122,11 @@ public class RenderController extends AbstractController {
 		switch(type) {
 			case CSS: 
 				CascadingStyleSheet css = BoInfo.getNamedCascadingStyleSheet(site, name);
-				content = css.getText().getBytes(getDefaultCharset(site));
+				content = css.getText().getBytes(Constants.DEFAULT_CHARSET);
 				break;
 			case OTHER:
 				OtherResource or = BoInfo.getNamedOtherResource(site, name);
-				content = or.getText().getBytes(getDefaultCharset(site));
+				content = or.getText().getBytes(Constants.DEFAULT_CHARSET);
 				break;
 			default:
 				throw new IllegalArgumentException(String.format("Type not allowed in this context: ", type));

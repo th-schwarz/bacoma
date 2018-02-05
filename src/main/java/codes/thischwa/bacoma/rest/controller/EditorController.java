@@ -39,7 +39,7 @@ public class EditorController extends AbstractController {
 		StringWriter writer = new StringWriter();
 		try {
 			in = getClass().getResourceAsStream("/vm/sourceeditor.vm");
-			IOUtils.copy(in, writer, getDefaultCharset(siteUrl));
+			IOUtils.copy(in, writer, Constants.DEFAULT_CHARSET.displayName());
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

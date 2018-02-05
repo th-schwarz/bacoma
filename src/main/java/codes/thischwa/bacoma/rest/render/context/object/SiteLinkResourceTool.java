@@ -1,26 +1,32 @@
 package codes.thischwa.bacoma.rest.render.context.object;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.SiteConfiguration;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.model.pojo.site.SiteResourceType;
 import codes.thischwa.bacoma.rest.render.ViewMode;
-import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-class SiteLinkResourceTool {
+class SiteLinkResourceTool implements Constants {
 
 	@Autowired
 	private SiteManager siteManager;
-
+	
+	@Autowired
+	private SiteConfiguration siteConfiguration;
+	
 	private AbstractSiteResource resource;
 	
 	private IRenderable renderable;
@@ -45,12 +51,13 @@ class SiteLinkResourceTool {
 			if(renderable == null)
 				throw new IllegalArgumentException("Current renderable not set!");
 			String resourceDir;
+			Map<String, String> config = siteConfiguration.getSite();
 			switch(resource.getResourceType()) {
 				case CSS:
-					resourceDir = siteManager.getMergedSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_CSS);
+					resourceDir = config.get(KEY_EXPORT_DIR_RESOURCES_CSS);
 					break;
 				case OTHER:
-					resourceDir = siteManager.getMergedSiteConfig().get(ConfigurationHolder.KEY_EXPORT_DIR_RESOURCES_OTHER);
+					resourceDir = config.get(KEY_EXPORT_DIR_RESOURCES_OTHER);
 					break;
 				default:
 					throw new IllegalArgumentException(

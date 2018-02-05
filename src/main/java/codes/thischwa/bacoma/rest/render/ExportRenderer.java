@@ -15,10 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.SiteConfiguration;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
-import codes.thischwa.bacoma.rest.service.ConfigurationHolder;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
@@ -30,7 +31,7 @@ public class ExportRenderer {
 	private FileSystemUtil fileSystemUtil;
 
 	@Autowired
-	private ConfigurationHolder defaultConfigurationHolder;
+	private SiteConfiguration siteConfig;
 	
 	@Autowired
 	private VelocityRenderer velocityRenderer;
@@ -53,7 +54,7 @@ public class ExportRenderer {
 			logger.warn(messages.toString());
 			return;
 		}
-		 BoPathTool pathTool = new BoPathTool(sm.getMergedSiteConfig());
+		 BoPathTool pathTool = new BoPathTool(siteConfig.getSite());
 		for(IRenderable renderable : renderables) {
 			StringBuilderWriter writer = new StringBuilderWriter();
 			velocityRenderer.render(writer, renderable, ViewMode.EXPORT);
@@ -62,7 +63,7 @@ public class ExportRenderer {
 			if(!Files.exists(parent))
 				Files.createDirectories(parent);
 			Files.createFile(exportPath);
-			Files.write(exportPath, writer.toString().getBytes(defaultConfigurationHolder.getDefaultProperty(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
+			Files.write(exportPath, writer.toString().getBytes(Constants.DEFAULT_CHARSET), 
 					StandardOpenOption.WRITE);
 		}
 		List<AbstractSiteResource> resources = new ArrayList<>();
@@ -74,7 +75,7 @@ public class ExportRenderer {
 			if(!Files.exists(parent))
 				Files.createDirectories(parent);
 			Files.createFile(exportPath);
-			Files.write(exportPath, res.getText().getBytes(defaultConfigurationHolder.getDefaultProperty(ConfigurationHolder.KEY_DEFAULT_ENCODING)), 
+			Files.write(exportPath, res.getText().getBytes(Constants.DEFAULT_CHARSET), 
 					StandardOpenOption.WRITE);
 		}
 	}

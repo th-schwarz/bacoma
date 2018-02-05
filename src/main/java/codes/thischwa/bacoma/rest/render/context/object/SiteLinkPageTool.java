@@ -5,6 +5,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.SiteConfiguration;
 import codes.thischwa.bacoma.rest.model.BoInfo;
 import codes.thischwa.bacoma.rest.model.IRenderable;
 import codes.thischwa.bacoma.rest.model.InstanceUtil;
@@ -18,6 +20,9 @@ import codes.thischwa.bacoma.rest.service.SiteManager;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 class SiteLinkPageTool {
 
+	@Autowired
+	private SiteConfiguration siteConfiguration;
+	
 	@Autowired
 	private SiteManager siteManager;
 
@@ -50,9 +55,9 @@ class SiteLinkPageTool {
 			
 			String pageName;
 			if(BoInfo.isWelcomePage(page) || OrderableInfo.isFirst(page)) 
-				pageName = siteManager.getMergedSiteConfig().get("site.export.file.welcome");
+				pageName = siteConfiguration.getSite().get(Constants.KEY_EXPORT_FILE_WELCOME);
 			else
-				pageName = page.getName().concat(".").concat(siteManager.getMergedSiteConfig().get("site.export.file.extension"));
+				pageName = siteConfiguration.getSite().get(Constants.KEY_EXPORT_FILE_EXTENSION);
 			
 			Page currentPage = (Page)renderable;
 			String levelPath = ContextObjectUtilities.getURLRelativePathToLevel(currentPage.getParent(), page.getParent());
