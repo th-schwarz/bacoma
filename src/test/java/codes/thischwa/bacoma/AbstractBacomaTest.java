@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.service.Persister;
 import codes.thischwa.bacoma.rest.service.SiteBuilder;

@@ -1,10 +1,10 @@
-package codes.thischwa.bacoma.rest.model;
+package codes.thischwa.bacoma.rest.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.SiteResourceType;
+import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
 import codes.thischwa.bacoma.rest.util.EnumUtil;
 
 public class TestEnumUtil {

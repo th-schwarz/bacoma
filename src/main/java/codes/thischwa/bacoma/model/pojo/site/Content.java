@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.model.pojo.site;
+package codes.thischwa.bacoma.model.pojo.site;
 
 /**
  * Base object - content of a {@link Page}.

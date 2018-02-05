@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import codes.thischwa.bacoma.rest.model.BoInfo;
-import codes.thischwa.bacoma.rest.model.IRenderable;
-import codes.thischwa.bacoma.rest.model.InstanceUtil;
-import codes.thischwa.bacoma.rest.model.OrderableInfo;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
-import codes.thischwa.bacoma.rest.model.pojo.site.Page;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.BoInfo;
+import codes.thischwa.bacoma.model.IRenderable;
+import codes.thischwa.bacoma.model.InstanceUtil;
+import codes.thischwa.bacoma.model.OrderableInfo;
+import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.pojo.site.Page;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 

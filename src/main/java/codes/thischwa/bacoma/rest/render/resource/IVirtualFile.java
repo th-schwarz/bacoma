@@ -3,7 +3,7 @@ package codes.thischwa.bacoma.rest.render.resource;
 import java.io.File;
 import java.nio.file.Path;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.pojo.site.Level;
 
 /**
  * Interface for all file-based resources.

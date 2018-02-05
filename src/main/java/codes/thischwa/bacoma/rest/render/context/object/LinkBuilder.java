@@ -1,9 +1,9 @@
 package codes.thischwa.bacoma.rest.render.context.object;
 
 import codes.thischwa.bacoma.Constants;
-import codes.thischwa.bacoma.rest.model.BoInfo;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.BoInfo;
+import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 
 public class LinkBuilder implements Constants {
 

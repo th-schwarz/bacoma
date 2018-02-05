@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.model;
+package codes.thischwa.bacoma.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,16 +9,16 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.model.pojo.site.CascadingStyleSheet;
+import codes.thischwa.bacoma.model.pojo.site.Content;
+import codes.thischwa.bacoma.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.pojo.site.OtherResource;
+import codes.thischwa.bacoma.model.pojo.site.Page;
+import codes.thischwa.bacoma.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Template;
+import codes.thischwa.bacoma.model.pojo.site.TemplateType;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
-import codes.thischwa.bacoma.rest.model.pojo.site.Content;
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
-import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
-import codes.thischwa.bacoma.rest.model.pojo.site.Page;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
-import codes.thischwa.bacoma.rest.model.pojo.site.Template;
-import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
 
 /**
  * Helper to provide some informations of an {@link AbstractBacomaObject}, which you can get without a database call.

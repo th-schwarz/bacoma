@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import codes.thischwa.bacoma.AbstractBacomaTest;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.Persister;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 

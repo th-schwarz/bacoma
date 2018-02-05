@@ -1,6 +1,6 @@
 package codes.thischwa.bacoma.rest.exception;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 
 public class AbstractBacomaException extends RuntimeException {
 

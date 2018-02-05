@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.model;
+package codes.thischwa.bacoma.model;
 
 import static org.junit.Assert.*;
 
@@ -9,8 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import codes.thischwa.bacoma.AbstractBacomaTest;
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.Persister;
 
 public class TestPojo extends AbstractBacomaTest {

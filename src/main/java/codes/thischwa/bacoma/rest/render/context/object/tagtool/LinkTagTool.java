@@ -10,7 +10,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import codes.thischwa.bacoma.rest.model.IRenderable;
+import codes.thischwa.bacoma.model.IRenderable;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectCommon;
 import codes.thischwa.bacoma.rest.render.context.IContextObjectNeedRenderable;
 import codes.thischwa.bacoma.rest.render.context.RenderData;

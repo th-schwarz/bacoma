@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import codes.thischwa.bacoma.rest.model.IRenderable;
-import codes.thischwa.bacoma.rest.model.InstanceUtil;
-import codes.thischwa.bacoma.rest.model.pojo.site.Content;
-import codes.thischwa.bacoma.rest.model.pojo.site.Page;
+import codes.thischwa.bacoma.model.IRenderable;
+import codes.thischwa.bacoma.model.InstanceUtil;
+import codes.thischwa.bacoma.model.pojo.site.Content;
+import codes.thischwa.bacoma.model.pojo.site.Page;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 
 /**

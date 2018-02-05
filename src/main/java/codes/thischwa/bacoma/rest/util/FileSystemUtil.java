@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.SiteConfiguration;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 
 @Service
 public class FileSystemUtil {

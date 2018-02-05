@@ -27,12 +27,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
 import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.model.pojo.requestcycle.GenericRequestSiteResource;
+import codes.thischwa.bacoma.model.pojo.requestcycle.ReqLevel;
+import codes.thischwa.bacoma.model.pojo.requestcycle.ReqPage;
+import codes.thischwa.bacoma.model.pojo.requestcycle.ReqTemplate;
+import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.AbstractController;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqPage;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
 
 @Controller
 public class SiteAdminController extends AbstractController {

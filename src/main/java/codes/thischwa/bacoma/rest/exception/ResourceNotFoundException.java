@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 
 @ResponseStatus(value=HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends AbstractBacomaException {

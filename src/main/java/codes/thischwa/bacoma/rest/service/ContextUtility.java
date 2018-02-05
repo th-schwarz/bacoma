@@ -14,13 +14,13 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import codes.thischwa.bacoma.model.pojo.requestcycle.GenericRequestSiteResource;
+import codes.thischwa.bacoma.model.pojo.requestcycle.ReqLevel;
+import codes.thischwa.bacoma.model.pojo.requestcycle.ReqPage;
+import codes.thischwa.bacoma.model.pojo.requestcycle.ReqTemplate;
+import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.exception.SiteNotLoadedException;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.GenericRequestSiteResource;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqLevel;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqPage;
-import codes.thischwa.bacoma.rest.model.pojo.requestcycle.ReqTemplate;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 
 @Component

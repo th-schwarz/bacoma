@@ -8,15 +8,15 @@ import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 
 import codes.thischwa.bacoma.AbstractBacomaTest;
-import codes.thischwa.bacoma.rest.model.pojo.site.CascadingStyleSheet;
-import codes.thischwa.bacoma.rest.model.pojo.site.Content;
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
-import codes.thischwa.bacoma.rest.model.pojo.site.Macro;
-import codes.thischwa.bacoma.rest.model.pojo.site.OtherResource;
-import codes.thischwa.bacoma.rest.model.pojo.site.Page;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
-import codes.thischwa.bacoma.rest.model.pojo.site.Template;
-import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
+import codes.thischwa.bacoma.model.pojo.site.CascadingStyleSheet;
+import codes.thischwa.bacoma.model.pojo.site.Content;
+import codes.thischwa.bacoma.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.pojo.site.Macro;
+import codes.thischwa.bacoma.model.pojo.site.OtherResource;
+import codes.thischwa.bacoma.model.pojo.site.Page;
+import codes.thischwa.bacoma.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Template;
+import codes.thischwa.bacoma.model.pojo.site.TemplateType;
 
 /**
  * UUID-usage:

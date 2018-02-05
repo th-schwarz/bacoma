@@ -10,10 +10,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.exception.AbstractBacomaException;
 import codes.thischwa.bacoma.rest.exception.PersitException;
 import codes.thischwa.bacoma.rest.exception.ResourceNotFoundException;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 
 public class Response {
 	

@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.model.pojo.requestcycle;
+package codes.thischwa.bacoma.model.pojo.requestcycle;
 
 import java.util.UUID;
 

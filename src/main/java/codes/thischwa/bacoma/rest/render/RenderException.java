@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
+import codes.thischwa.bacoma.model.pojo.site.TemplateType;
 
 public class RenderException extends RuntimeException {
 	

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import codes.thischwa.bacoma.AbstractBacomaTest;
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.pojo.site.Level;
 
 public class TestContextObjectUtilities extends AbstractBacomaTest {
 	

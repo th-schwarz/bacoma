@@ -6,8 +6,8 @@ import java.nio.file.Path;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.exception.PersitException;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
 
 public class Persister {
 

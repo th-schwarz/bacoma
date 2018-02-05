@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.model.BoInfo;
+import codes.thischwa.bacoma.model.IRenderable;
+import codes.thischwa.bacoma.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.SiteConfiguration;
-import codes.thischwa.bacoma.rest.model.BoInfo;
-import codes.thischwa.bacoma.rest.model.IRenderable;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 

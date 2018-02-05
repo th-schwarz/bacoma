@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.model.pojo.site;
+package codes.thischwa.bacoma.model.pojo.site;
 
 import java.util.HashSet;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import codes.thischwa.bacoma.rest.model.IOrderable;
-import codes.thischwa.bacoma.rest.model.IRenderable;
+import codes.thischwa.bacoma.model.IOrderable;
+import codes.thischwa.bacoma.model.IRenderable;
 
 /**
  * Base object for a page.

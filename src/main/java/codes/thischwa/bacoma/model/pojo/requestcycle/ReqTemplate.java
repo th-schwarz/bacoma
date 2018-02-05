@@ -1,9 +1,9 @@
-package codes.thischwa.bacoma.rest.model.pojo.requestcycle;
+package codes.thischwa.bacoma.model.pojo.requestcycle;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.SiteResourceType;
-import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
+import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
+import codes.thischwa.bacoma.model.pojo.site.TemplateType;
 
 public class ReqTemplate extends GenericRequestSiteResource {
 

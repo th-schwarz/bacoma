@@ -1,8 +1,8 @@
-package codes.thischwa.bacoma.rest.model.pojo.site;
+package codes.thischwa.bacoma.model.pojo.site;
 
 import org.apache.commons.lang3.StringUtils;
 
-import codes.thischwa.bacoma.rest.model.IRenderable;
+import codes.thischwa.bacoma.model.IRenderable;
 
 /**
  * Type of template for {@link IRenderable}s.

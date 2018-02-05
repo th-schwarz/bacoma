@@ -2,7 +2,7 @@ package codes.thischwa.bacoma.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.rest.service.ContextUtility;
 import codes.thischwa.bacoma.rest.util.FileSystemUtil;
 

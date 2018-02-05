@@ -1,13 +1,13 @@
-package codes.thischwa.bacoma.rest.model;
+package codes.thischwa.bacoma.model;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractSiteResource;
-import codes.thischwa.bacoma.rest.model.pojo.site.Content;
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
-import codes.thischwa.bacoma.rest.model.pojo.site.Macro;
-import codes.thischwa.bacoma.rest.model.pojo.site.Page;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
-import codes.thischwa.bacoma.rest.model.pojo.site.Template;
+import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.model.pojo.site.AbstractSiteResource;
+import codes.thischwa.bacoma.model.pojo.site.Content;
+import codes.thischwa.bacoma.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.pojo.site.Macro;
+import codes.thischwa.bacoma.model.pojo.site.Page;
+import codes.thischwa.bacoma.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Template;
 
 /**
  * Static helper class to check the instance of the database pojos.

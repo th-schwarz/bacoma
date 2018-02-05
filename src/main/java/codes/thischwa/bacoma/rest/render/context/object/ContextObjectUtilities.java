@@ -1,9 +1,9 @@
 package codes.thischwa.bacoma.rest.render.context.object;
 
-import codes.thischwa.bacoma.rest.model.BoInfo;
-import codes.thischwa.bacoma.rest.model.InstanceUtil;
-import codes.thischwa.bacoma.rest.model.pojo.site.AbstractBacomaObject;
-import codes.thischwa.bacoma.rest.model.pojo.site.Level;
+import codes.thischwa.bacoma.model.BoInfo;
+import codes.thischwa.bacoma.model.InstanceUtil;
+import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
+import codes.thischwa.bacoma.model.pojo.site.Level;
 
 final class ContextObjectUtilities {
 

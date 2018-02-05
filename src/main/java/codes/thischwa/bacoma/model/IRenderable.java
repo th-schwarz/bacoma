@@ -1,8 +1,8 @@
-package codes.thischwa.bacoma.rest.model;
+package codes.thischwa.bacoma.model;
 
 import java.util.UUID;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.TemplateType;
+import codes.thischwa.bacoma.model.pojo.site.TemplateType;
 
 /**
  * Interface to identify the renderable pojos.

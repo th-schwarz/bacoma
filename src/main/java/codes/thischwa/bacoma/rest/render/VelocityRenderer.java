@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import codes.thischwa.bacoma.rest.model.BoInfo;
-import codes.thischwa.bacoma.rest.model.IRenderable;
-import codes.thischwa.bacoma.rest.model.pojo.site.Site;
-import codes.thischwa.bacoma.rest.model.pojo.site.Template;
+import codes.thischwa.bacoma.model.BoInfo;
+import codes.thischwa.bacoma.model.IRenderable;
+import codes.thischwa.bacoma.model.pojo.site.Site;
+import codes.thischwa.bacoma.model.pojo.site.Template;
 import codes.thischwa.bacoma.rest.render.context.ContextObjectManager;
 import codes.thischwa.bacoma.rest.service.SiteManager;
 

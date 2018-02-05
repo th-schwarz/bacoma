@@ -1,8 +1,8 @@
-package codes.thischwa.bacoma.rest.model;
+package codes.thischwa.bacoma.model;
 
 import java.util.List;
 
-import codes.thischwa.bacoma.rest.model.pojo.site.Page;
+import codes.thischwa.bacoma.model.pojo.site.Page;
 
 
 /**
