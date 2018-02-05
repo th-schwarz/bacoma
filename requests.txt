@@ -3,9 +3,8 @@ classpath: http://127.0.0.1:8080/ui/index.html
 web-app-folder: http://127.0.0.1:8080/webapp/index.html
 
 SITE
-curl http://localhost:8080/site/getAll/
+curl http://localhost:8080/getAll/
 curl http://localhost:8080/site/site.test/get/
-curl http://localhost:8080/site/site.test/getConfiguration/
 curl http://localhost:8080/site/site.test/get/d20e9e25-0001-0000-0000-000000000001
 curl http://localhost:8080/site/site.test/remove/d20e9e25-0003-0000-0000-000000000023
 curl -i -F "file=@/tmp/test.js" http://localhost:8080/site/site.test/static/add/?path=/sub/test.js
