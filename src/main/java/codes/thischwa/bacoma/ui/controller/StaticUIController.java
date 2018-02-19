@@ -17,6 +17,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 
+/**
+ * Serves static resources.
+ */
 @Controller
 public class StaticUIController {
 	private static final Logger logger = LoggerFactory.getLogger(StaticUIController.class);

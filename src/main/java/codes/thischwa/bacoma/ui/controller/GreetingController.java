@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.controller;
+package codes.thischwa.bacoma.ui.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

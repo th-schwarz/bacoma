@@ -1,5 +1,5 @@
 static resources
-classpath: http://127.0.0.1:8080/ui/index.html
+classpath: http://127.0.0.1:8080/ui/index.html, http://localhost:8080/ui/greeting.html
 web-app-folder: http://127.0.0.1:8080/webapp/index.html
 
 SITE
@@ -25,3 +25,7 @@ curl -i -POST -H 'Content-Type: application/json' -d '{"parent":"d20e9e25-7e34-4
 
 Filemanager:
 http://localhost:8080/site.test/filemanager/index.html?CKEditor=field&CKEditorFuncNum=1&langCode=de
+
+
+CLI:
+java -jar target/bacoma-0.0.1-SNAPSHOT.jar
