@@ -76,7 +76,7 @@ public class ServeSiteResourceController extends AbstractController {
 
 	/**
 	 * Serves a desired static resource (files in the file system), e.g.
-	 * <tt>http://localhost:8080/site/site.test/resource/static/get?path=/sub_folder/test.js</tt>.<br/>
+	 * <tt>http://localhost:8080/site/site.test/resource/static/get?path=/sub_folder/test.js</tt>.<p>
 	 * The content- / media-type depends on the extension of the 'path'.
 	 * 
 	 * @param siteUrl
