@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.model.BoInfo;
 import codes.thischwa.bacoma.model.IRenderable;
 import codes.thischwa.bacoma.model.InstanceUtil;
@@ -32,6 +31,7 @@ import codes.thischwa.bacoma.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
 import codes.thischwa.bacoma.rest.AbstractController;
+import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.render.VelocityRenderer;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.util.EnumUtil;

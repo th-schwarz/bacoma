@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma;
+package codes.thischwa.bacoma.rest;
 
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;

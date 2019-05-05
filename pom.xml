@@ -48,6 +48,7 @@
 	<modules>
 		<module>bacoma-model</module>
 		<module>bacoma-rest</module>
+		<module>bacoma-ui</module>
 	</modules>
 
 	<dependencies>

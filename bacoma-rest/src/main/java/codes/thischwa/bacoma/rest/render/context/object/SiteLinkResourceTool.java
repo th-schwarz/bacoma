@@ -7,12 +7,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.model.BoInfo;
 import codes.thischwa.bacoma.model.IRenderable;
 import codes.thischwa.bacoma.model.pojo.site.AbstractSiteResource;
 import codes.thischwa.bacoma.model.pojo.site.Page;
 import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
+import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.SiteConfiguration;
 import codes.thischwa.bacoma.rest.render.ViewMode;
 import codes.thischwa.bacoma.rest.service.SiteManager;

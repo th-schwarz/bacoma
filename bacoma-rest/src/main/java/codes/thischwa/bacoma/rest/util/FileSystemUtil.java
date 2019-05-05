@@ -19,8 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.model.pojo.site.Site;
+import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.SiteConfiguration;
 
 @Service

@@ -10,7 +10,7 @@ public class ThymeleafController {
     @Value("${spring.application.name}")
     String appName;
  
-    @GetMapping("/thymeleaf")
+    @GetMapping("/ui")
     public String homePage(Model model) {
         model.addAttribute("appName", appName);
         return "home";

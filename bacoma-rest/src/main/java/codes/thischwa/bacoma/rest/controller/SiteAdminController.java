@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
-import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.model.pojo.requestcycle.GenericRequestSiteResource;
 import codes.thischwa.bacoma.model.pojo.requestcycle.ReqLevel;
 import codes.thischwa.bacoma.model.pojo.requestcycle.ReqPage;
 import codes.thischwa.bacoma.model.pojo.requestcycle.ReqTemplate;
 import codes.thischwa.bacoma.model.pojo.site.AbstractBacomaObject;
 import codes.thischwa.bacoma.rest.AbstractController;
+import codes.thischwa.bacoma.rest.Constants;
 
 @Controller
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)

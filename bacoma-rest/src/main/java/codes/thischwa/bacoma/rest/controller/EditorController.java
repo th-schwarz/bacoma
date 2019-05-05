@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.rest.AbstractController;
+import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.render.VelocityRenderer;
 
 /**

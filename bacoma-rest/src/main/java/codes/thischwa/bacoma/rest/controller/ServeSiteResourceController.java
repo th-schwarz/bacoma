@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import codes.thischwa.bacoma.Constants;
 import codes.thischwa.bacoma.exception.ResourceNotFoundException;
 import codes.thischwa.bacoma.model.BoInfo;
 import codes.thischwa.bacoma.model.pojo.site.AbstractSiteResource;
@@ -31,6 +30,7 @@ import codes.thischwa.bacoma.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
 import codes.thischwa.bacoma.rest.AbstractController;
+import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.util.EnumUtil;
 import codes.thischwa.bacoma.rest.util.ServletUtil;
 

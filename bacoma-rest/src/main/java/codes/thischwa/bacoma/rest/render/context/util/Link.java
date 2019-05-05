@@ -14,7 +14,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import codes.thischwa.bacoma.Constants;
+import codes.thischwa.bacoma.rest.Constants;
 
 /**
  * Wrapper object for {@link URI} to find out, if a link is an internal or an external one. 
