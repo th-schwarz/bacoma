@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import codes.thischwa.bacoma.rest.util.ServletUtil;
+import codes.thischwa.bacoma.model.util.ServletUtil;
 
 public class TestServletUtil {
 

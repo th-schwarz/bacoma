@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.util;
+package codes.thischwa.bacoma.model.util;
 
 public class EnumUtil {
 

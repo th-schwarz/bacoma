@@ -29,10 +29,10 @@ import codes.thischwa.bacoma.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
+import codes.thischwa.bacoma.model.util.EnumUtil;
+import codes.thischwa.bacoma.model.util.ServletUtil;
 import codes.thischwa.bacoma.rest.AbstractController;
 import codes.thischwa.bacoma.rest.Constants;
-import codes.thischwa.bacoma.rest.util.EnumUtil;
-import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 /**
  * Controller which serves all resources of a {@link Site}, which are required for the final rendered site. Resources are:

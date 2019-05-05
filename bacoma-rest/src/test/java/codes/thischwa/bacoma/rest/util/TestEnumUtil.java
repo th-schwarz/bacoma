@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
-import codes.thischwa.bacoma.rest.util.EnumUtil;
+import codes.thischwa.bacoma.model.util.EnumUtil;
 
 public class TestEnumUtil {
 

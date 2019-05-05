@@ -30,12 +30,12 @@ import codes.thischwa.bacoma.model.pojo.site.CascadingStyleSheet;
 import codes.thischwa.bacoma.model.pojo.site.OtherResource;
 import codes.thischwa.bacoma.model.pojo.site.Site;
 import codes.thischwa.bacoma.model.pojo.site.SiteResourceType;
+import codes.thischwa.bacoma.model.util.EnumUtil;
+import codes.thischwa.bacoma.model.util.ServletUtil;
 import codes.thischwa.bacoma.rest.AbstractController;
 import codes.thischwa.bacoma.rest.Constants;
 import codes.thischwa.bacoma.rest.render.VelocityRenderer;
 import codes.thischwa.bacoma.rest.render.ViewMode;
-import codes.thischwa.bacoma.rest.util.EnumUtil;
-import codes.thischwa.bacoma.rest.util.ServletUtil;
 
 @Controller
 public class RenderController extends AbstractController {

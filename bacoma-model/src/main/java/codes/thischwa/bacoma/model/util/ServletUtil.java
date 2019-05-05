@@ -1,4 +1,4 @@
-package codes.thischwa.bacoma.rest.util;
+package codes.thischwa.bacoma.model.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
