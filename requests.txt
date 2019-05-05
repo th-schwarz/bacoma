@@ -1,6 +1,7 @@
 static resources
 classpath: http://127.0.0.1:8080/ui/index.html, http://localhost:8080/ui/greeting.html
 web-app-folder: http://127.0.0.1:8080/webapp/index.html
+thymeleaf: http://127.0.0.1:8080/thymeleaf/
 
 SITE
 curl http://localhost:8080/getAll/
